@@ -80,6 +80,11 @@
     display: none;
   }
 
+  .nav-text > a {
+    display: inline-block;
+    width: inherit;
+    height: inherit;
+  }
   
   .ant-layout-aside-collapse .ant-layout-sider .ant-menu>.ant-menu-submenu:hover {
     background: #9cf;
