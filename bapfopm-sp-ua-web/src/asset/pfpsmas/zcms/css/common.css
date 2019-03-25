@@ -35,3 +35,7 @@
 .display-inline-block{
     display: inline-block;
 }
+
+.font-color-fff{
+    color: #fff !important;
+}

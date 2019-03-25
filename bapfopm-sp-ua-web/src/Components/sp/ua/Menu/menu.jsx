@@ -94,9 +94,9 @@ class Sider extends React.Component {
 
     return (
       this.state.menuData ? <div>
-        <Switch onChange={this.changeMode.bind(this)} />
-        <br />
-        <br />
+        {/* <Switch onChange={this.changeMode.bind(this)} /> */}
+        {/* <br />
+        <br /> */}
         <Menu
           style={{ width: `100%` }}
           mode={this.state.mode}

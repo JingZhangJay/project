@@ -34,6 +34,9 @@ import TimedTask from "../../../../Pages/pfpsmas/zcms/rzc/timedTask";
 import PreviewFormalZoningCode from "../../../../Pages/pfpsmas/zcms/rzc/previewFormalZoningCode";
 import ProvincialVersionControl from "../../../../Pages/pfpsmas/zcms/rzc/provincialVersionControl";
 import ConditionQuery from "../../../../Pages/pfpsmas/zcms/rzc/conditionQuery";
+import UploadApprovalFile from "../../../../Pages/pfpsmas/zcms/rzc/uploadApprovalFile";
+import ApprovalDocumentManage from "../../../../Pages/pfpsmas/zcms/rzc/approvalDocumentManage";
+import ImportCivilzoningCode from "../../../../Pages/pfpsmas/zcms/rzc/importCivilzoningCode";
 
 
 require('./template.css')
@@ -83,6 +86,9 @@ export const Template = (props) => (
                         <Route path='/about/pfpsmas/zcms/previewFormalZoningCode' component={PreviewFormalZoningCode} />
                         <Route path='/about/pfpsmas/zcms/provincialVersionControl' component={ProvincialVersionControl} />
                         <Route path='/about/pfpsmas/zcms/conditionQuery' component={ConditionQuery} />
+                        <Route path='/about/pfpsmas/zcms/uploadApprovalFile' component={UploadApprovalFile} />
+                        <Route path='/about/pfpsmas/zcms/approvalDocumentManage' component={ApprovalDocumentManage} />
+                        <Route path='/about/pfpsmas/zcms/importCivilzoningCode' component={ImportCivilzoningCode} />
                         
 
 

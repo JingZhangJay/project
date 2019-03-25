@@ -44,6 +44,11 @@ import TimedTask from "./Pages/pfpsmas/zcms/rzc/timedTask";
 import PreviewFormalZoningCode from "./Pages/pfpsmas/zcms/rzc/previewFormalZoningCode";
 import ProvincialVersionControl from "./Pages/pfpsmas/zcms/rzc/provincialVersionControl";
 import ConditionQuery from "./Pages/pfpsmas/zcms/rzc/conditionQuery";
+//批复文件上传 管理
+import UploadApprovalFile from "./Pages/pfpsmas/zcms/rzc/uploadApprovalFile";
+import ApprovalDocumentManage from "./Pages/pfpsmas/zcms/rzc/approvalDocumentManage";
+// 民政区划管理
+import ImportCivilzoningCode from "./Pages/pfpsmas/zcms/rzc/importCivilzoningCode";
 
 //  引入axios
 //  并做全局配置
@@ -91,6 +96,9 @@ ReactDOM.render(
                 <Route path='/about/pfpsmas/zcms/previewFormalZoningCode' component={PreviewFormalZoningCode} />
                 <Route path='/about/pfpsmas/zcms/provincialVersionControl' component={ProvincialVersionControl} />
                 <Route path='/about/pfpsmas/zcms/conditionQuery' component={ConditionQuery} />
+                <Route path='/about/pfpsmas/zcms/uploadApprovalFile' component={UploadApprovalFile} />
+                <Route path='/about/pfpsmas/zcms/approvalDocumentManage' component={ApprovalDocumentManage} />
+                <Route path='/about/pfpsmas/zcms/importCivilzoningCode' component={ImportCivilzoningCode} />
                 
                 <Route path='/about/wpdmp/dmp/apilist' component={ApiList}>
                     <Route path='/about/wpdmp/dmp/apilist/apiDetail' component={ApiDetail}/>

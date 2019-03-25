@@ -107,7 +107,9 @@ class InputChangeDetails extends React.Component {
             //  并入时有下级区划出现模态框的数据存放
             moreForMerge: [],
             //  并入时有下级区划出现模态框的显隐标识
-            moreForMergeVisible: false
+            moreForMergeVisible: false,
+
+            addCode: ""    //   新增区划自动补位
         }
     }
 
@@ -172,6 +174,7 @@ class InputChangeDetails extends React.Component {
 
             // 清理非直系下级数据，只保留亲子级数据
             clearData(selectedAssigningCode, codeRankPreview);
+            clearData(selectedAssigningCode, activedColor);
 
             //  获取子级区划代码发送数据
             let postData = {};
@@ -298,15 +301,22 @@ class InputChangeDetails extends React.Component {
      * 变更类型更改
      */
     handleChangeType(e) {
-        let { selectedZoningCode, selectedZoningName, ringFlag, ringFlagToggle, selectedAssigningCode, codeRankPreview } = this.state;
+        let { selectedZoningCode, selectedZoningName, ringFlag, ringFlagToggle, selectedAssigningCode, codeRankPreview, addCode } = this.state;
         let originalZoningCode, originalZoningName, originalZoningCodeArray = [];
-        let postData = {};
 
         originalZoningCode = selectedZoningCode;
         originalZoningName = selectedZoningName;
+
+        this.setState({
+            targetZoningCodeArray: sliceSpecifiedCode(selectedZoningCode)
+        })
+
         originalZoningCodeArray = sliceSpecifiedCode(originalZoningCode);
 
         this.axiosLogicCheckBeforeChange(selectedZoningCode);
+
+        console.log("=====!!",this.state.selectedZoningCode, this.state.targetZoningCode, this.state.targetZoningCodeArray, this.state.selectedAssigningCode, addCode)
+
 
         //  是否选择环链变更
         //  是的话   取同级区划做叶子节点
@@ -343,12 +353,20 @@ class InputChangeDetails extends React.Component {
 
         } else {
             if (e == "11") {
+                let {targetZoningCodeArray, targetZoningCode, selectedAssigningCode, addCode} = this.state;
+                let tempArr = targetZoningCodeArray;
+                tempArr[selectedAssigningCode] = addCode;
+                targetZoningCode = combinSpecifiedCode(tempArr)
+                console.log(tempArr, targetZoningCodeArray, targetZoningCode)
+
                 this.setState({
                     changeType: e,
                     originalZoningCode: "",
                     originalZoningCodeArray: ["", "", "", "", "", ""],
                     originalZoningName: "",
                     targetZoningName: "",
+                    targetZoningCode: targetZoningCode,
+                    targetZoningCodeArray: tempArr,
                     iconToggle: false,
                     ringFlag: 0
                 })
@@ -488,6 +506,8 @@ class InputChangeDetails extends React.Component {
                                 openNotificationWithIcon("warning" ,`${originalZoningName}该区划存在下级`);
                             }
                         }
+
+                        console.log(this.state.selectedAssigningCode)
 
                         this.setState({
                             moreForMerge: tempArr,
@@ -656,6 +676,10 @@ class InputChangeDetails extends React.Component {
         })
     }
 
+    handleMoveOk(e){
+        console.log(e);
+    }
+
     /**
      * 区划树模态框关闭函数
      * 合并时下级迁移模态框关闭函数
@@ -762,13 +786,26 @@ class InputChangeDetails extends React.Component {
      */
     async axiosSubordinateZoning(params) {
         let res = await getSubordinateZoning(params);
-        let { codeRankPreview } = this.state;
+        let { codeRankPreview, selectedAssigningCode } = this.state;
         if (res.rtnCode == "000000") {
             let dataCode = res.responseData;
+
+            for(var key in dataCode){
+                if(dataCode[key].length != 0){
+                    var addCode = Number(dataCode[key][dataCode[key].length-1].ownCode) + 1;
+                    if(addCode < 100){
+                        addCode = selectedAssigningCode < 3 ? "" + addCode : "0" + addCode;
+                    }
+                }
+            }
+
+            
+
             placeData(dataCode, codeRankPreview);
-            console.log("--------------", codeRankPreview)
+            // console.log("--------------", codeRankPreview)
             this.setState({
-                codeRankPreview: codeRankPreview
+                codeRankPreview: codeRankPreview,
+                addCode: addCode
             })
         }
     }
@@ -1073,7 +1110,7 @@ class InputChangeDetails extends React.Component {
             key: 'operation',
             width: 150,
             render: (text, record) => (
-                <Input size="large" onChange={this.inputMoveCode.bind(this, record)} />
+                <Input size="large" onChange={this.inputMoveCode.bind(this, record)} maxLength={this.state.selectedAssigningCode < 3 ? 2 : 3} style={{textAlign: "center"}}/>
             ),
         }];
 
@@ -1298,7 +1335,7 @@ class InputChangeDetails extends React.Component {
                                             <label className="label-font-16">现区划名称<span className="color-red-margin">*</span></label>
                                         </Col>
                                         <Col span={18}>
-                                            <input type="text" className="input-large-length" value={this.state.targetZoningName}
+                                            <input type="text" className="input-large-length font-color-fff" value={this.state.targetZoningName}
                                                 onChange={this.handleChangeInputValue.bind(this, "targetZoningName")} />
                                         </Col>
                                     </Row>
@@ -1359,7 +1396,7 @@ class InputChangeDetails extends React.Component {
                 </Modal>
 
                 <Modal title="并入区划下要迁移的下级行政区划" visible={this.state.moreForMergeVisible}
-                    onOk={this.handleOk.bind(this)} onCancel={this.handleCancel.bind(this)}
+                    onOk={this.handleMoveOk.bind(this)} onCancel={this.handleCancel.bind(this)}
                     okText="迁移" cancelText="关闭" maskClosable={false}
                     wrapClassName="move-table"
                 >
