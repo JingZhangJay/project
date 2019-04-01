@@ -20,55 +20,58 @@ class UploadApprovalFile extends React.Component {
             selectRows: {},
             selectedRows: {},
 
-            zoningName: '',   //  行政区划名称
-            fileValue: '',//上传文件名称
-            formId: '', // ID
-            pageSize: '',//每页条数
-            pageIndex: '',//当前页码
-            start: '',//创建时间起点
-            end: '',//创建时间终点
+            zoningName: '', // 行政区划名称
+            fileName: '', //   上传文件名称
+            formId: '', //  ID
+            file: "",// 上传文件
+
+            pageSize: 1, // 每页条数
+            pageIndex: 1, // 当前页码
+            totalRecord: "", // 总数据量
+
+            start: '', //   创建时间起点
+            end: '', // 创建时间终点
         }
     }
-    // 初始页面 展示列表
-    componentWillMount() {
-        let getDataObj = {};
-        let { pageSize, pageIndex } = this.state;
-        getDataObj.pageSize = 5;
-        getDataObj.pageIndex = 1;
 
-        this.axioslist(getDataObj);
-    }
-    async axioslist(params) {
-        let res = await getList(params);
-        // console.log('列表res--->', res)
+    // 重置
+    handleReset() {
         this.setState({
-            fileList: res.responseData.dataList
+            fileName: '',
+            file: ""
         })
     }
 
-    onSelectChange(selectedRowKeys, selectedRows) {
-        // console.log(selectedRowKeys, selectedRows);
-    }
-
     update(e) {
-        this.setState({ fileValue: e.target.files[0].name });
+        console.log(e, 111);
+        this.setState({
+            file: e.target.files[0],
+            fileName: e.target.files[0].name
+        });
     }
 
-    onChange(e) {
-        e.target.value = this.state.fileValue
+    handleDelete(text, record) {
+        console.log(text, record);
     }
 
     /**
      * 批复文件上传接口
      * @param {string} formId 上传文件id
-  */
+    */
     handleAxiosupload() {
         let postDataObj = {};
-        let { fileValue, formId } = this.state;
-        postDataObj.fileValue = fileValue;
+        let { fileName, formId, file } = this.state;
+        postDataObj.fileName = fileName;
         postDataObj.formId = formId;
 
-        this.axiosupload(postDataObj);
+        console.log(postDataObj);
+
+        let param = new FormData();
+        param.append("name", fileName);
+        param.append("file", file);
+        console.log(param.get("file"));
+
+        this.axiosupload(param);
     }
 
     async axiosupload(params) {
@@ -76,20 +79,38 @@ class UploadApprovalFile extends React.Component {
         // console.log('批复上传res--->', res)
         if (res.rtnCode == '000000') {
             openNotificationWithIcon("success", res.rtnMessage);
-            this.setState({
-                fileList: res.responseData.dataIndex
-            })
+            let getDataObj = {};
+            let { pageSize, pageIndex } = this.state;
+            getDataObj.pageSize = pageSize;
+            getDataObj.pageIndex = pageIndex;
+            this.axioslist(getDataObj);
         } else {
             openNotificationWithIcon("error", res.rtnMessage);
         }
 
     }
-    // 重置
-    handleReset() {
-        this.setState({ fileValue: '' })
+
+    
+    async axioslist(params) {
+        let res = await getList(params);
+        // console.log('列表res--->', res)
+        if(res.rtnCode == "000000"){
+            this.setState({
+                totalRecord: res.responseData.totalRecord,
+                fileList: res.responseData.dataList
+            })
+        } 
     }
 
-
+    // 初始页面 展示列表
+    componentWillMount() {
+        let getDataObj = {};
+        let { pageSize, pageIndex } = this.state;
+        getDataObj.pageSize = pageSize;
+        getDataObj.pageIndex = pageIndex;
+        this.axioslist(getDataObj);
+    }
+    
     render() {
         const columns = [
             {
@@ -119,22 +140,37 @@ class UploadApprovalFile extends React.Component {
                 dataIndex: 'createDate',
                 key: 'createDate',
                 width: "1"
+            }, {
+                title: '操作',
+                key: 'operation',
+                width: 1,
+                render: (text, record) => (
+                    <span>
+                        <Button type="primary" size="small" onClick={this.handleDelete.bind(this, record)}>删除</Button>
+                    </span>
+                ),
             }];
-
-        const requestRowSelection = {
-            type: 'radio',
-            selectedRowKeys: this.state.selectedRowKeys,
-            onChange: this.onSelectChange.bind(this),
-        }
+        
+        const pagination = {
+            _this: this,
+            total: this.state.totalRecord,
+            pageSize: this.state.pageSize,
+            onChange(current) {
+                let getDataObj = {};
+                getDataObj.pageSize = this._this.state.pageSize;
+                getDataObj.pageIndex = current;
+                this._this.axioslist(getDataObj)
+                console.log('Current: ', current, this._this);
+            },
+        };
 
         return (
             <div className="UploadApprovalFile">
                 <div className="upload-quhua">
                     <span>上传文件</span>
-                    <input type="text" className='filename' onChange={this.onChange.bind(this)} value={this.state.fileValue} />
+                    <input type="text" className='filename' onChange={this.onChange.bind(this)} value={this.state.fileName} />
                     <input type="file" className="upload-file" id="upload_file" name="file" onChange={this.update.bind(this)} />
                     <input type="button" className="button-up" value="浏览" />
-
                 </div>
                 {/* 功能按钮组 */}
                 <div className="button-group  button-group-quhua">
@@ -144,11 +180,7 @@ class UploadApprovalFile extends React.Component {
                 </div>
 
                 <div style={{ marginTop: 60 }}>
-                    <div className="table-title">
-                        <span>查询信息结果展示</span>
-                        <Button type="primary" size="small" className="t-delete">删除</Button>
-                    </div>
-                    <Table columns={columns} dataSource={this.state.fileList} rowSelection={requestRowSelection} />
+                    <Table columns={columns} dataSource={this.state.fileList} pagination={pagination} />
                 </div>
             </div>
         )

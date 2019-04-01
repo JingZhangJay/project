@@ -556,11 +556,12 @@ export let getChangeDetailedReproduction = async (params) => {
  * @param {string} formId 上传文件id
 */
 export let getUpload = async (params) => {
-    let response = await axios({
+    let instance = axios.create();
+    let response = await instance({
         url: 'zcmsapi1/zoning/document/upload',
         method: 'post',
-        headers: {'Content-Type': 'multipart/form-data'},
-        params: params
+        headers: {'Content-Type': 'multipart/form-data'},   
+        data: params
     })
     return response.data
 }
