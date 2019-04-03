@@ -10,7 +10,7 @@ import gray from "../../../../asset/pfpsmas/zcms/img/gray.png";
 import FreeScrollBar from 'react-free-scrollbar';
 
 import { clearData, placeData, changeTypeConversion, getAssigningCode, getSubZoning, getSuperiorZoningCode, openNotificationWithIcon } from "../../../../asset/pfpsmas/zcms/js/common";
-import { getInitPreviewZoningData, getCheckPreviewZoning, getRejectionChangeDetails, getConfirmationChangeDetails, getFindChangeDetails} from "../../../../Service/pfpsmas/zcms/server";
+import { getInitPreviewZoningData, getCheckPreviewZoning, getRejectionChangeDetails, getConfirmationChangeDetails, getFindChangeDetails, getDCVerification} from "../../../../Service/pfpsmas/zcms/server";
 
 import { Navbar, Hr } from "../../../../Components/index";
 import { Table, Button, Modal, Input, Checkbox, Select, Row, Col, Tooltip, Tree } from 'antd';
@@ -116,6 +116,25 @@ class PreviewChangeDetails extends React.Component {
     }
 
     /**
+     * 通过申请单获取全部未审核明细
+     * @param {string} seqStr 申请单序号
+     */
+    async axiosDCVerification(params){
+        let res = await getDCVerification(params);
+        let tempArr = [];
+        if(res.rtnCode == "000000"){
+            res.responseData.forEach(item => {
+                item.disChangeType= changeTypeConversion(item.changeType)
+                tempArr.push(item);
+            });
+
+            this.setState({
+                displayDetails: tempArr
+            })
+        }
+    }
+
+    /**
      * 根据行政区划查询当月变更明细
      * @param {string} zoningCode 区划代码
      */
@@ -177,6 +196,8 @@ class PreviewChangeDetails extends React.Component {
         console.log(requestSeq);
         postData.zoningCode = zoningCode.substr(0, 6);        
         this.axiosInitPreviewZoningData(postData);
+
+        this.axiosDCVerification({seqStr:requestSeq})
         this.setState({
             requestSeq: requestSeq
         })  
@@ -185,12 +206,12 @@ class PreviewChangeDetails extends React.Component {
     render() {
         const navbar = [{
             name: "建立变更对照表",
-            routerPath: "/about/pfpsmas/zcms/createChangeComparisonTable",
+            routerPath: "/about/pfpsmas/zcms/previewChangeDetails",
             imgPath: gray
         },
         {
             name: "录入变更明细",
-            routerPath: "/about/pfpsmas/zcms/inputChangeDetails",
+            routerPath: "/about/pfpsmas/zcms/previewChangeDetails",
             imgPath: gray
         },
         {
@@ -216,13 +237,13 @@ class PreviewChangeDetails extends React.Component {
             width: 150,
         }, {
             title: '现区划代码',
-            dataIndex: 'currentZoningCode',
-            key: 'currentZoningCode',
+            dataIndex: 'targetZoningCode',
+            key: 'targetZoningCode',
             width: 150,
         }, {
             title: '现区划名称',
-            dataIndex: 'currentZoningName',
-            key: 'currentZoningName',
+            dataIndex: 'targetZoningName',
+            key: 'targetZoningName',
             width: 150,
         }, {
             title: '备注',

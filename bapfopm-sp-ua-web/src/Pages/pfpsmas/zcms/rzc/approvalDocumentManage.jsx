@@ -21,22 +21,21 @@ class ApprovalDocumentManage extends React.Component {
             endValue: null,//时间选择器结束时间
             endOpen: false,//
 
-            pageSize: '',//每页条数
-            pageIndex: '',//当前页码
-            start: '',//创建时间起点
-            end: '',//创建时间终点
+            pageSize: 1,//每页条数
+            pageIndex: 1,//当前页码
+            totalRecord: "",
         }
     }
 
     componentWillMount() {
-        let getDataObj = {};
+        let postData = {};
         let { pageSize, pageIndex, start, end } = this.state;
-        getDataObj.pageSize = 5;
-        getDataObj.pageIndex = 1;
-        getDataObj.start = start;
-        getDataObj.end = end;
+        postData.pageSize = 5;
+        postData.pageIndex = 1;
+        postData.start = start;
+        postData.end = end;
 
-        this.axiosListInit(getDataObj);
+        this.axiosListInit(postData);
     }
     async axiosListInit(params) {
         let res = await getList(params);
@@ -78,29 +77,41 @@ class ApprovalDocumentManage extends React.Component {
     handleEndToggle({ open }) {
         this.setState({ endOpen: open });
     }
-    /**
-   * 列表展示已经上传的文档接口
-   * @param {number} pageSize 每页条数
-   * @param {number} pageIndex 当前页码
-   * @param {string} start 创建时间起点
-   * @param {string} end 创建时间终点
-   */
-    handleAxiosList() {
-        let getDataObj = {};
-        let { pageSize, pageIndex, start, end } = this.state;
-        getDataObj.pageSize = 5;
-        getDataObj.pageIndex = 1;
-        getDataObj.start = start;
-        getDataObj.end = end;
 
-        this.axiosList(getDataObj);
+    handleReSet(){
+        this.setState({
+            startValue: "",
+            endValue: "",
+        })
     }
+
+    /**
+     * 列表展示已经上传的文档
+     */
+    handleAxiosList() {
+        let postData = {};
+        let { pageSize, pageIndex, startValue, endValue } = this.state;
+        postData.pageSize = pageSize;
+        postData.pageIndex = pageIndex;
+        postData.start = startValue;
+        postData.end = endValue;
+
+        this.axiosList(postData);
+    }
+
+    /**
+     * 批复文件列表展示已经上传的文档接口
+     * @param {number} pageSize 每页条数
+     * @param {number} pageIndex 当前页码
+     * @param {string} start 创建时间起点
+     * @param {string} end 创建时间终点
+     */
     async axiosList(params) {
         let res = await getList(params);
-        console.log('管理res-->', res)
         if (res.rtnCode == '000000') {
-            openNotificationWithIcon("success", res.rtnMessage);
+            // openNotificationWithIcon("success", res.rtnMessage);
             this.setState({
+                totalRecord: res.responseData.totalRecord,
                 requestList: res.responseData.dataList
             })
         } else {
@@ -125,8 +136,8 @@ class ApprovalDocumentManage extends React.Component {
                 key: 'fileName',
             }, {
                 title: '文件类型',
-                dataIndex: 'contentType',
-                key: 'contentType',
+                dataIndex: 'suffix',
+                key: 'suffix',
             }, {
                 title: '年份',
                 dataIndex: 'year',
@@ -137,6 +148,19 @@ class ApprovalDocumentManage extends React.Component {
                 key: 'createDate',
             }
         ];
+
+        const pagination = {
+            _this: this,
+            total: this.state.totalRecord,
+            pageSize: this.state.pageSize,
+            onChange(current) {
+                let postData = {};
+                postData.pageSize = this._this.state.pageSize;
+                postData.pageIndex = current;
+                this._this.axiosList(postData)
+                console.log('Current: ', current, this._this);
+            },
+        };
 
         return (
             <div className="ApprovalDocumentManage">
@@ -166,7 +190,7 @@ class ApprovalDocumentManage extends React.Component {
                 {/* 功能按钮组 */}
                 <div className="button-group">
                     <Button type="primary" size="large" onClick={this.handleAxiosList.bind(this)}>查询</Button>
-                    <Button type="primary" size="large" className="margin-left-20" >重置</Button>
+                    <Button type="primary" size="large" className="margin-left-20" onClick={this.handleReSet.bind(this)}>重置</Button>
                 </div>
 
                 {/* 申请单展示列表 */}
@@ -174,7 +198,7 @@ class ApprovalDocumentManage extends React.Component {
                     <div className="table-title">
                         <span>查询信息结果展示</span>
                     </div>
-                    <Table columns={columns} dataSource={this.state.requestList} />
+                    <Table columns={columns} dataSource={this.state.requestList} pagination={pagination}/>
                 </div>
 
             </div>

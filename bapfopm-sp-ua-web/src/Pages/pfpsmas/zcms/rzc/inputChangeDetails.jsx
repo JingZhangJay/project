@@ -353,8 +353,8 @@ class InputChangeDetails extends React.Component {
 
         } else {
             if (e == "11") {
-                let {targetZoningCodeArray, targetZoningCode, selectedAssigningCode, addCode} = this.state;
-                let tempArr = targetZoningCodeArray;
+                let {targetZoningCodeArray, targetZoningCode, selectedAssigningCode, addCode, selectedZoningCode} = this.state;
+                let tempArr = sliceSpecifiedCode(selectedZoningCode);
                 tempArr[selectedAssigningCode] = addCode;
                 targetZoningCode = combinSpecifiedCode(tempArr)
                 console.log(tempArr, targetZoningCodeArray, targetZoningCode)
@@ -1040,7 +1040,7 @@ class InputChangeDetails extends React.Component {
             imgPath: blue
         }, {
             name: "变更明细预览",
-            routerPath: "/about/pfpsmas/zcms/previewChangeDetails",
+            routerPath: "/about/pfpsmas/zcms/inputChangeDetails",
             imgPath: black
         }];
 

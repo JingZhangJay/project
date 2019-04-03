@@ -245,12 +245,12 @@ class CreateChangeComparisonTable extends React.Component {
         },
         {
             name: "录入变更明细",
-            routerPath: "/about/pfpsmas/zcms/inputChangeDetails",
+            routerPath: "/about/pfpsmas/zcms/createChangeComparisonTable",
             imgPath: black
         },
         {
             name: "变更明细预览",
-            routerPath: "/about/pfpsmas/zcms/previewChangeDetails",
+            routerPath: "/about/pfpsmas/zcms/createChangeComparisonTable",
             imgPath: black
         }];
 
@@ -269,8 +269,10 @@ class CreateChangeComparisonTable extends React.Component {
                     </div>
                 </div>
                 
-                <Modal title="添加申请单" visible={this.state.addRequestToggle}
+                <Modal title="添加申请单" 
+                    visible={this.state.addRequestToggle}
                     okText="提交" 
+                    maskClosable={false}
                     onOk={this.handleSubmit.bind(this)}
                     onCancel={this.handleCancel.bind(this)}
                 >

@@ -1,10 +1,11 @@
 import React from 'react';
 import { hashHistory, Link } from "react-router";
 
-import { Tree, Input } from 'antd';
+import { Tree, Input, Checkbox } from 'antd';
 
 const { TreeNode } = Tree;
 const Search = Input.Search;
+const CheckboxGroup = Checkbox.Group;
 
 const x = 3;
 const y = 2;
@@ -69,7 +70,16 @@ class Test2 extends React.Component {
         expandedKeys: [],
         searchValue: '',
         autoExpandParent: true,
+        checkedBox: []
       }
+  }
+
+  onChange1(checkedValues) {
+    console.log('checked = ', checkedValues);
+    this.setState({
+      checkedBox: checkedValues
+    })
+    console.log("checkedBox= ", this.state.checkedBox)
   }
 
   onExpand(expandedKeys){
@@ -116,10 +126,27 @@ class Test2 extends React.Component {
       }
       return <TreeNode key={item.key} title={title} />;
     });
+    const plainOptions = ['Apple', 'Pear', 'Orange'];
+    const options = [
+      { label: '苹果', value: 'Apple' },
+      { label: '梨', value: 'Pear' },
+      { label: '橘', value: 'Orange' },
+    ];
+    const optionsWithDisabled = [
+      { label: '苹果', value: 'Apple' },
+      { label: '梨', value: 'Pear' },
+      { label: '橘', value: 'Orange', disabled: false },
+    ];
     
     return (
       <div>
         <Input style={{ marginBottom: 8 }} placeholder="Search" onChange={this.onChange.bind(this)} />
+
+       <CheckboxGroup options={plainOptions} onChange={this.onChange1.bind(this)} />
+    {/* <br />
+    <CheckboxGroup options={options} onChange={this.onChange1.bind(this)} />
+    <br />
+    <CheckboxGroup options={optionsWithDisabled} disabled value={['Apple']} onChange={this.onChange1.bind(this)} /> */}
 
         <Tree
           onExpand={this.onExpand.bind(this)}

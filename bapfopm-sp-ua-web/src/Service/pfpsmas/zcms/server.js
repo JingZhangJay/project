@@ -241,6 +241,19 @@ export let getCheckPreviewZoning = async (params) => {
 }
 
 /**
+ * 通过申请单获取全部未审核明细
+ * @param {string} seqStr 申请单序号
+ */
+export let getDCVerification = async (params) => {
+    let response = await axios({
+        url: 'zcmsapi1/zoningChangeManager/dCVerification',
+        method: 'get',
+        params: params
+    })
+    return response.data
+}
+
+/**
  * 根据行政区划查询当月变更明细
  * @param {string} zoningCode 区划代码
  */
@@ -551,6 +564,10 @@ export let getChangeDetailedReproduction = async (params) => {
     return response.data
 }
 
+//  rzc 
+//  批复文件上传
+//  uploadApprovalFile
+
 /**
  * 批复文件上传接口
  * @param {string} formId 上传文件id
@@ -581,12 +598,30 @@ export let getList = async (params) => {
     })
     return response.data
 }
+
+/**
+ * 批复文件删除接口
+ * @param {number} id 文档id
+ */
+export let getDelete = async (params) => {
+    let response = await axios({
+        url: 'zcmsapi1/zoning/document/delete',
+        method: 'get',
+        params: params
+    })
+    return response.data
+}
+
+//  rzc 
+//  民政数据收集
+//  importCivilzoningCode
+
 /**
  * 导入民政区划 上传文件查询接口
  * @param {number} pageSize 每页显示条数
  * @param {number} pageIndex 当前页码
  */
-export let getselectCivilAffairZip = async (params) => {
+export let getSelectCivilAffairZip = async (params) => {
     let response = await axios({
         url: 'zcmsapi1/civilAffair/selectCivilAffairZip',
         method: 'get',
@@ -594,16 +629,18 @@ export let getselectCivilAffairZip = async (params) => {
     })
     return response.data
 }
+
 /**
- * 文件上传接口
+ * 导入民政区划 文件上传接口
  * @param {string} formId 表单ID
  */
 export let getZipFlie = async (params) => {
-    let response = await axios({
+    let instance = axios.create();
+    let response = await instance({
         url: 'zcmsapi1/civilAffair/upload/zipFlie',
         method: 'post',
         headers: {'Content-Type': 'multipart/form-data'},
-        params: params
+        post: params
     })
     return response.data
 }
