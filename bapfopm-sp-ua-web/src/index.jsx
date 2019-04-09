@@ -49,6 +49,8 @@ import UploadApprovalFile from "./Pages/pfpsmas/zcms/rzc/uploadApprovalFile";
 import ApprovalDocumentManage from "./Pages/pfpsmas/zcms/rzc/approvalDocumentManage";
 // 民政区划管理
 import ImportCivilzoningCode from "./Pages/pfpsmas/zcms/rzc/importCivilzoningCode";
+import PreviewCivilzoningCode from "./Pages/pfpsmas/zcms/rzc/previewCivilzoningCode";
+
 
 //  引入axios
 //  并做全局配置
@@ -99,6 +101,8 @@ ReactDOM.render(
                 <Route path='/about/pfpsmas/zcms/uploadApprovalFile' component={UploadApprovalFile} />
                 <Route path='/about/pfpsmas/zcms/approvalDocumentManage' component={ApprovalDocumentManage} />
                 <Route path='/about/pfpsmas/zcms/importCivilzoningCode' component={ImportCivilzoningCode} />
+                <Route path='/about/pfpsmas/zcms/previewCivilzoningCode' component={PreviewCivilzoningCode} />
+                
                 
                 <Route path='/about/wpdmp/dmp/apilist' component={ApiList}>
                     <Route path='/about/wpdmp/dmp/apilist/apiDetail' component={ApiDetail}/>

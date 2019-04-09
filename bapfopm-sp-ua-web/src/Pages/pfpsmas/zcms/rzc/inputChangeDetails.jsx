@@ -789,17 +789,22 @@ class InputChangeDetails extends React.Component {
         let { codeRankPreview, selectedAssigningCode } = this.state;
         if (res.rtnCode == "000000") {
             let dataCode = res.responseData;
+            console.log(dataCode)
 
             for(var key in dataCode){
                 if(dataCode[key].length != 0){
                     var addCode = Number(dataCode[key][dataCode[key].length-1].ownCode) + 1;
-                    if(addCode < 100){
-                        addCode = selectedAssigningCode < 3 ? "" + addCode : "0" + addCode;
+                    if(addCode < 10){
+                        addCode = selectedAssigningCode < 3 ? "0" + addCode : "00" + addCode;
+                    }else if(addCode < 100){
+                        addCode = selectedAssigningCode < 3 ? "" + addCode : "0" + addCode
                     }
+                }else{
+                    var addCode = selectedAssigningCode < 3 ? "01" : "001";
                 }
             }
-
-            
+    
+            console.log("=========12312", addCode)
 
             placeData(dataCode, codeRankPreview);
             // console.log("--------------", codeRankPreview)

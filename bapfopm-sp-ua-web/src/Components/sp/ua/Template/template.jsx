@@ -37,6 +37,7 @@ import ConditionQuery from "../../../../Pages/pfpsmas/zcms/rzc/conditionQuery";
 import UploadApprovalFile from "../../../../Pages/pfpsmas/zcms/rzc/uploadApprovalFile";
 import ApprovalDocumentManage from "../../../../Pages/pfpsmas/zcms/rzc/approvalDocumentManage";
 import ImportCivilzoningCode from "../../../../Pages/pfpsmas/zcms/rzc/importCivilzoningCode";
+import PreviewCivilzoningCode from "../../../../Pages/pfpsmas/zcms/rzc/previewCivilzoningCode";
 
 
 require('./template.css')
@@ -77,7 +78,6 @@ export const Template = (props) => (
                         <Route path='/about/test' component={Test} />
                         <Route path='/about/test2' component={Test2} />
 
-
                         <Route path='/about/pfpsmas/zcms/createChangeComparisonTable' component={CreateChangeComparisonTable} />
                         <Route path='/about/pfpsmas/zcms/inputChangeDetails' component={InputChangeDetails} />
                         <Route path='/about/pfpsmas/zcms/previewChangeDetails' component={PreviewChangeDetails} />
@@ -89,9 +89,8 @@ export const Template = (props) => (
                         <Route path='/about/pfpsmas/zcms/uploadApprovalFile' component={UploadApprovalFile} />
                         <Route path='/about/pfpsmas/zcms/approvalDocumentManage' component={ApprovalDocumentManage} />
                         <Route path='/about/pfpsmas/zcms/importCivilzoningCode' component={ImportCivilzoningCode} />
+                        <Route path='/about/pfpsmas/zcms/previewCivilzoningCode' component={PreviewCivilzoningCode} />
                         
-
-
                         <Route path='/about/wpdmp/dmp/apilist' component={ApiList}/>
                         <Route path='/about/wpdmp/dmp/apilist/apiDetail' component={ApiDetail}/>
                         <Route path='/about/wpdmp/dmp/apilist/apiDetailChange' component={ApiDetailChange}/>

@@ -1,0 +1,39 @@
+.previewCivilzoningCode{
+    overflow: auto;
+    height: 800px;
+}
+
+.previewCivilzoningCode .preview-container{
+    margin-top: 20px;
+}
+
+.previewCivilzoningCode .preview-container .preview-container-top :global(.ant-row-flex){
+    height: 180px;
+}
+
+.previewCivilzoningCode .preview-container .preview-container-top :global(.ant-row-flex .ant-col-4){
+    background: url("../../../../asset/sp/ua/img/portal/1/2.png") repeat;
+    height: inherit;
+    overflow: auto;
+}
+
+.previewCivilzoningCode .preview-container .preview-container-top .zoningcode-tr{
+    width: 100%;
+    display: inline-block;
+    font-size: 14px;
+    color: #fff;
+    line-height: 30px;
+    cursor: pointer;
+    padding-left: 10px;
+}
+
+.previewCivilzoningCode .preview-container .preview-container-top .zoningcode-tr:hover{
+    background: #8FBC8F;
+}
+.previewCivilzoningCode .preview-container .preview-container-top .zoningcode-tr td{
+    text-align: left;
+}
+
+.previewCivilzoningCode .preview-container .preview-container-footer{
+    text-align: center;
+}

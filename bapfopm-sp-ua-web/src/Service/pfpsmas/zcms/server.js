@@ -571,25 +571,27 @@ export let getChangeDetailedReproduction = async (params) => {
 /**
  * 批复文件上传接口
  * @param {string} formId 上传文件id
-*/
+ */
 export let getUpload = async (params) => {
     let instance = axios.create();
     let response = await instance({
         url: 'zcmsapi1/zoning/document/upload',
         method: 'post',
-        headers: {'Content-Type': 'multipart/form-data'},   
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        },
         data: params
     })
     return response.data
 }
 
 /**
-  * 批复文件列表展示已经上传的文档接口
-  * @param {number} pageSize 每页条数
-  * @param {number} pageIndex 当前页码
-  * @param {string} start 创建时间起点
-  * @param {string} end 创建时间终点
-  */
+ * 批复文件列表展示已经上传的文档接口
+ * @param {number} pageSize 每页条数
+ * @param {number} pageIndex 当前页码
+ * @param {string} start 创建时间起点
+ * @param {string} end 创建时间终点
+ */
 export let getList = async (params) => {
     let response = await axios({
         url: 'zcmsapi1/zoning/document/list',
@@ -639,8 +641,50 @@ export let getZipFlie = async (params) => {
     let response = await instance({
         url: 'zcmsapi1/civilAffair/upload/zipFlie',
         method: 'post',
-        headers: {'Content-Type': 'multipart/form-data'},
-        post: params
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        },
+        data: params
+    })
+    return response.data
+}
+
+/**
+ * 删除民政区划文件
+ * @param {number} zipXh 文件序号
+ */
+export let getDeleteCAZCodeByzipXh = async (params) => {
+    let response = await axios({
+        url: 'zcmsapi1/civilAffair/deleteCAZCodeByzipXh',
+        method: 'get',
+        params: params
+    })
+    return response.data
+}
+
+/**
+ * 文件导入接口
+ * @param {number} zipXh  文件序号
+ * @param {string} filePath  文件路径
+ */
+export let getImportDate = async (params) => {
+    let response = await axios({
+        url: 'zcmsapi1/civilAffair/importDate',
+        method: 'post',
+        params: params
+    })
+    return response.data
+}
+
+/**
+ * 民政区划数据查询接口
+ * @param {string} superiorZoningCode 民政区划代码
+ */
+export let getSelectCAZ = async (params) => {
+    let response = await axios({
+        url: 'zcmsapi1/civilAffair/selectCAZ',
+        method: 'get',
+        params: params
     })
     return response.data
 }

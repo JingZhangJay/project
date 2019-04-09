@@ -54,11 +54,7 @@ class UploadApprovalFile extends React.Component {
      * 批复文件上传
      */
     handleAxiosUpload() {
-        let postDataObj = {};
         let { fileName, formId, file } = this.state;
-        postDataObj.fileName = fileName;
-        postDataObj.formId = formId;
-
         let param = new FormData();
         param.append("name", fileName);
         param.append("file", file);
@@ -117,7 +113,9 @@ class UploadApprovalFile extends React.Component {
                 totalRecord: res.responseData.totalRecord,
                 fileList: res.responseData.dataList
             })
-        } 
+        } else {
+            openNotificationWithIcon("error", res.rtnMessage);
+        }
     }
 
     /**

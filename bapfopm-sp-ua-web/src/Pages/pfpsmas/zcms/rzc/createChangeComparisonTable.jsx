@@ -87,6 +87,7 @@ class CreateChangeComparisonTable extends React.Component {
         this.setState({
             requestSeq: record.seq
         })
+        sessionStorage.setItem("requestSeq", record.seq)
         this.axiosDetailedConfirmationVerification(postData);
     }
 

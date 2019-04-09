@@ -4,9 +4,9 @@ import qs from 'qs'
 
 import './importCivilzoningCode.css'
 
-import { Table, Button, Select, Upload, Icon } from 'antd';
+import { Table, Button, Select, Upload, Icon, Popconfirm } from 'antd';
 import { openNotificationWithIcon } from "../../../../asset/pfpsmas/zcms/js/common";
-import { getselectCivilAffairZip, getZipFlie } from "../../../../Service/pfpsmas/zcms/server";
+import { getSelectCivilAffairZip, getZipFlie, getDeleteCAZCodeByzipXh, getImportDate } from "../../../../Service/pfpsmas/zcms/server";
 
 class ImportCivilzoningCode extends React.Component {
     constructor(props) {
@@ -16,34 +16,17 @@ class ImportCivilzoningCode extends React.Component {
 
             updateRequestToggle: false, //  添加申请单确认框显隐开关
 
-            selectedRowKeys: [],  // 这里配置默认勾选列
-            selectRows: {},
-            selectedRows: {},
-
             zoningName: '',   //  行政区划名称
-            fileValue: '',//上传文件名称
+            fileName: '',   //上传文件名称
             formId: '', // ID
-            pageSize: '',//每页条数
-            pageIndex: '',//当前页码
-            start: '',//创建时间起点
-            end: '',//创建时间终点
-        }
-    }
-    // 初始页面 展示列表
-    componentWillMount() {
-        let getDataObj = {};
-        let { pageSize, pageIndex } = this.state;
-        getDataObj.pageSize = 5;
-        getDataObj.pageIndex = 1;
+            file: "",   //  上传文件
 
-        this.axioslist(getDataObj);
-    }
-    async axioslist(params) {
-        let res = await getselectCivilAffairZip(params);
-        // console.log('列表res--->', res)
-        this.setState({
-            fileList: res.responseData.dataList
-        })
+            loading: false, //  加载状态
+
+            pageSize: 5,    //  每页条数
+            pageIndex: 1,   //  当前页码
+            totalRecord: "",    //  数据总量
+        }
     }
 
     onSelectChange(selectedRowKeys, selectedRows) {
@@ -51,29 +34,78 @@ class ImportCivilzoningCode extends React.Component {
     }
 
     update(e) {
-        this.setState({ fileValue: e.target.files[0].name });
+        console.log(e.target.files[0])
+        this.setState({
+            file: e.target.files[0],
+            fileName: e.target.files[0].name,
+        });
     }
 
     onChange(e) {
-        e.target.value = this.state.fileValue
+        this.setState({
+            file: e.target.files[0] || "",
+            fileName: e.target.files[0].name || "",
+        });
+    }
+
+    // 重置
+    handleReset() {
+        this.setState({
+            fileName: "",
+            file: ""
+        })
     }
 
     /**
      * 文件上传接口
      * @param {string} formId 上传文件id
-  */
+     */
     handleAxioszipFlie() {
-        let postDataObj = {};
-        let { fileValue, formId } = this.state;
-        postDataObj.fileValue = fileValue;
-        postDataObj.formId = formId;
+        let { fileName, file } = this.state;
+        let param = new FormData();
+        param.append("name", fileName);
+        param.append("file", file);
 
-        this.axiosupload(postDataObj);
+        console.log(param)
+
+        this.axiosZipFlie(param);
     }
 
-    async axiosupload(params) {
+    /**
+     * 删除民政区划文件
+     */
+    handleAxiosDeleteCAZCodeByzipXh(text, record){
+        console.log(text, record);
+        let postData = {};
+        postData.zipXh = text.zipXh;
+        if(text.zipXh == "10" || text.zipXh == "21"){
+            this.axiosDeleteCAZCodeByzipXh(postData);
+        }else{
+            openNotificationWithIcon("warning","该文件不能被删除!")
+        }    
+    }
+
+    /**
+     * 文件导入接口
+     * @param {number} zipXh  文件序号
+     * @param {string} filePath  文件路径
+     */
+    handleAxiosImportDate(text, record){
+        let postData = {}; 
+        postData.zipXh = text.zipXh;
+        postData.filePath = text.filePath;
+        this.setState({
+            loading: true
+        })
+        this.axiosImportDate(postData);
+    }
+
+    /**
+     * 文件上传接口
+     * @param {string} formId 上传文件id
+     */
+    async axiosZipFlie(params) {
         let res = await getZipFlie(params);
-        // console.log('上传res--->', res)
         if (res.rtnCode == '000000') {
             openNotificationWithIcon("success", res.rtnMessage);
             this.setState({
@@ -82,17 +114,69 @@ class ImportCivilzoningCode extends React.Component {
         } else {
             openNotificationWithIcon("error", res.rtnMessage);
         }
-
-    }
-    // 重置
-    handleReset() {
-        this.setState({ fileValue: '' })
-    }
-    //导入
-    handleImport() {
-
     }
 
+    /**
+     * 导入民政区划 上传文件查询接口
+     * @param pageSize — 每页显示条数
+     * @param pageIndex — 当前页码
+     */
+    async axiosSelectCivilAffairZip(params) {
+        let res = await getSelectCivilAffairZip(params);
+        if (res.rtnCode == "000000") {
+            this.setState({
+                fileList: res.responseData.dataList,
+                totalRecord: res.responseData.totalRecord
+            })
+        } else {
+            openNotificationWithIcon("error", res.rtnMessage);
+        }
+    }
+
+    /**
+     * 删除民政区划文件
+     * @param {number} zipXh 文件序号
+     */
+    async axiosDeleteCAZCodeByzipXh(param) {
+        let res = await getDeleteCAZCodeByzipXh(param);
+        if (res.rtnCode == "000000") {
+            openNotificationWithIcon("success", res.rtnMessage);
+            let postData = {};
+            let { pageSize, pageIndex } = this.state;
+            postData.pageSize = pageSize;
+            postData.pageIndex = pageIndex;
+            this.axiosSelectCivilAffairZip(postData);
+        } else {
+            openNotificationWithIcon("error", res.rtnMessage);
+        }
+    }
+
+    /**
+     * 文件导入接口
+     * @param {number} zipXh  文件序号
+     * @param {string} filePath  文件路径
+     */
+    async axiosImportDate(param){
+        let res = await getImportDate(param);
+        if(res.rtnCode == "000000"){
+            openNotificationWithIcon("success", resrtnMessage);
+        }else {
+            openNotificationWithIcon("error", res.rtnMessage);
+        }
+        this.setState({
+            loading: false
+        })
+    }
+
+    // 初始页面 展示列表
+    componentWillMount() {
+        let postData = {};
+        let { pageSize, pageIndex } = this.state;
+        postData.pageSize = pageSize;
+        postData.pageIndex = pageIndex;
+
+        this.axiosSelectCivilAffairZip(postData);
+    }
 
     render() {
         const columns = [
@@ -111,32 +195,51 @@ class ImportCivilzoningCode extends React.Component {
                 dataIndex: 'comment',
                 key: 'comment',
                 width: "1"
-            },
-            {
+            }, {
                 title: '上传时间',
                 dataIndex: 'enterTime',
                 key: 'enterTime',
                 width: "1"
-            }
-        ];
+            }, {
+                title: '操作',
+                key: 'operation',
+                width: 1,
+                render: (text, record) => (
+                    <span>
+                        <Popconfirm placement="top" title="确定要删除这个文件吗?" onConfirm={this.handleAxiosDeleteCAZCodeByzipXh.bind(this, record)}>
+                            <Button type="primary" size="small" disabled={(record.status != "10")}>删除</Button>
+                        </Popconfirm>
+                        <span className="ant-divider"></span>
+                        <Popconfirm placement="top" title="确定要导入这个文件吗?" onConfirm={this.handleAxiosImportDate.bind(this, record)}>
+                            <Button type="primary" size="small" disabled={(record.status != "10")}>导入</Button>
+                        </Popconfirm>
+                    </span>
+                ),
+            }];
 
-        const requestRowSelection = {
-            type: 'radio',
-            selectedRowKeys: this.state.selectedRowKeys,
-            onChange: this.onSelectChange.bind(this),
-        }
-     
+        const pagination = {
+            _this: this,
+            total: this.state.totalRecord,
+            pageSize: this.state.pageSize,
+            onChange(current) {
+                let postData = {};
+                postData.pageSize = this._this.state.pageSize;
+                postData.pageIndex = current;
+                this._this.axiosSelectCivilAffairZip(postData)
+                console.log('Current: ', current, this._this);
+            },
+        };
 
         return (
             <div className="ImportCivilzoningCode">
-               
+
                 <div className="upload-quhua">
                     <span>上传文件</span>
-                    <input type="text" className='filename' onChange={this.onChange.bind(this)} value={this.state.fileValue} />
+                    <input type="text" className='filename' onChange={this.onChange.bind(this)} value={this.state.fileName} />
                     <input type="file" className="upload-file" id="upload_file" name="file" onChange={this.update.bind(this)} />
                     <input type="button" className="button-up" value="浏览" />
                 </div>
-                
+
                 {/* 功能按钮组 */}
                 <div className="button-group  button-group-quhua">
                     <Button type="primary" size="large" onClick={this.handleAxioszipFlie.bind(this)}>上传</Button>
@@ -147,12 +250,8 @@ class ImportCivilzoningCode extends React.Component {
                 <div style={{ marginTop: 60 }}>
                     <div className="table-title">
                         <span>导入结果展示</span>
-                        <Button type="primary" size="small" style={{padding: "0 15px"}} className="t-delete">删除</Button>
                     </div>
-                    <Table columns={columns} dataSource={this.state.fileList} rowSelection={requestRowSelection} />
-                </div>
-                <div style={{ marginTop: 20 }} className="b-import">
-                    <Button type="primary" size="large" onClick={this.handleImport.bind(this)} >导入</Button>
+                    <Table columns={columns} dataSource={this.state.fileList} pagination={pagination} />
                 </div>
             </div>
         )

@@ -10,7 +10,7 @@ import gray from "../../../../asset/pfpsmas/zcms/img/gray.png";
 import FreeScrollBar from 'react-free-scrollbar';
 
 import { clearData, placeData, changeTypeConversion, getAssigningCode, getSubZoning, getSuperiorZoningCode, openNotificationWithIcon } from "../../../../asset/pfpsmas/zcms/js/common";
-import { getInitPreviewZoningData, getCheckPreviewZoning, getRejectionChangeDetails, getConfirmationChangeDetails, getFindChangeDetails, getDCVerification} from "../../../../Service/pfpsmas/zcms/server";
+import { getInitPreviewZoningData, getCheckPreviewZoning, getRejectionChangeDetails, getConfirmationChangeDetails, getFindChangeDetails, getDCVerification } from "../../../../Service/pfpsmas/zcms/server";
 
 import { Navbar, Hr } from "../../../../Components/index";
 import { Table, Button, Modal, Input, Checkbox, Select, Row, Col, Tooltip, Tree } from 'antd';
@@ -21,6 +21,7 @@ class PreviewChangeDetails extends React.Component {
         this.state = {
             zoningCode: sessionStorage.getItem("zoningCode"), //  区划代码
             assigningCode: Number(sessionStorage.getItem("assigningCode")), //  级次代码
+            systemId: sessionStorage.getItem("systemId"),
 
             //  省,市,县,乡,村,组   各级区划预览数据存放
             codeRankPreview: {
@@ -34,6 +35,7 @@ class PreviewChangeDetails extends React.Component {
             displayDetails: [], //  变更明细展示
 
             requestSeq: "", //  申请单序号
+            groupmc: "",
 
             //  各级选中区划,颜色样式状态标志
             activedColor: {
@@ -42,14 +44,16 @@ class PreviewChangeDetails extends React.Component {
                 "county": "",
                 "township": "",
                 "village": ""
-            }  
+            },
+
+            isDisabled: true    //  确认明细按钮禁用状态
         }
     }
 
     /**
      * 获取预览表下级区划
      */
-    handleAxiosCheckPreviewZoning(e){
+    handleAxiosCheckPreviewZoning(e) {
         let postData = {};
         let colorRank = {};
 
@@ -68,18 +72,31 @@ class PreviewChangeDetails extends React.Component {
         clearData(selectedAssigningCode, codeRankPreview);
     }
 
-    handleAxiosConfirmationChangeDetails(){
-        let {requestSeq} = this.state;
+    changeNote(e) {
+        this.setState({
+            groupmc: e.target.value
+        })
+    }
+
+    /**
+     * 确认变更明细
+     */
+    handleAxiosConfirmationChangeDetails() {
+        let { requestSeq, groupmc } = this.state;
         let postData = {};
         postData.seqStr = requestSeq;
-
+        postData.groupmc = groupmc;
         this.axiosConfirmationChangeDetails(postData);
     }
 
-    handleAxiosRejectionChangeDetails(){
-        let {requestSeq} = this.state;
+    /**
+     * 驳回变更明细
+     */
+    handleAxiosRejectionChangeDetails() {
+        let { requestSeq, groupmc } = this.state;
         let postData = {};
         postData.seqStr = requestSeq;
+        postData.groupmc = groupmc;
         console.log(postData);
 
         this.axiosRejectionChangeDetails(postData)
@@ -88,9 +105,9 @@ class PreviewChangeDetails extends React.Component {
     /**
      * 初始化预览表数据
      */
-    async axiosInitPreviewZoningData(params) { 
-        let { codeRankPreview } = this.state;  
-        let res = await getInitPreviewZoningData(params);      
+    async axiosInitPreviewZoningData(params) {
+        let { codeRankPreview } = this.state;
+        let res = await getInitPreviewZoningData(params);
         if (res.rtnCode == "000000") {
             let dataCode = res.responseData;
             placeData(dataCode, codeRankPreview);
@@ -103,7 +120,7 @@ class PreviewChangeDetails extends React.Component {
     /**
      * 获取预览表下级区划
      */
-    async axiosCheckPreviewZoning(params){
+    async axiosCheckPreviewZoning(params) {
         let res = await getCheckPreviewZoning(params);
         let { codeRankPreview } = this.state;
         if (res.rtnCode == "000000") {
@@ -119,15 +136,21 @@ class PreviewChangeDetails extends React.Component {
      * 通过申请单获取全部未审核明细
      * @param {string} seqStr 申请单序号
      */
-    async axiosDCVerification(params){
+    async axiosDCVerification(params) {
         let res = await getDCVerification(params);
         let tempArr = [];
-        if(res.rtnCode == "000000"){
-            res.responseData.forEach(item => {
-                item.disChangeType= changeTypeConversion(item.changeType)
-                tempArr.push(item);
-            });
+        if (res.rtnCode == "000000") {
+            if(res.responseData.length != 0){
+                res.responseData.forEach(item => {
+                    item.disChangeType = changeTypeConversion(item.changeType)
+                    tempArr.push(item);
+                });
 
+                this.setState({
+                    isDisabled: false
+                })
+            }
+        
             this.setState({
                 displayDetails: tempArr
             })
@@ -138,22 +161,24 @@ class PreviewChangeDetails extends React.Component {
      * 根据行政区划查询当月变更明细
      * @param {string} zoningCode 区划代码
      */
-    async axiosFindChangeDetails(params){
+    async axiosFindChangeDetails(params) {
         let res = await getFindChangeDetails(params);
         let tempArr = [];
 
         console.log(res);
         if (res.rtnCode == "000000") {
-    
+
             res.responseData.forEach(item => {
-                item.disChangeType= changeTypeConversion(item.changeType)
+                item.disChangeType = changeTypeConversion(item.changeType)
                 tempArr.push(item);
             });
 
-            this.setState({
+            tempArr.length != 0 && this.setState({
                 displayDetails: tempArr
             })
-        }else{
+            
+            
+        } else {
             openNotificationWithIcon("error", res.rtnMessage);
         }
     }
@@ -162,12 +187,18 @@ class PreviewChangeDetails extends React.Component {
      * 确认变更明细
      * @param seqStr 申请单序号
      */
-    async axiosConfirmationChangeDetails(params){
+    async axiosConfirmationChangeDetails(params) {
         let res = await getConfirmationChangeDetails(params);
         console.log(res);
-        if(res.rtnCode == "000000"){
+        if (res.rtnCode == "000000") {
             openNotificationWithIcon("success", res.rtnMessage);
-        }else{
+            hashHistory.push({
+                pathname: "/about/pfpsmas/zcms/inputChangeDetails",
+                state:{
+                    systemId: this.state.systemId
+                }
+            })
+        } else {
             openNotificationWithIcon("error", res.rtnMessage);
         }
     }
@@ -176,15 +207,18 @@ class PreviewChangeDetails extends React.Component {
      * 驳回变更明细
      * @param seqStr 申请单序号
      */
-    async axiosRejectionChangeDetails(params){
+    async axiosRejectionChangeDetails(params) {
         let res = await getRejectionChangeDetails(params);
         console.log(res);
-        if(res.rtnCode == "000000"){
+        if (res.rtnCode == "000000") {
             openNotificationWithIcon("success", res.rtnMessage);
             hashHistory.push({
-                pathname: "/about/pfpsmas/zcms/inputChangeDetails"
+                pathname: "/about/pfpsmas/zcms/inputChangeDetails",
+                state:{
+                    systemId: this.state.systemId
+                }
             })
-        }else{
+        } else {
             openNotificationWithIcon("error", res.rtnMessage);
         }
     }
@@ -192,15 +226,15 @@ class PreviewChangeDetails extends React.Component {
     componentWillMount() {
         let { zoningCode } = this.state;
         let postData = {};
-        let requestSeq = this.props.location.state.requestSeq;
+        let requestSeq = this.props.location.state.requestSeq || sessionStorage.getItem("requestSeq");
         console.log(requestSeq);
-        postData.zoningCode = zoningCode.substr(0, 6);        
+        postData.zoningCode = zoningCode.substr(0, 6);
         this.axiosInitPreviewZoningData(postData);
 
-        this.axiosDCVerification({seqStr:requestSeq})
+        this.axiosDCVerification({ seqStr: requestSeq })
         this.setState({
             requestSeq: requestSeq
-        })  
+        })
     }
 
     render() {
@@ -265,12 +299,12 @@ class PreviewChangeDetails extends React.Component {
         const loop = (data, color) => data.map((item) => {
 
             return (
-                <tr className={`zoningcode-tr ${(item.sfbh && item.sfbh == "1") ? "background-color-red": null} ${color == item.zoningCode?"zoningCode-actived" : null }`}
+                <tr className={`zoningcode-tr ${(item.sfbh && item.sfbh == "1") ? "background-color-red" : null} ${color == item.zoningCode ? "zoningCode-actived" : null}`}
                     data-zoningCode={item.zoningCode}
                     data-zoningName={item.divisionName}
                     data-assigningCode={item.assigningCode}
                     onClick={this.handleAxiosCheckPreviewZoning.bind(this)}
-                    >
+                >
                     <td data-zoningCode={item.zoningCode}
                         data-zoningName={item.divisionName}
                         data-assigningCode={item.assigningCode}>
@@ -281,27 +315,43 @@ class PreviewChangeDetails extends React.Component {
         })
 
         return (
-            <div className="previewchangedetails">
+            <div className="outer-box">
+                <div className="previewchangedetails">
+                    <FreeScrollBar autohide="true">
+                        <Navbar data={navbar}></Navbar>
 
-                <Navbar data={navbar}></Navbar>
+                        <div className="preview-container">
+                            <div className="preview-container-top">
+                                <Row type="flex" justify="space-around">
+                                    {displayDom(this.state.codeRankPreview, this.state.activedColor)}
+                                </Row>
+                            </div>
 
-                <div className="container">
-                    <div className="container-top">
-                        <Row type="flex" justify="space-around">
-                            {displayDom(this.state.codeRankPreview, this.state.activedColor)}
-                        </Row>
-                    </div>
+                            <Hr />
 
-                    <Hr />
+                            <div className="preview-container-bottom">
+                                <Table dataSource={this.state.displayDetails} columns={columns} pagination={{ pageSize: 5 }} />
+                            </div>
 
-                    <div className="container-bottom">
-                        <Table dataSource={this.state.displayDetails} columns={columns} pagination={{ pageSize: 5 }} />
-                    </div>
+                            <div className="preview-container-footer margin-top-10">
+                                <Button type="primary" size="large" onClick={this.handleAxiosRejectionChangeDetails.bind(this)}>驳回</Button>
+                                <Button type="primary" size="large" style={{ marginLeft: 20 }} disabled={this.state.isDisabled} onClick={this.handleAxiosConfirmationChangeDetails.bind(this)}>确认</Button>
+                            </div>
 
-                    <div className="container-footer margin-top-10">
-                        <Button type="primary" size="large" onClick={this.handleAxiosRejectionChangeDetails.bind(this)}>驳回</Button>
-                        <Button type="primary" size="large" style={{ marginLeft: 20 }} onClick={this.handleAxiosConfirmationChangeDetails.bind(this)}>确认</Button>
-                    </div>
+                            <div className="margin-top-10">
+                                <Row>
+                                    <Col span={4} offset={5}>
+                                        <span className="font-color-fff text-algin-center">批复说明</span>
+                                    </Col>
+
+                                    <Col span={10}>
+                                        <Input type="textarea" onChange={this.changeNote.bind(this)} value={this.state.groupmc}></Input>
+                                    </Col>
+                                </Row>
+
+                            </div>
+                        </div>
+                    </FreeScrollBar>
                 </div>
             </div>
         )

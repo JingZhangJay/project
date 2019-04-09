@@ -25,6 +25,7 @@
     /**
      * 根据键值将数据放置对应的省市县区域代码中
      * @param {Object} obj 区划变更明细对照数据录入界面接口返回数据
+     * @param {string} codeRank 存放变量
      */
     export let placeData = (obj, codeRank) => {
         for (var key in obj) {

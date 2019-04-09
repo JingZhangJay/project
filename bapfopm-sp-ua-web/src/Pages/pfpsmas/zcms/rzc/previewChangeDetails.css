@@ -1,23 +1,23 @@
 .previewchangedetails{
-    /* overflow: auto;
-    height: 800px; */
+    overflow: auto;
+    height: 800px;
 }
 
-.previewchangedetails .container{
+.previewchangedetails .preview-container{
     margin-top: 20px;
 }
 
-.previewchangedetails .container .container-top :global(.ant-row-flex){
+.previewchangedetails .preview-container .preview-container-top :global(.ant-row-flex){
     height: 180px;
 }
 
-.previewchangedetails .container .container-top :global(.ant-row-flex .ant-col-4){
+.previewchangedetails .preview-container .preview-container-top :global(.ant-row-flex .ant-col-4){
     background: url("../../../../asset/sp/ua/img/portal/1/2.png") repeat;
     height: inherit;
     overflow: auto;
 }
 
-.previewchangedetails .container .container-top .zoningcode-tr{
+.previewchangedetails .preview-container .preview-container-top .zoningcode-tr{
     width: 100%;
     display: inline-block;
     font-size: 14px;
@@ -27,9 +27,13 @@
     padding-left: 10px;
 }
 
-.previewchangedetails .container .container-top .zoningcode-tr:hover{
-    background: #3ea7d4;
+.previewchangedetails .preview-container .preview-container-top .zoningcode-tr:hover{
+    background: #8FBC8F;
 }
-.previewchangedetails .container .container-top .zoningcode-tr td{
+.previewchangedetails .preview-container .preview-container-top .zoningcode-tr td{
     text-align: left;
+}
+
+.previewchangedetails .preview-container .preview-container-footer{
+    text-align: center;
 }
