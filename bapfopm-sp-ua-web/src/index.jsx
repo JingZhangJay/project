@@ -56,7 +56,7 @@ import HistoricalTrace from "./Pages/pfpsmas/zcms/rzc/historicalTrace";
 //  引入axios
 //  并做全局配置
 import axios from "axios";
-axios.defaults.baseURL = `http://localhost:9999`;
+// axios.defaults.baseURL = `http://localhost:9999`;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
 
 class App extends React.Component{

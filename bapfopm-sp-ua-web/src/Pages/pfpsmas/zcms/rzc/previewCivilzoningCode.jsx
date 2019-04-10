@@ -14,8 +14,8 @@ import FreeScrollBar from 'react-free-scrollbar';
 import { Table, Button, Select, Upload, Icon, Popconfirm, Row, Col } from 'antd';
 import { Navbar, Hr } from "../../../../Components/index";
 
-import { clearData, placeData, changeTypeConversion, getAssigningCode, getSubZoning, getSuperiorZoningCode, openNotificationWithIcon } from "../../../../asset/pfpsmas/zcms/js/common";
-import { getSelectCAZ } from "../../../../Service/pfpsmas/zcms/server";
+import { clearData, placeData, openNotificationWithIcon } from "../../../../asset/pfpsmas/zcms/js/common";
+import { getSelectCAZ, getZoningCompareAffair, getDownLoadCAZ } from "../../../../Service/pfpsmas/zcms/server";
 
 class PreviewCivilzoningCode extends React.Component {
     constructor(props) {
@@ -38,6 +38,10 @@ class PreviewCivilzoningCode extends React.Component {
                 "township": "",
                 "village": ""
             },
+
+            selectedAssigningCode: "", //   目标级次代码
+            selectedZoningCode: "", //  目标民政区划代码
+            selectedZoningName: "", //  目标民政区划名称
         }
     }
 
@@ -64,6 +68,13 @@ class PreviewCivilzoningCode extends React.Component {
         if (e) {
             let selectedAssigningCode = e.target.dataset.assigningcode;
             let selectedZoningCode = e.target.dataset.zoningcode;
+            let selectedZoningName = e.target.dataset.zoningname.replace(/(\s\w+)/,"");
+
+            this.setState({
+                selectedZoningCode: selectedZoningCode,
+                selectedZoningName: selectedZoningName,
+            })
+
             switch (selectedZoningCode) {
                 case "110000000000000":
                     obj.affairCode = "110100000000000";
@@ -107,6 +118,24 @@ class PreviewCivilzoningCode extends React.Component {
     }
 
     /**
+     * 民政区划与行政区划总体对比
+     */
+    handleAxiosZoningCompareAffair(){
+        this.axiosZoningCompareAffair()
+    }
+
+    /**
+     * 导出民政区划
+     */
+    handleDownLoadCAZ(type){
+        let { selectedZoningCode } = this.state;
+        let postData = {};
+        postData.superiorZoningCode = selectedZoningCode;
+        postData.type = type;
+        getDownLoadCAZ(postData);
+    }
+
+    /**
      * 民政区划数据查询接口
      * @param {string} superiorZoningCode 民政区划代码
      */
@@ -122,6 +151,18 @@ class PreviewCivilzoningCode extends React.Component {
             })
             console.log(codeRankPreview);
         } else {
+            openNotificationWithIcon("error", res.rtnMessage);
+        }
+    }
+
+    /**
+     * 民政区划与行政区划总体对比
+     */
+    async axiosZoningCompareAffair(){
+        let res = await getZoningCompareAffair();
+        if(res.rtnCode == "000000"){
+            openNotificationWithIcon("success", res.rtnMessage);
+        }else{
             openNotificationWithIcon("error", res.rtnMessage);
         }
     }
@@ -176,7 +217,7 @@ class PreviewCivilzoningCode extends React.Component {
         return (
             <div className="outer-box">
                 <div className="previewCivilzoningCode">
-                    <FreeScrollBar autohide="true">
+                    {/* <FreeScrollBar autohide="true"> */}
                         <Navbar data={navbar}></Navbar>
 
                         <div className="preview-container">
@@ -187,8 +228,34 @@ class PreviewCivilzoningCode extends React.Component {
                             </div>
 
                             <Hr />
+
+                            <div className="preview-container-center">
+                                <Row type="flex" justify="center">
+                                    <Col className="info-span" span={4}>民政区划代码:</Col>
+                                    <Col className="info-span info-span-small" span={4}>{this.state.selectedZoningCode}</Col>
+                                    <Col className="info-span" span={4}>民政区划名称:</Col>
+                                    <Col className="info-span info-span-small" span={4}>{this.state.selectedZoningName}</Col>
+                                </Row>
+                            </div>
+
+                            <Hr />
+
+                            <div className="preview-container-bottom">
+                                <Row type="flex" justify="center">
+                                    <Col span={4}>
+                                        <Button type="primary" size="large" onClick={this.handleAxiosZoningCompareAffair.bind(this)}>生成民政对比</Button>
+                                    </Col>
+                                    <Col span={4}>
+                                        <Button type="primary" size="large" onClick={this.handleDownLoadCAZ.bind(this, "pdf")}>导出PDF</Button>
+                                    </Col>
+                                    <Col span={4}>
+                                        <Button type="primary" size="large" onClick={this.handleDownLoadCAZ.bind(this, "excel")}>导出Excel</Button>
+                                    </Col>
+                                </Row>
+                            </div>
+
                         </div>
-                    </FreeScrollBar>
+                    {/* </FreeScrollBar> */}
                 </div>
             </div>
         )

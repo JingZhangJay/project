@@ -34,6 +34,20 @@
     text-align: left;
 }
 
-.previewCivilzoningCode .preview-container .preview-container-footer{
+.previewCivilzoningCode .preview-container .preview-container-center .info-span{
+    font-size: 16px;
+    font-weight: bolder;
+    color: #fff;
+    display: inline-block;
+    height: 32px;
+    line-height: 32px;
+}
+
+.previewCivilzoningCode .preview-container .preview-container-center .info-span-small{
+    font-weight: inherit;
+    font-size: 14px;
+}
+
+.previewCivilzoningCode .preview-container .preview-container-bottom :global(.ant-col-4){
     text-align: center;
 }

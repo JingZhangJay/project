@@ -693,6 +693,27 @@ export let getSelectCAZ = async (params) => {
     return response.data
 }
 
+/**
+ * 民政区划与行政区划总体对比
+ */
+export let getZoningCompareAffair = async () => {
+    let response = await axios({
+        url: 'zcmsapi1/civilAffair/zoningCompareAffair',
+        method: 'get',
+    })
+    return response.data
+}
+
+/**
+ * 导出民政区划
+ * @param {string} superiorZoningCode 区划代码
+ * @param {string} type 导出类型
+ */
+export let getDownLoadCAZ = (params) => {
+    var url = 'zcmsapi1/civilAffair/downLoadCAZ';
+    window.location.href = url + '?superiorZoningCode=' + params.superiorZoningCode + '&type=' + params.type;
+}
+
 //  rzc 
 //  民政数据收集
 //  historicalTrace
