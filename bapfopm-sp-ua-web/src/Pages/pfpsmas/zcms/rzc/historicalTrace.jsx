@@ -3,6 +3,8 @@ import React from 'react';
 //  自定义滚动条
 import FreeScrollBar from 'react-free-scrollbar';
 
+import circle from '../../../../asset/pfpsmas/zcms/img/circle3.png'
+
 // 引入 ECharts 主模块
 import echarts from 'echarts/lib/echarts';
 // 引入关系图
@@ -14,7 +16,7 @@ import 'echarts/lib/component/title';
 import { Table, Button, Input, DatePicker, Row, Col } from 'antd';
 import { Navbar, Hr } from "../../../../Components/index";
 
-import { openNotificationWithIcon } from "../../../../asset/pfpsmas/zcms/js/common";
+import { openNotificationWithIcon, changeTypeConversion } from "../../../../asset/pfpsmas/zcms/js/common";
 import { getHistoryDate } from "../../../../Service/pfpsmas/zcms/server";
 
 import './historicalTrace.css';
@@ -25,7 +27,7 @@ class HistoricalTrace extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            queryZoningCode: "230111010204000",
+            queryZoningCode: "230112010003000",
             date: "20000101",
             rawData: [],
             historyData: [], //  追溯结果展示
@@ -103,11 +105,12 @@ class HistoricalTrace extends React.Component {
 
         //  连线 links
         //  先获得data的版本数组
-        for (var i = 0; i < data.length; i++) {
-            versionArr.unshift(data[i].version);
-            versionArr = [...new Set(versionArr)];
-            versionArr = versionArr.reverse();
-        }
+        data.forEach(item => {
+            versionArr.unshift(item.version);
+        })
+
+        versionArr = Array.from(new Set(versionArr));
+        versionArr = versionArr.reverse();
 
         //  从最早的区划往后推，只要uniqueKey匹配到了下一个版本的区划，便停止遍历 
         obj = {};
@@ -120,7 +123,7 @@ class HistoricalTrace extends React.Component {
                     if (k != j) {
                         obj.source = k;
                         obj.target = j;
-                        lableObj.text = typeCodeConversion(data[j].changeType);
+                        lableObj.text = changeTypeConversion(data[j].changeType);
                         obj.label = lableObj;
                         links.push(obj);
                         obj = {};
@@ -144,8 +147,8 @@ class HistoricalTrace extends React.Component {
             series: [{
                 type: 'graph',
                 layout: 'none',
-                // symbol: 'image://src/img/circle3.png',
-                symbol: 'circle',
+                symbol: `image://${circle}`,
+                // symbol: 'circle',
                 symbolSize: 50,
                 focusNodeAdjacency: true,
                 yAxis: {
@@ -165,7 +168,7 @@ class HistoricalTrace extends React.Component {
                         }
 
                         if (params.dataType == 'edge') {
-                            return params.data.label.text ? '<div><p>' + params.data.label.text + '</p></div>' : '';
+                            return params.data.label.text ? '<div><p>' + params.data.label.text + '</p></div>' : '变更';
                         }
                     }
                 },
@@ -214,7 +217,7 @@ class HistoricalTrace extends React.Component {
             if (params.data.version == maxV) {
                 obj.currentCode = data[currentIndex].zoningCode;
                 obj.currentName = data[currentIndex].zoningName;
-                obj.changeType = data[currentIndex].changeType;
+                obj.changeType = changeTypeConversion(data[currentIndex].changeType) || "变更";
                 obj.periodStart = data[currentIndex].periodStart;
                 historyData.push(obj);
                 obj = {};
@@ -226,7 +229,7 @@ class HistoricalTrace extends React.Component {
                             originalIndex = links[i].source;
                             obj.currentCode = data[currentIndex].zoningCode;
                             obj.currentName = data[currentIndex].zoningName;
-                            obj.changeType = data[currentIndex].changeType;
+                            obj.changeType = changeTypeConversion(data[currentIndex].changeType) || "变更";
                             obj.periodStart = data[currentIndex].periodStart;
                             obj.originalCode = data[originalIndex].zoningCode;
                             obj.originalName = data[originalIndex].zoningName;
@@ -242,7 +245,7 @@ class HistoricalTrace extends React.Component {
                 historyData: historyData
             })
 
-            console.log(this.state.historyData);
+            console.log(historyData, this.state.historyData);
         })
     }
 
@@ -300,7 +303,7 @@ class HistoricalTrace extends React.Component {
         return (
             <div className="outer-box">
                 <div className="historicalTrace">
-                    <FreeScrollBar autohide="true">
+                    {/* <FreeScrollBar autohide="true"> */}
                         <div className="historicalTrace-container">
                             <div className="historicalTrace-container-top">
                                 <Row>
@@ -339,7 +342,7 @@ class HistoricalTrace extends React.Component {
                             </div>
                         </div>
 
-                    </FreeScrollBar>
+                    {/* </FreeScrollBar> */}
                 </div>
             </div>
         )
