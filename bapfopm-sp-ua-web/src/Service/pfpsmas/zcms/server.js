@@ -676,6 +676,10 @@ export let getImportDate = async (params) => {
     return response.data
 }
 
+//  rzc 
+//  民政数据预览
+//  previewCivilzoningCode
+
 /**
  * 民政区划数据查询接口
  * @param {string} superiorZoningCode 民政区划代码
@@ -683,6 +687,24 @@ export let getImportDate = async (params) => {
 export let getSelectCAZ = async (params) => {
     let response = await axios({
         url: 'zcmsapi1/civilAffair/selectCAZ',
+        method: 'get',
+        params: params
+    })
+    return response.data
+}
+
+//  rzc 
+//  民政数据收集
+//  historicalTrace
+
+/**
+ * 历史轨迹数据获取接口
+ * @param {string} zoningCode 区划代码
+ * @param {string} timeInterval 时间间隔(所选时间到最近一次发布)   6位数
+ */
+export let getHistoryDate = async (params) => {
+    let response = await axios({
+        url: 'zcmsapi1/queryZoningData/query/historyDate',
         method: 'get',
         params: params
     })

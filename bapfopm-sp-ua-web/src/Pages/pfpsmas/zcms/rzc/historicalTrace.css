@@ -1,0 +1,17 @@
+.historicalTrace{
+    overflow: auto;
+    height: 800px;
+}
+
+.historicalTrace-container-top  .info-span{
+    font-size: 16px;
+    font-weight: bolder;
+    color: #fff;
+    display: inline-block;
+    height: 32px;
+    line-height: 32px;
+}
+
+.historicalTrace-container-center{
+    padding: 15px;
+}

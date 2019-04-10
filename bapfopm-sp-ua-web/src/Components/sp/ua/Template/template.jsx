@@ -38,6 +38,7 @@ import UploadApprovalFile from "../../../../Pages/pfpsmas/zcms/rzc/uploadApprova
 import ApprovalDocumentManage from "../../../../Pages/pfpsmas/zcms/rzc/approvalDocumentManage";
 import ImportCivilzoningCode from "../../../../Pages/pfpsmas/zcms/rzc/importCivilzoningCode";
 import PreviewCivilzoningCode from "../../../../Pages/pfpsmas/zcms/rzc/previewCivilzoningCode";
+import HistoricalTrace from "../../../../Pages/pfpsmas/zcms/rzc/historicalTrace";
 
 
 require('./template.css')
@@ -90,6 +91,7 @@ export const Template = (props) => (
                         <Route path='/about/pfpsmas/zcms/approvalDocumentManage' component={ApprovalDocumentManage} />
                         <Route path='/about/pfpsmas/zcms/importCivilzoningCode' component={ImportCivilzoningCode} />
                         <Route path='/about/pfpsmas/zcms/previewCivilzoningCode' component={PreviewCivilzoningCode} />
+                        <Route path='/about/pfpsmas/zcms/historicalTrace' component={HistoricalTrace} />
                         
                         <Route path='/about/wpdmp/dmp/apilist' component={ApiList}/>
                         <Route path='/about/wpdmp/dmp/apilist/apiDetail' component={ApiDetail}/>
