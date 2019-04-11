@@ -51,55 +51,6 @@
   transition: all 0.3s ease;
 }
 
-.ant-layout-aside .ant-layout-sider>.ant-menu {
-  margin-bottom: 20px;
-}
-
-.ant-layout-aside .ant-layout-sider .ant-menu>.ant-menu-submenu {
-  margin: 16px 0;
-}
-
-.ant-layout-aside .ant-layout-sider .ant-menu>.ant-menu-submenu .nav-text {
-  vertical-align: baseline;
-  display: inline-block;
-}
-
-.ant-layout-aside .ant-layout-sider .ant-menu>.ant-menu-submenu>.anticon {
-  transition: font-size .3s;
-}
-
-.ant-layout-aside-collapse .ant-layout-sider .ant-menu>.ant-menu-submenu {
-  transition: all 0s ease;
-}
-
-.ant-layout-aside-collapse .ant-layout-sider .ant-menu>.ant-menu-submenu>.anticon {
-  font-size: 16px;
-  display: inline-block;
-}
-
-.ant-layout-aside-collapse .ant-layout-sider .ant-menu>.ant-menu-submenu .nav-text {
-  display: none;
-}
-
-.ant-layout-aside-collapse .ant-layout-sider .ant-menu>.ant-menu-submenu:hover {
-  background: #2db7f5;
-  color: #fff;
-  transition: all 0s ease;
-}
-
-.ant-layout-aside-collapse .ant-layout-sider .ant-menu>.ant-menu-submenu:hover .nav-text {
-  display: inline-block;
-  vertical-align: top;
-  background: #2db7f5;
-  color: #fff;
-  padding-right: 16px;
-  border-radius: 0 5px 5px 0;
-}
-
-.ant-layout-aside-collapse .ant-layout-sider .ant-menu>.ant-menu-submenu:hover .nav-text>a{
-  color: inherit;
-}
-
 /* 实际使用中需要改成 position: fixed */
 .ant-layout-aside .ant-aside-action {
   height: 42px;

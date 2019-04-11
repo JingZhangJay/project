@@ -32,62 +32,60 @@ class Sider extends React.Component {
 
     var data = await this.props.handle();
     var listData = data.dataObject;
-    console.log('---', listData);
-    var arrData = [];
+    // console.log('---', listData);
 
-    listData.forEach(item => {
-      var obj = {};
-      for (var key in item) {
-        if (key == "requestUrl") {
-          obj[key] = item[key] ? item[key] : 'javascript:;';
-        } else {
-          obj[key] = item[key];
+    let temp = {};
+    let tree = {};
+    for(let i in listData){
+      temp[listData[i].authorityId] = listData[i];
+    }
+    for(let i in temp){
+      if(temp[i].parent && temp[temp[i].parent]) {
+        if(!temp[temp[i].parent].children) {
+          temp[temp[i].parent].children = new Object();
         }
+        temp[temp[i].parent].children[temp[i].authorityId] = temp[i];
+      } else {
+        tree[temp[i].authorityId] =  temp[i];
       }
+    }
 
-      if (item.parent == 0) {
-        obj.subMenu = [];
-        arrData.push(obj);
-
-        listData.forEach(el => {
-          if (el.parent == item.authorityId) {
-            var obj = {};
-            for (var key in el) {
-              if (key == "requestUrl") {
-                obj[key] = el[key] ? el[key] : 'javascript:;';
-              } else {
-                obj[key] = el[key];
-              }
-            }
-            arrData[arrData.length - 1].subMenu.push(obj);
-          }
-        })
-      }
-    })
-    console.log('菜单数据=========', arrData)
-    this.setState({ menuData: arrData });
+    this.setState({ menuData: tree });
   }
 
   render() {
-    const loopMenu = data => data.map(item => {
-      return (
-        <SubMenu key={item.authorityId}
-          title={<span><Icon type="appstore" /><span className="nav-text">
-            <Link to={{ pathname: `/about${item.requestUrl}`, state: { systemId: item.systemId } }}>
-              {item.authorityName}
-            </Link>
-          </span></span>}
-        >
-          {loopSubMenu(item.subMenu)}
-        </SubMenu>)
+    const loopMenu = data => Object.keys(data).map(item => {
+        if(data[item].children && data[item].children.length != 0){
+          return (
+            <SubMenu key={data[item].authorityId}
+              title={<span><Icon type="appstore" className={data[item].parent == 0 ? "display-inline-block" : "display-none"}/><span className="nav-text">
+                {/* <Link to={{ pathname: `/about${data[item].requestUrl}`, state: { systemId: data[item].systemId } }}>
+                  {data[item].authorityName}
+                </Link> */}
+                {data[item].authorityName}
+              </span></span>}
+            >
+              {loopMenu(data[item].children)}
+            </SubMenu>)
+        }else{
+          return (
+            <Menu.Item key={data[item].authorityId}>
+              <span><Icon type="appstore" className={data[item].parent == 0 ? "display-inline-block" : "display-none"}/><span className="nav-text">
+                <Link to={{ pathname: `/about${data[item].requestUrl}`, state: { systemId: data[item].systemId } }}>
+                  {data[item].authorityName}
+                </Link>
+              </span></span>
+            </Menu.Item>
+          )
+        }
     })
 
-    const loopSubMenu = data => data.map(item => {
+    const loopSubMenu = data => Object.keys(data).map(item => {
       return (
-        <Menu.Item key={item.authorityId}>
+        <Menu.Item key={data[item].authorityId}>
           <span className="nav-text">
-            <Link to={{ pathname: `/about${item.requestUrl}`, state: { systemId: item.systemId } }}>
-              {item.authorityName}
+            <Link to={{ pathname: `/about${data[item].requestUrl}`, state: { systemId: data[item].systemId } }}>
+              {data[item].authorityName}
             </Link>
           </span>
         </Menu.Item>
@@ -96,11 +94,9 @@ class Sider extends React.Component {
 
     return (
       this.state.menuData ? <div>
-        <Switch onChange={this.changeMode.bind(this)} />
-        {/* <span className="ant-divider" style={{ margin: '0 1em' }} /> */}
-        {/* <Switch onChange={this.changeTheme.bind(this)} /> Theme */}
-        <br />
-        <br />
+        {/* <Switch onChange={this.changeMode.bind(this)} /> */}
+        {/* <br />
+        <br /> */}
         <Menu
           style={{ width: `100%` }}
           mode={this.state.mode}

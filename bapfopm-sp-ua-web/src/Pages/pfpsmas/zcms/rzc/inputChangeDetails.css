@@ -19,7 +19,7 @@
     height: 180px;
 }
 
-.inputchangedetails .container .container-top :global(.ant-row-flex .ant-col-3){
+.inputchangedetails .container .container-top :global(.ant-row-flex .ant-col-4){
     background: url("../../../../asset/sp/ua/img/portal/1/2.png") repeat;
     height: inherit;
     overflow: auto;
@@ -149,16 +149,26 @@
 .outer-box :global(table .ant-table-thead > tr > th),
 table .ant-table-thead > tr > th{
     background: url("../../../../asset/sp/ua/img/portal/1/3.png") repeat;
+    text-align: center;
 }
 
 .outer-box :global(table .ant-table-tbody > tr > td),
 table .ant-table-tbody > tr > td{
     background: url("../../../../asset/sp/ua/img/portal/1/2.png") repeat;
+    text-align: center;
 }
 
 .inputchangedetails :global(.container:after) {
     content: "";
     display: block;
     padding: 10%;
+}
+
+.inputchangedetails :global(table .ant-table-thead > tr > th, table .ant-table-tbody > tr > td){
+    text-align: center;
+}
+
+.move-table :global(.ant-modal){
+    width: 50% !important;
 }
 

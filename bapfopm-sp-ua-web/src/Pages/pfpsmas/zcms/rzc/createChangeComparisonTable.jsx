@@ -11,7 +11,7 @@ import './createChangeComparisonTable.css'
 import { Table, Button, Modal, Input } from 'antd';
 import { Navbar, Hr } from "../../../../Components/index";
 
-import {openNotificationWithIcon} from "../../../../asset/pfpsmas/zcms/js/common";
+import {openNotificationWithIcon, ownTimeFormat} from "../../../../asset/pfpsmas/zcms/js/common";
 import { getZoningChangeRequestList, getAddZoningChangeRequest, getFindWritableZCCRequests, getDetailedConfirmationVerification } from "../../../../Service/pfpsmas/zcms/server";
 
 class CreateChangeComparisonTable extends React.Component {
@@ -87,6 +87,7 @@ class CreateChangeComparisonTable extends React.Component {
         this.setState({
             requestSeq: record.seq
         })
+        sessionStorage.setItem("requestSeq", record.seq)
         this.axiosDetailedConfirmationVerification(postData);
     }
 
@@ -108,9 +109,19 @@ class CreateChangeComparisonTable extends React.Component {
     async axiosZoningChangeRequestList() {
         let res = await getZoningChangeRequestList();
         console.log("数据", res);
+        let data = res.responseData.dataList;
+        data.forEach(item => {
+            for(var key in item){
+                if(key == "createDate"){
+                    item[key] = ownTimeFormat(item[key]);
+                }
+            }
+        })
+        console.log(data)
+
         if (res.rtnCode == "000000") {
             this.setState({
-                requestList: res.responseData.dataList
+                requestList: data
             })
         }
     }
@@ -235,17 +246,17 @@ class CreateChangeComparisonTable extends React.Component {
         },
         {
             name: "录入变更明细",
-            routerPath: "/about/pfpsmas/zcms/inputChangeDetails",
+            routerPath: "/about/pfpsmas/zcms/createChangeComparisonTable",
             imgPath: black
         },
         {
             name: "变更明细预览",
-            routerPath: "/about/pfpsmas/zcms/previewChangeDetails",
+            routerPath: "/about/pfpsmas/zcms/createChangeComparisonTable",
             imgPath: black
         }];
 
         return (
-            <div>
+            <div className="createChangeComparisonTable">
                 <Navbar data={navbar}></Navbar>
 
                 <div className="container"> 
@@ -259,8 +270,10 @@ class CreateChangeComparisonTable extends React.Component {
                     </div>
                 </div>
                 
-                <Modal title="添加申请单" visible={this.state.addRequestToggle}
-                    okText="提交" cancelText="返回"
+                <Modal title="添加申请单" 
+                    visible={this.state.addRequestToggle}
+                    okText="提交" 
+                    maskClosable={false}
                     onOk={this.handleSubmit.bind(this)}
                     onCancel={this.handleCancel.bind(this)}
                 >

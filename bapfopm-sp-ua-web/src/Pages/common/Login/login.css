@@ -58,3 +58,7 @@
     color: #fff;
     font-size: 14px;
 }
+
+body :global(.ant-form .ID-code .ant-form-item-label label){
+    color: #000000;
+}

@@ -27,6 +27,7 @@ import ApplyApiCheck from "./Pages/wpdmp/dmp/ApplyApiCheck/applyApiCheck";
 import {ApplyApiList} from "./Pages/wpdmp/dmp/ApplyApiList/applyApiList";
 import {ApplyApi} from "./Pages/wpdmp/dmp/ApplyApi/applyApi";
 import {ReviewApi} from "./Pages/wpdmp/dmp/ReviewApi/reviewApi";
+import {BlackListRevise} from "./Pages/wpdmp/dmp/BlackListRevise/blackListRevise";
 
 //  sp-ua
 import Approval from "./Pages/sp/ua/Approval/approval";
@@ -44,10 +45,19 @@ import TimedTask from "./Pages/pfpsmas/zcms/rzc/timedTask";
 import PreviewFormalZoningCode from "./Pages/pfpsmas/zcms/rzc/previewFormalZoningCode";
 import ProvincialVersionControl from "./Pages/pfpsmas/zcms/rzc/provincialVersionControl";
 import ConditionQuery from "./Pages/pfpsmas/zcms/rzc/conditionQuery";
+//批复文件上传 管理
+import UploadApprovalFile from "./Pages/pfpsmas/zcms/rzc/uploadApprovalFile";
+import ApprovalDocumentManage from "./Pages/pfpsmas/zcms/rzc/approvalDocumentManage";
+// 民政区划管理
+import ImportCivilzoningCode from "./Pages/pfpsmas/zcms/rzc/importCivilzoningCode";
+import PreviewCivilzoningCode from "./Pages/pfpsmas/zcms/rzc/previewCivilzoningCode";
+import HistoricalTrace from "./Pages/pfpsmas/zcms/rzc/historicalTrace";
+
 
 //  引入axios
 //  并做全局配置
 import axios from "axios";
+
 axios.defaults.baseURL = `http://localhost:9999`;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
 
@@ -91,12 +101,19 @@ ReactDOM.render(
                 <Route path='/about/pfpsmas/zcms/previewFormalZoningCode' component={PreviewFormalZoningCode} />
                 <Route path='/about/pfpsmas/zcms/provincialVersionControl' component={ProvincialVersionControl} />
                 <Route path='/about/pfpsmas/zcms/conditionQuery' component={ConditionQuery} />
+                <Route path='/about/pfpsmas/zcms/uploadApprovalFile' component={UploadApprovalFile} />
+                <Route path='/about/pfpsmas/zcms/approvalDocumentManage' component={ApprovalDocumentManage} />
+                <Route path='/about/pfpsmas/zcms/importCivilzoningCode' component={ImportCivilzoningCode} />
+                <Route path='/about/pfpsmas/zcms/previewCivilzoningCode' component={PreviewCivilzoningCode} />
+                <Route path='/about/pfpsmas/zcms/historicalTrace' component={HistoricalTrace} />
+                
                 
                 <Route path='/about/wpdmp/dmp/apilist' component={ApiList}>
                     <Route path='/about/wpdmp/dmp/apilist/apiDetail' component={ApiDetail}/>
                     <Route path='/about/wpdmp/dmp/apilist/apiDetailChange' component={ApiDetailChange}/>
                     <Route path='/about/wpdmp/dmp/apilist/blackList' component={BlackWhiteList}/>
                     <Route path='/about/wpdmp/dmp/apilist/blackList/blackDetail' component={BlackWhiteDetail}/>
+                    <Route path='/about/wpdmp/dmp/apilist/blackList/blackListRevise' component={BlackListRevise}/>
                 </Route>
                 <Route path='/about/wpdmp/dmp/applyCHeck' component={ApplyApiCheck}>
                     <Route path='/about/wpdmp/dmp/applyCHeck/apiList' component={ApplyApiList}/>

@@ -241,6 +241,19 @@ export let getCheckPreviewZoning = async (params) => {
 }
 
 /**
+ * 通过申请单获取全部未审核明细
+ * @param {string} seqStr 申请单序号
+ */
+export let getDCVerification = async (params) => {
+    let response = await axios({
+        url: 'zcmsapi1/zoningChangeManager/dCVerification',
+        method: 'get',
+        params: params
+    })
+    return response.data
+}
+
+/**
  * 根据行政区划查询当月变更明细
  * @param {string} zoningCode 区划代码
  */
@@ -545,6 +558,174 @@ export let getTraceabilityOfChangeDetails = async (params) => {
 export let getChangeDetailedReproduction = async (params) => {
     let response = await axios({
         url: 'zcmsapi1/zoningChangeManager/ChangeDetailedReproduction',
+        method: 'get',
+        params: params
+    })
+    return response.data
+}
+
+//  rzc 
+//  批复文件上传
+//  uploadApprovalFile
+
+/**
+ * 批复文件上传接口
+ * @param {string} formId 上传文件id
+ */
+export let getUpload = async (params) => {
+    let instance = axios.create();
+    let response = await instance({
+        url: 'zcmsapi1/zoning/document/upload',
+        method: 'post',
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        },
+        data: params
+    })
+    return response.data
+}
+
+/**
+ * 批复文件列表展示已经上传的文档接口
+ * @param {number} pageSize 每页条数
+ * @param {number} pageIndex 当前页码
+ * @param {string} start 创建时间起点
+ * @param {string} end 创建时间终点
+ */
+export let getList = async (params) => {
+    let response = await axios({
+        url: 'zcmsapi1/zoning/document/list',
+        method: 'get',
+        params: params
+    })
+    return response.data
+}
+
+/**
+ * 批复文件删除接口
+ * @param {number} id 文档id
+ */
+export let getDelete = async (params) => {
+    let response = await axios({
+        url: 'zcmsapi1/zoning/document/delete',
+        method: 'get',
+        params: params
+    })
+    return response.data
+}
+
+//  rzc 
+//  民政数据收集
+//  importCivilzoningCode
+
+/**
+ * 导入民政区划 上传文件查询接口
+ * @param {number} pageSize 每页显示条数
+ * @param {number} pageIndex 当前页码
+ */
+export let getSelectCivilAffairZip = async (params) => {
+    let response = await axios({
+        url: 'zcmsapi1/civilAffair/selectCivilAffairZip',
+        method: 'get',
+        params: params
+    })
+    return response.data
+}
+
+/**
+ * 导入民政区划 文件上传接口
+ * @param {string} formId 表单ID
+ */
+export let getZipFlie = async (params) => {
+    let instance = axios.create();
+    let response = await instance({
+        url: 'zcmsapi1/civilAffair/upload/zipFlie',
+        method: 'post',
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        },
+        data: params
+    })
+    return response.data
+}
+
+/**
+ * 删除民政区划文件
+ * @param {number} zipXh 文件序号
+ */
+export let getDeleteCAZCodeByzipXh = async (params) => {
+    let response = await axios({
+        url: 'zcmsapi1/civilAffair/deleteCAZCodeByzipXh',
+        method: 'get',
+        params: params
+    })
+    return response.data
+}
+
+/**
+ * 文件导入接口
+ * @param {number} zipXh  文件序号
+ * @param {string} filePath  文件路径
+ */
+export let getImportDate = async (params) => {
+    let response = await axios({
+        url: 'zcmsapi1/civilAffair/importDate',
+        method: 'post',
+        params: params
+    })
+    return response.data
+}
+
+//  rzc 
+//  民政数据预览
+//  previewCivilzoningCode
+
+/**
+ * 民政区划数据查询接口
+ * @param {string} superiorZoningCode 民政区划代码
+ */
+export let getSelectCAZ = async (params) => {
+    let response = await axios({
+        url: 'zcmsapi1/civilAffair/selectCAZ',
+        method: 'get',
+        params: params
+    })
+    return response.data
+}
+
+/**
+ * 民政区划与行政区划总体对比
+ */
+export let getZoningCompareAffair = async () => {
+    let response = await axios({
+        url: 'zcmsapi1/civilAffair/zoningCompareAffair',
+        method: 'get',
+    })
+    return response.data
+}
+
+/**
+ * 导出民政区划
+ * @param {string} superiorZoningCode 区划代码
+ * @param {string} type 导出类型
+ */
+export let getDownLoadCAZ = (params) => {
+    var url = 'zcmsapi1/civilAffair/downLoadCAZ';
+    window.location.href = url + '?superiorZoningCode=' + params.superiorZoningCode + '&type=' + params.type;
+}
+
+//  rzc 
+//  民政数据收集
+//  historicalTrace
+
+/**
+ * 历史轨迹数据获取接口
+ * @param {string} zoningCode 区划代码
+ * @param {string} timeInterval 时间间隔(所选时间到最近一次发布)   6位数
+ */
+export let getHistoryDate = async (params) => {
+    let response = await axios({
+        url: 'zcmsapi1/queryZoningData/query/historyDate',
         method: 'get',
         params: params
     })

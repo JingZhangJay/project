@@ -19,6 +19,9 @@
     background: #3ea7d4;
 }
 
+.text-algin-center{
+    text-align: center;
+}
 
 .margin-top-10{
     margin-top: 10px;
@@ -26,4 +29,16 @@
 
 .background-color-red{
     background-color: #f00;
+}
+
+.display-none{
+    display: none;
+}
+
+.display-inline-block{
+    display: inline-block;
+}
+
+.font-color-fff{
+    color: #fff !important;
 }

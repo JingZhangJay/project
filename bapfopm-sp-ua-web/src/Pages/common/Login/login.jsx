@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import { hashHistory, Link } from 'react-router';
 
-import { Form, Select, Input, Button, message } from 'antd';
+import { Form, Select, Input, Button, message,Modal } from 'antd';
 import { getLoginData, getVerificationCode } from '../../../Service/sp/ua/server';
 
 require('../../../asset/sp/ua/css/icon.css');
@@ -21,7 +21,8 @@ class Login extends React.Component {
         super(prop);
         this.state = {
             codeNum: '',
-            loginType: 'userName'
+            loginType: 'userName',
+            visible: false
         }
 
     }
@@ -36,6 +37,25 @@ class Login extends React.Component {
     handleReset(e) {
         e.preventDefault();
         this.props.form.resetFields();
+    }
+
+    //身份证弹出框显示隐藏
+    showModal() {
+        this.setState({ visible: true });
+    }
+
+    hideModal() {
+        this.setState({ visible: false });
+    }
+    IDhandleSubmit(){
+        const idReg = /^(\d{6})(\d{4})(\d{2})(\d{2})(\d{3})([0-9]|X)$/;
+        let ID=this.props.form.getFieldsValue().IDCodeProps;
+        if(idReg.test(ID)){
+            this.hideModal();
+            hashHistory.push('/home');
+        }else{
+            message.error('身份证号填写有误,请核对后填写完整!')
+        }
     }
 
     /**
@@ -65,7 +85,7 @@ class Login extends React.Component {
         console.log('------------------登录success', data);
         if (data.status == 200) {
             message.success('登录成功');
-            hashHistory.push('/home');
+            this.showModal()
         } else {
             this.axiosVerificationCode();
             message.error(data.description)
@@ -83,6 +103,7 @@ class Login extends React.Component {
     componentWillMount() {
         this.axiosVerificationCode();
     }
+
 
     render() {
         const { getFieldProps, getFieldError, isFieldValidating } = this.props.form;
@@ -108,6 +129,12 @@ class Login extends React.Component {
             rules: [{ required: true, message: "请填写手机验证码!" }]
         });
 
+        // const IDCodeProps = getFieldProps("IDCode", {
+        //     rules: [
+        //         { required: true, message: "请输入身份证号" },
+        //         { validator: this.checkIdNumber }
+        //     ]
+        // });
         return (
             <div className="login">
                 <div className="login-container">
@@ -171,11 +198,23 @@ class Login extends React.Component {
                         </Form>
                     </div>
                 </div>
+                <Modal title="登录" visible={this.state.visible} onOk={this.IDhandleSubmit.bind(this)} onCancel={this.hideModal.bind(this)}>
+                    <Form horizontal form={this.props.form}>
+                        <FormItem
+                            {...formItemLayout}
+                            label="身份证号"
+                            className='ID-code'
+                        >
+                            <Input {...getFieldProps('IDCodeProps', {})} type="text" autoComplete="off" />
+                        </FormItem>
+                    </Form>
+                </Modal>
             </div>
         )
     }
 
 }
+
 
 Login = createForm()(Login);
 

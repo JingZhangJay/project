@@ -7,3 +7,105 @@
     width: 100%;
     height: 100%;
 }
+
+.ant-layout-aside .ant-layout-sider>.ant-menu {
+    margin-bottom: 20px;
+  }
+  
+  .ant-layout-aside .ant-layout-sider .ant-menu>.ant-menu-submenu {
+    /* margin: 16px 0; */
+  }
+  
+  .ant-layout-aside .ant-layout-sider .ant-menu>.ant-menu-submenu .nav-text {
+    vertical-align: baseline;
+    display: inline-block;
+  }
+  
+  .ant-layout-aside .ant-layout-sider .ant-menu>.ant-menu-submenu>.anticon {
+    transition: font-size .3s;
+  }
+  
+  .ant-menu-dark.ant-menu-inline .ant-menu-item-selected > span > a{
+    color: #fff;
+  }
+
+  .ant-menu-root .ant-menu-item > span > .nav-text > a{
+      color: #999;
+  }
+
+  .ant-menu-dark.ant-menu-inline .ant-menu-item-selected{
+    background: #9cf;
+  }
+
+  .ant-layout-aside-collapse .ant-menu-inline-active .ant-menu-item .nav-text,
+  .ant-layout-aside-collapse .ant-menu-inline .ant-menu-item .nav-text,
+  .ant-layout-aside-collapse .ant-menu-vertical .ant-menu-item .nav-text{
+    display: none;
+  }
+
+  .ant-layout-aside-collapse .ant-menu-inline-selected .ant-menu-root > span,
+  .ant-layout-aside-collapse .ant-menu-inline-selected .ant-menu-root .nav-text{
+    display: inline-block;
+  }
+
+  .ant-layout-aside-collapse .ant-menu-vertical .ant-menu-item-active,
+  .ant-layout-aside-collapse .ant-menu-inline .ant-menu-item:hover,
+  .ant-layout-aside-collapse .ant-menu-inline .ant-menu-item:hover > span,
+  .ant-layout-aside-collapse .ant-menu-inline-active .ant-menu-item:hover,
+  .ant-layout-aside-collapse .ant-menu-inline-active .ant-menu-item:hover > span {
+    background: #9cf;
+  }
+
+  .ant-layout-aside-collapse .ant-menu-inline-active .ant-menu-item:hover .nav-text,
+  .ant-layout-aside-collapse .ant-menu-inline .ant-menu-item:hover .nav-text,
+  .ant-layout-aside-collapse .ant-menu-inline-selected .ant-menu-item .nav-text{
+    display: inline-block;
+    vertical-align: top;
+    background: #9cf;
+    color: #fff;
+    padding-right: 16px;
+    border-radius: 0 5px 5px 0;
+  }
+
+  .ant-layout-aside-collapse .ant-layout-sider .ant-menu>.ant-menu-submenu {
+    transition: all 0s ease;
+  }
+  
+  .ant-layout-aside-collapse .ant-layout-sider .ant-menu>.ant-menu-submenu>.anticon {
+    font-size: 16px;
+    display: inline-block;
+  }
+  
+  .ant-layout-aside-collapse .ant-layout-sider .ant-menu>.ant-menu-submenu .nav-text {
+    display: none;
+  }
+
+  .nav-text > a {
+    display: inline-block;
+    width: inherit;
+    height: inherit;
+  }
+  
+  .ant-layout-aside-collapse .ant-layout-sider .ant-menu>.ant-menu-submenu:hover {
+    background: #9cf;
+    color: #fff;
+    transition: all 0s ease;
+  }
+  
+  .ant-layout-aside-collapse .ant-layout-sider .ant-menu>.ant-menu-submenu:hover .nav-text,
+  .ant-layout-aside-collapse .ant-menu-vertical .ant-menu-item-active .nav-text {
+    display: inline-block;
+    vertical-align: top;
+    background: #9cf;
+    color: #fff;
+    padding-right: 16px;
+    border-radius: 0 5px 5px 0;
+  }
+  
+  .ant-layout-aside-collapse .ant-layout-sider .ant-menu>.ant-menu-submenu:hover .nav-text>a{
+    color: inherit;
+  }
+
+  .ant-layout-aside-collapse .ant-menu-vertical .ant-menu-item-vertical .nav-text > a{
+      background: #404040;
+  }

@@ -1,35 +1,6 @@
-.nav {
-    width: 94%;
-    height: 54px;
-    background: none;
-    margin-left: 6%;
-    padding-top: 20px;
-  }
-  
-  .nav .navbar-a {
-    width: 18%;
-    height: 32px;
-    display: inline-block;
-    line-height: 32px;
-    font-size: 16px;
-    color: #ffffff;
+
+
+  .createChangeComparisonTable .container :global(table .ant-table-thead > tr > th),
+  .createChangeComparisonTable .container :global(table .ant-table-tbody > tr > td) {
     text-align: center;
-    margin-left: -10px;
-    position: relative;
-  }
-  
-  .nav .navbar-a span {
-    width: 100%;
-    display: inline-block;
-    z-index: 1;
-    position: absolute;
-    left: 0;
-  }
-  
-  .nav .navbar-a img {
-    width: 100%;
-    height: 32px;
-    display: inline-block;
-    position: absolute;
-    left: 0;
   }
