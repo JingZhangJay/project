@@ -135,7 +135,8 @@ class InputChangeDetails extends React.Component {
         //  如果选择的级次发生变化,则将变更类型重置
         if (selectedAssigningCode != this.state.selectedAssigningCode) {
             this.setState({
-                changeType: "--请选择--"
+                changeType: "--请选择--",
+                iconToggle: false
             })
         }
 

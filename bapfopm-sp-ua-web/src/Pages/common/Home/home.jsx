@@ -175,19 +175,20 @@ class Home extends React.Component {
         let systemDom;
         if (this.state.systemData.length > 0) {
             systemDom = this.state.systemData.map(el => {
-                // if(el.systemId == 7){
-                    // return (
-                    //     <Col span="4">
-                    //     <Card bordered={true} style={{ backgroundColor: 'transparent', borderColor: "#4cb8e9" }}>
-                    //         <p>
-                    //             <img className="system-logo" src={require(`../../../asset/sp/ua/img/portal/${el.systemId}.png`)} alt="" /></p>
-                    //         <p className='system-name'>
-                    //             <a href="/pfpsmas/zcms" className="system-a">{el.systemName}</a>
-                    //         </p>
-                    //     </Card>
-                    // </Col>
-                    // )
-                // }else{
+                if(el.systemId == 8){
+                    return (
+                        <Col span="4">
+                            <Card bordered={true} style={{ backgroundColor: 'transparent', borderColor: "#4cb8e9" }}>
+                                <p>
+                                    <img className="system-logo" src={el.systemId < 11 ? require(`../../../asset/sp/ua/img/portal/${el.systemId}.png`) : require(`../../../asset/sp/ua/img/portal/1.png`)} alt="" /></p>
+                                <p className='system-name'>
+                                    <Link className="system-a" to={{ pathname: "/about/pfpsmas/zcms/zcmsIndex", state: { systemId: el.systemId } }}>{el.systemName}
+                                    </Link>
+                                </p>
+                            </Card>
+                        </Col>
+                    )
+                }else{
                     return (
                         <Col span="4">
                             <Card bordered={true} style={{ backgroundColor: 'transparent', borderColor: "#4cb8e9" }}>
@@ -200,7 +201,7 @@ class Home extends React.Component {
                             </Card>
                         </Col>
                     );
-                // }  
+                }  
             })
         }
 

@@ -42,6 +42,8 @@ class PreviewCivilzoningCode extends React.Component {
             selectedAssigningCode: "", //   目标级次代码
             selectedZoningCode: "", //  目标民政区划代码
             selectedZoningName: "", //  目标民政区划名称
+
+            loading: false,
         }
     }
 
@@ -121,6 +123,9 @@ class PreviewCivilzoningCode extends React.Component {
      * 民政区划与行政区划总体对比
      */
     handleAxiosZoningCompareAffair(){
+        this.setState({
+            loading: true
+        })
         this.axiosZoningCompareAffair()
     }
 
@@ -165,6 +170,9 @@ class PreviewCivilzoningCode extends React.Component {
         }else{
             openNotificationWithIcon("error", res.rtnMessage);
         }
+        this.setState({
+            loading: false
+        })
     }
 
     componentWillMount() {
@@ -243,7 +251,7 @@ class PreviewCivilzoningCode extends React.Component {
                             <div className="preview-container-bottom">
                                 <Row type="flex" justify="center">
                                     <Col span={4}>
-                                        <Button type="primary" size="large" onClick={this.handleAxiosZoningCompareAffair.bind(this)}>生成民政对比</Button>
+                                        <Button type="primary" size="large" loading={this.state.loading} onClick={this.handleAxiosZoningCompareAffair.bind(this)}>生成民政对比</Button>
                                     </Col>
                                     <Col span={4}>
                                         <Button type="primary" size="large" onClick={this.handleDownLoadCAZ.bind(this, "pdf")}>导出PDF</Button>

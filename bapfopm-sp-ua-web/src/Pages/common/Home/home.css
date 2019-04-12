@@ -1,5 +1,5 @@
 /*//媒体查询*/
-@media(min-width:1200px) and (max-width:1400px){
+@media(min-width:1200px) and (max-width:1536px){
   .main .home-container {
     width: 100%;
     height: 100%;

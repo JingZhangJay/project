@@ -26,6 +26,7 @@ import {ApplyApi} from "../../../../Pages/wpdmp/dmp/ApplyApi/applyApi";
 import {ReviewApi} from "../../../../Pages/wpdmp/dmp/ReviewApi/reviewApi";
 
 //  pfpsmas-zcms
+import ZcmsIndex from "../../../../Pages/pfpsmas/zcms/rzc/zcmsIndex";
 import CreateChangeComparisonTable from "../../../../Pages/pfpsmas/zcms/rzc/createChangeComparisonTable";
 import InputChangeDetails from "../../../../Pages/pfpsmas/zcms/rzc/inputChangeDetails";
 import PreviewChangeDetails from "../../../../Pages/pfpsmas/zcms/rzc/previewChangeDetails";
@@ -79,6 +80,7 @@ export const Template = (props) => (
                         <Route path='/about/test' component={Test} />
                         <Route path='/about/test2' component={Test2} />
 
+                        <Route path='/about/pfpsmas/zcms/zcmsIndex' component={ZcmsIndex} />
                         <Route path='/about/pfpsmas/zcms/createChangeComparisonTable' component={CreateChangeComparisonTable} />
                         <Route path='/about/pfpsmas/zcms/inputChangeDetails' component={InputChangeDetails} />
                         <Route path='/about/pfpsmas/zcms/previewChangeDetails' component={PreviewChangeDetails} />

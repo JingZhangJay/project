@@ -1,6 +1,7 @@
 .layout-bg{
-  /* background: url(../../../asset/sp/ua/img/portal/bg.jpg) no-repeat; */
-  background: url(../../../asset/sp/ua/img/portal/cloth.jpg) repeat;
+  background: url(../../../asset/sp/ua/img/portal/bg.jpg) no-repeat 0 0;
+  /* background: url(../../../asset/sp/ua/img/portal/cloth.jpg) repeat; */
+  background-size: 100% 100%;
 }
 
 .ant-layout-aside {

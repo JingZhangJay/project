@@ -148,7 +148,6 @@ class HistoricalTrace extends React.Component {
                 type: 'graph',
                 layout: 'none',
                 symbol: `image://${circle}`,
-                // symbol: 'circle',
                 symbolSize: 50,
                 focusNodeAdjacency: true,
                 yAxis: {

@@ -731,3 +731,34 @@ export let getHistoryDate = async (params) => {
     })
     return response.data
 }
+
+//  rzc
+//  区划首页展示
+//  zcmsIndex
+
+/**
+ * 变更明细当月实时数据
+ * @param {string} zoningCode 区划代码
+ */
+export let getBgmxRealTimeExcel = async (params) => {
+    let response = await axios({
+        url: 'zcmsapi1/queryZoningData/bgmxRealTimeExcel',
+        method: 'get',
+        params: params
+    })
+    return response.data
+}
+
+/**
+ * 变更明细当月实时数据查询下级
+ * @param {string} zoningCode 区划代码
+ */
+export let getBgmxRealTimeExcelSub = async (params) => {
+    let response = await axios({
+        url: 'zcmsapi1/queryZoningData/bgmxRealTimeExcelSub',
+        method: 'get',
+        params: params
+    })
+    return response.data
+}
+

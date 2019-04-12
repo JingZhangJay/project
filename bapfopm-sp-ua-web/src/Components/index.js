@@ -37,3 +37,9 @@ export {Navbar}
 
 import Hr from "./pfpsmas/zcms/common/Hr/hr"
 export {Hr}
+
+import Pie from "./pfpsmas/zcms/common/Pie/pie"
+export {Pie}
+
+import Bar from "./pfpsmas/zcms/common/Bar/bar"
+export {Bar}

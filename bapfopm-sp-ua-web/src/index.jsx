@@ -36,6 +36,7 @@ import EditUserInfo from "./Pages/sp/ua/EditUserInfo/editUserInfo";
 import CreateAuth from "./Pages/sp/ua/CreateAuth/createAuth";
 
 //  pfpsmas-zcms
+import ZcmsIndex from "./Pages/pfpsmas/zcms/rzc/zcmsIndex";
 import CreateChangeComparisonTable from "./Pages/pfpsmas/zcms/rzc/createChangeComparisonTable";
 import InputChangeDetails from "./Pages/pfpsmas/zcms/rzc/inputChangeDetails";
 import PreviewChangeDetails from "./Pages/pfpsmas/zcms/rzc/previewChangeDetails";
@@ -56,7 +57,7 @@ import HistoricalTrace from "./Pages/pfpsmas/zcms/rzc/historicalTrace";
 //  引入axios
 //  并做全局配置
 import axios from "axios";
-// axios.defaults.baseURL = `http://localhost:9999`;
+axios.defaults.baseURL = `http://localhost:9999`;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
 
 class App extends React.Component{
@@ -82,6 +83,8 @@ ReactDOM.render(
 
             <Route path='/home' component={Home}/>
             <Route path='/about' component={About}>
+
+                {/* 权限 */}
                 <Route path='/about/sp/ua/approval' component={Approval} />
                 <Route path='/about/sp/ua/manage' component={Manage} />
                 <Route path='/about/sp/ua/business' component={Busin} />
@@ -91,6 +94,8 @@ ReactDOM.render(
                 <Route path='/about/test' component={Test} />
                 <Route path='/about/test2' component={Test2} />
 
+                {/* 区划 */}
+                <Route path='/about/pfpsmas/zcms/zcmsIndex' component={ZcmsIndex} />
                 <Route path='/about/pfpsmas/zcms/createChangeComparisonTable' component={CreateChangeComparisonTable} />
                 <Route path='/about/pfpsmas/zcms/inputChangeDetails' component={InputChangeDetails} />
                 <Route path='/about/pfpsmas/zcms/previewChangeDetails' component={PreviewChangeDetails} />
@@ -105,7 +110,7 @@ ReactDOM.render(
                 <Route path='/about/pfpsmas/zcms/previewCivilzoningCode' component={PreviewCivilzoningCode} />
                 <Route path='/about/pfpsmas/zcms/historicalTrace' component={HistoricalTrace} />
                 
-                
+                {/* 全员人口 */}
                 <Route path='/about/wpdmp/dmp/apilist' component={ApiList}>
                     <Route path='/about/wpdmp/dmp/apilist/apiDetail' component={ApiDetail}/>
                     <Route path='/about/wpdmp/dmp/apilist/apiDetailChange' component={ApiDetailChange}/>
