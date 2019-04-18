@@ -66,12 +66,22 @@ class ProvincialVersionControl extends React.Component{
      * 查询版本记录
      */
     async axiosFindVersionRecord(){
+        let {zoningCode} = this.state;
         let res = await getFindVersionRecord();
         console.log(res);
         if(res.rtnCode == "000000"){
             let data = res.responseData;
+            let temp = [];
+            data.forEach(item => {
+                if(item.xzqhdm == zoningCode){
+                    temp.unshift(item);
+                }else{
+                    temp.push(item);
+                }
+            })
+            console.log(temp);
             this.setState({
-                displayVersion: data
+                displayVersion: temp
             })
         }else{
             openNotificationWithIcon("error", res.rtnMessage);
@@ -109,7 +119,12 @@ class ProvincialVersionControl extends React.Component{
             key: 'xzqhmc',
             width: 150
         }, {
-            title: '版本号(版本发布日期)',
+            title: '上次使用版本(版本发布日期)',
+            dataIndex: 'scbbrq',
+            key: 'scbbrq',
+            width: 150
+        }, {
+            title: '目前使用版本(版本发布日期)',
             dataIndex: 'bbfbrq',
             key: 'bbfbrq',
             width: 150
@@ -139,7 +154,11 @@ class ProvincialVersionControl extends React.Component{
                 <div className="container">
 
                     <div className="container-top margin-top-15">
-                        <Table className="provincialVersionControl-table" dataSource={this.state.displayVersion} columns={columns} pagination={{ pageSize: 5 }} />
+                        <Table className="provincialVersionControl-table" 
+                            dataSource={this.state.displayVersion} 
+                            rowClassName={(record, index) => record.xzqhdm === this.state.zoningCode ? "bg-color-green" : ''}
+                            columns={columns} 
+                            pagination={{ pageSize: 5 }} />
                     </div>
 
                     <Hr />

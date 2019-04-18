@@ -52,6 +52,7 @@ import ApprovalDocumentManage from "./Pages/pfpsmas/zcms/rzc/approvalDocumentMan
 import ImportCivilzoningCode from "./Pages/pfpsmas/zcms/rzc/importCivilzoningCode";
 import PreviewCivilzoningCode from "./Pages/pfpsmas/zcms/rzc/previewCivilzoningCode";
 import HistoricalTrace from "./Pages/pfpsmas/zcms/rzc/historicalTrace";
+import PreviewChangeReport from "./Pages/pfpsmas/zcms/rzc/previewChangeReport";
 
 
 //  引入axios
@@ -109,6 +110,7 @@ ReactDOM.render(
                 <Route path='/about/pfpsmas/zcms/importCivilzoningCode' component={ImportCivilzoningCode} />
                 <Route path='/about/pfpsmas/zcms/previewCivilzoningCode' component={PreviewCivilzoningCode} />
                 <Route path='/about/pfpsmas/zcms/historicalTrace' component={HistoricalTrace} />
+                <Route path='/about/pfpsmas/zcms/previewChangeReport' component={PreviewChangeReport} />
                 
                 {/* 全员人口 */}
                 <Route path='/about/wpdmp/dmp/apilist' component={ApiList}>

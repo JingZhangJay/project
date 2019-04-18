@@ -40,6 +40,7 @@
     "axios": "^0.17.1",
     "babel-polyfill": "^6.26.0",
     "echarts": "^4.2.1",
+    "echarts-for-react": "^2.0.15-beta.0",
     "pinkie": "^2.0.4",
     "react-free-scrollbar": "^0.3.2",
     "react-router": "2.3.0",

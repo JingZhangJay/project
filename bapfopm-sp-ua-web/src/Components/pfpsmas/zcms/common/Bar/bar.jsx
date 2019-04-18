@@ -34,27 +34,50 @@ class Bar extends React.Component {
       title: {
         left: "center"
       },
+      backgroundColor: "rgba(0,0,0,0.1)",
       xAxis: {
         type: "category",
-        axisLabel: {
-            show: true,
-            textStyle: {
-              color: "#fff"
-            }
+        splitLine: {
+          show: true,
+          lineStyle: {
+            color: '#387392'
           }
-      },
-      yAxis: {
-        type: "value",
+        },
         axisLabel: {
           show: true,
           textStyle: {
             color: "#fff"
           }
-        }
+        },
+        axisLine: {
+          lineStyle: {
+            color: "#387392",
+          }
+        },
+      },
+      yAxis: {
+        type: "value",
+        splitLine: {  //决定是否显示坐标中网格
+          show: true,
+          lineStyle: {
+            color: '#387392'
+          }
+        },
+        axisLabel: {
+          show: true,
+          textStyle: {
+            color: "#fff"
+          },
+        },
+        axisLine: {
+          lineStyle: {
+            color: "#387392",
+          }
+        },
       },
       axisLine: {
         lineStyle: {
-          color: "fff"
+          color: "#387392"
         }
       },
       grid: {
@@ -71,6 +94,11 @@ class Bar extends React.Component {
         {
           data: data,
           type: "bar",
+          itemStyle:{
+            normal:{
+              color:'#EBFF46'
+            }
+          },
           tooltip: {
             trigger: "axis",
             axisPointer: {

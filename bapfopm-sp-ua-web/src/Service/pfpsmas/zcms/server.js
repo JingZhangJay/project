@@ -184,6 +184,21 @@ export let getZoningMergeSelectTree = async (params) => {
 }
 
 /**
+ * 获取迁移区划数据
+ * @param {string} rootCode    根区划     登录人区划
+ * @param {string} excludeCode  排除区划   用户选择需要变更的原区划
+ * @param {string} zoningCode  区划    用户选择迁移并入的现区划
+ */
+export let getZoningMoveSelectTreeN = async (params) => {
+    let response = await axios({
+        url: 'zcmsapi1/zoningChangeManager/zoningMoveSelectTreeN',
+        method: 'get',
+        params: params
+    })
+    return response.data
+}
+
+/**
  * 提交区划变更对照明细接口
  * @param 存放文件序号,变更组名称 group
  * @param 存放变更明细数据 details

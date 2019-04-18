@@ -13,7 +13,7 @@ import { clearData, placeData, changeTypeConversion, getAssigningCode, getSubZon
 import { getInitPreviewZoningData, getCheckPreviewZoning, getRejectionChangeDetails, getConfirmationChangeDetails, getFindChangeDetails, getDCVerification } from "../../../../Service/pfpsmas/zcms/server";
 
 import { Navbar, Hr } from "../../../../Components/index";
-import { Table, Button, Modal, Input, Checkbox, Select, Row, Col, Tooltip, Tree } from 'antd';
+import { Table, Button, Input, Row, Col, Tooltip, Upload, message, Icon, } from 'antd';
 
 class PreviewChangeDetails extends React.Component {
     constructor(props) {
@@ -46,7 +46,10 @@ class PreviewChangeDetails extends React.Component {
                 "village": ""
             },
 
-            isDisabled: true    //  确认明细按钮禁用状态
+            isDisabled: true,    //  确认明细按钮禁用状态
+
+            fileList: [],   //  批复文件上传列表
+            uploading: false,
         }
     }
 
@@ -86,7 +89,12 @@ class PreviewChangeDetails extends React.Component {
         let postData = {};
         postData.seqStr = requestSeq;
         postData.groupmc = groupmc;
-        this.axiosConfirmationChangeDetails(postData);
+
+        if (groupmc == "") {
+            openNotificationWithIcon("warning", "请填写批复说明!");
+        } else {
+            this.axiosConfirmationChangeDetails(postData);
+        }
     }
 
     /**
@@ -100,6 +108,21 @@ class PreviewChangeDetails extends React.Component {
         console.log(postData);
 
         this.axiosRejectionChangeDetails(postData)
+    }
+
+    /**
+     * 上传批复文件
+     */
+    handleUpload(){
+        const { fileList } = this.state;
+        const formData = new FormData();
+        fileList.forEach((file) => {
+            formData.append('file', file);
+        });
+
+        this.setState({
+            uploading: true,
+        });
     }
 
     /**
@@ -140,7 +163,7 @@ class PreviewChangeDetails extends React.Component {
         let res = await getDCVerification(params);
         let tempArr = [];
         if (res.rtnCode == "000000") {
-            if(res.responseData.length != 0){
+            if (res.responseData.length != 0) {
                 res.responseData.forEach(item => {
                     item.disChangeType = changeTypeConversion(item.changeType)
                     tempArr.push(item);
@@ -150,7 +173,7 @@ class PreviewChangeDetails extends React.Component {
                     isDisabled: false
                 })
             }
-        
+
             this.setState({
                 displayDetails: tempArr
             })
@@ -176,8 +199,8 @@ class PreviewChangeDetails extends React.Component {
             tempArr.length != 0 && this.setState({
                 displayDetails: tempArr
             })
-            
-            
+
+
         } else {
             openNotificationWithIcon("error", res.rtnMessage);
         }
@@ -194,7 +217,7 @@ class PreviewChangeDetails extends React.Component {
             openNotificationWithIcon("success", res.rtnMessage);
             hashHistory.push({
                 pathname: "/about/pfpsmas/zcms/inputChangeDetails",
-                state:{
+                state: {
                     systemId: this.state.systemId
                 }
             })
@@ -214,7 +237,7 @@ class PreviewChangeDetails extends React.Component {
             openNotificationWithIcon("success", res.rtnMessage);
             hashHistory.push({
                 pathname: "/about/pfpsmas/zcms/inputChangeDetails",
-                state:{
+                state: {
                     systemId: this.state.systemId
                 }
             })
@@ -314,6 +337,25 @@ class PreviewChangeDetails extends React.Component {
             )
         })
 
+        const upLoadProp = {
+            onRemove: (file) => {
+                this.setState((state) => {
+                    const index = state.fileList.indexOf(file);
+                    const newFileList = state.fileList.slice();
+                    newFileList.splice(index, 1);
+                    return {
+                        fileList: newFileList,
+                    };
+                });
+            },
+            beforeUpload: (file) => {
+                this.setState(state => ({
+                    fileList: [...state.fileList, file],
+                }));
+                return false;
+            },
+        };
+
         return (
             <div className="outer-box">
                 <div className="previewchangedetails">
@@ -340,12 +382,29 @@ class PreviewChangeDetails extends React.Component {
 
                             <div className="margin-top-10">
                                 <Row>
-                                    <Col span={4} offset={5}>
+                                    <Col span={2} offset={3}>
                                         <span className="font-color-fff text-algin-center">批复说明</span>
                                     </Col>
 
-                                    <Col span={10}>
+                                    <Col span={8}>
                                         <Input type="textarea" onChange={this.changeNote.bind(this)} value={this.state.groupmc}></Input>
+                                    </Col>
+
+                                    <Col span={2} offset={1}>
+                                        <Upload {...upLoadProp}>
+                                            <Button>
+                                                <Icon type="upload" /> 批复文件上传
+                                                </Button>
+                                        </Upload>
+                                        <Button
+                                            type="primary"
+                                            onClick={this.handleUpload.bind(this)}
+                                            disabled={this.state.fileList.length === 0}
+                                            loading={this.state.uploading}
+                                            style={{ marginTop: 16 }}
+                                        >
+                                            {this.state.uploading ? '上传中' : '开始上传'}
+                                        </Button>
                                     </Col>
                                 </Row>
 

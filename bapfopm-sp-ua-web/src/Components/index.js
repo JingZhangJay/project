@@ -43,3 +43,6 @@ export {Pie}
 
 import Bar from "./pfpsmas/zcms/common/Bar/bar"
 export {Bar}
+
+import GeoDemo from "./pfpsmas/zcms/common/GeoDemo/geoDemo"
+export {GeoDemo}

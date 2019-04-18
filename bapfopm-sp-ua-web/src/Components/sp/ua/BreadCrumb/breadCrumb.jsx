@@ -28,7 +28,12 @@ class Bread extends React.Component {
         return (
             <div style={{position: "relative"}}>
                 <Breadcrumb>
-                    <Breadcrumb.Item><Link to='/about' state={this.state.systemId1} >首页</Link></Breadcrumb.Item>
+                    <Breadcrumb.Item>
+                    {
+                        this.state.systemId1 == "8" ? <Link to='/about/pfpsmas/zcms/zcmsIndex' state={this.state.systemId1} >首页</Link> : <Link to='/about' state={this.state.systemId1} >首页</Link>
+                    }
+                        
+                    </Breadcrumb.Item>
                     <Breadcrumb.Item>当前位置</Breadcrumb.Item>
                 </Breadcrumb>
 

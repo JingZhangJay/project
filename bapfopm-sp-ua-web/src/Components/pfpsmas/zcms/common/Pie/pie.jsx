@@ -31,6 +31,7 @@ class Pie extends React.Component {
             //   text:"你好",
               left:"center"
             },
+            backgroundColor: "rgba(0,0,0,0.1)",
             series : [
                 {
                     name: '',
@@ -55,7 +56,8 @@ class Pie extends React.Component {
                         formatter: function (params, ticket, callback) {
                             console.log(params);
                         }
-                    }
+                    },
+                    color:['#2EC7C9','#EBFF30','#5AB1EF','#FE8463']
                     // roseType: "radius"
                 }
             ]

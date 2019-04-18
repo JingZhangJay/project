@@ -1,0 +1,31 @@
+
+
+@media only screen and (min-width: 1200px) and (max-width: 1366px){
+    .previewChangeReport-container{
+        height: 500px;
+    }
+}
+
+@media only screen and (min-width: 1367px) {
+    .previewChangeReport-container{
+        height: 800px;
+    }
+}
+
+.previewChangeReport-container-top :global(.ant-col-12){
+    
+}
+
+.previewChangeReport-container-top span{
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bolder;
+    padding: 5px;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    background: url(../../../../asset/sp/ua/img/bg.png) repeat;
+}

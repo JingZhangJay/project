@@ -16,7 +16,7 @@ import { Table, Button, Modal, Input, Checkbox, Select, Row, Col, Tooltip, Tree,
 import { Navbar, Hr } from "../../../../Components/index"
 
 import { openNotificationWithIcon, clearData, placeData, sliceSpecifiedCode, combinSpecifiedCode, changeTypeConversion, getAssigningCode, getSubZoning, getSuperiorZoningCode } from "../../../../asset/pfpsmas/zcms/js/common";
-import { getInitAddDetails, getSubordinateZoning, getZoningCompareAffairByOne, getLogicCheckBeforeSave, getDraftsOfDetails, getRemoveDraftsOfDetails, getLogicCheckBeforeChange, getZoningMergeSelectTree, getSaveDetails } from "../../../../Service/pfpsmas/zcms/server";
+import { getInitAddDetails, getSubordinateZoning, getZoningCompareAffairByOne, getLogicCheckBeforeSave, getDraftsOfDetails, getRemoveDraftsOfDetails, getLogicCheckBeforeChange, getZoningMergeSelectTree, getZoningMoveSelectTreeN, getSaveDetails } from "../../../../Service/pfpsmas/zcms/server";
 
 const Option = Select.Option;
 const TreeNode = Tree.TreeNode;
@@ -697,19 +697,30 @@ class InputChangeDetails extends React.Component {
      */
     showTree() {
         let postData = {};
-        let { zoningCode, originalZoningCode, ringFlagToggle } = this.state;
+        let { zoningCode, originalZoningCode, ringFlagToggle, changeType } = this.state;
 
         postData.rootCode = zoningCode;
         postData.excludeCode = originalZoningCode;
 
         if(!ringFlagToggle){
-            this.axiosZoningMergeSelectTree(postData).then(res => {
-                if (res.rtnCode == "000000") {
-                    this.setState({
-                        treeData: res.responseData
-                    })
-                }
-            });
+            if(changeType == "31"){
+                this.axiosZoningMergeSelectTree(postData).then(res => {
+                    if (res.rtnCode == "000000") {
+                        this.setState({
+                            treeData: res.responseData
+                        })
+                    }
+                });
+            }else if(changeType == "41"){
+                this.axiosZoningMoveSelectTreeN(postData).then(res => {
+                    if (res.rtnCode == "000000") {
+                        this.setState({
+                            treeData: res.responseData
+                        })
+                    }
+                });
+            }
+            
         }
         
         this.setState({
@@ -738,15 +749,20 @@ class InputChangeDetails extends React.Component {
      */
     async onLoadData(treeNode) {
         let postData = {};
-        let { zoningCode, originalZoningCode } = this.state;
+        let { zoningCode, originalZoningCode, changeType } = this.state;
         let zoningKey = treeNode.props.eventKey;
 
         postData.rootCode = zoningCode;
         postData.excludeCode = originalZoningCode;
         postData.zoningCode = zoningKey;
 
-        console.log('=============', zoningKey)
-        let res = await this.axiosZoningMergeSelectTree(postData);
+        console.log('=============', zoningKey, changeType);
+        if(changeType == "31"){
+            var res = await this.axiosZoningMergeSelectTree(postData);
+        }else if(changeType == "41"){
+            var res = await this.axiosZoningMoveSelectTreeN(postData); 
+        }
+        
         let data = res.responseData;
         treeNode.props.dataRef.children = data;
         console.log('-------------', treeNode);
@@ -987,6 +1003,17 @@ class InputChangeDetails extends React.Component {
     }
 
     /**
+     * 获取迁移区划数据
+     * @param {string} rootCode    根区划     登录人区划
+     * @param {string} excludeCode  排除区划   用户选择需要变更的原区划
+     * @param {string} zoningCode  区划    用户选择迁移并入的现区划
+     */
+    async axiosZoningMoveSelectTreeN(params) {
+        let res = getZoningMoveSelectTreeN(params);
+        return res;
+    }
+
+    /**
      * 提交区划变更对照明细接口
      * @param  group 存放文件序号,变更组名称
      * @param  details 存放变更明细数据
@@ -1130,8 +1157,9 @@ class InputChangeDetails extends React.Component {
             )
         });
 
+        //  各级区划展示框
+        //  data  各级区划数据    color  各级选中的区划,用来做选中颜色展示
         const loop = (data, color) => data.map((item) => {
-
             return (
                     <tr className={`zoningcode-tr ${color == item.zoningCode ? "zoningCode-actived" : null}`}
                     data-zoningCode={item.zoningCode}
@@ -1150,6 +1178,7 @@ class InputChangeDetails extends React.Component {
             )
         })
 
+        //  区划代码组切分
         const loopInput = (data, assigningcode, changeType) => data.map((item, index) => {
             if (changeType == "11" && assigningcode == index) {
                 if (index <= 2) {
@@ -1184,12 +1213,14 @@ class InputChangeDetails extends React.Component {
             }
         })
 
+        //  变更类型下拉框
         const loopOption = data => data.map(item => {
             return (
                 <Option value={item.value} disabled={item.disabled}>{item.text}</Option>
             )
         })
 
+        //  区划树加载
         const loopTree = data => data.map((item) => {
             if(this.state.ringFlagToggle){
                 return <TreeNode title={item.divisionName} key={item.zoningCode} dataRef={item} isLeaf={true}/>;
@@ -1342,7 +1373,7 @@ class InputChangeDetails extends React.Component {
                                         </Col>
                                         <Col span={18}>
                                             <input type="text" className="input-large-length font-color-fff" value={this.state.targetZoningName}
-                                                onChange={this.handleChangeInputValue.bind(this, "targetZoningName")} />
+                                                onChange={this.handleChangeInputValue.bind(this, "targetZoningName")} readOnly={this.state.changeType == "31" || this.state.changeType == "41"}/>
                                         </Col>
                                     </Row>
                                 </Col>
