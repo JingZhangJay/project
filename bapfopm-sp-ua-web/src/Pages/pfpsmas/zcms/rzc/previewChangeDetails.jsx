@@ -9,7 +9,7 @@ import gray from "../../../../asset/pfpsmas/zcms/img/gray.png";
 //  自定义滚动条
 import FreeScrollBar from 'react-free-scrollbar';
 
-import { clearData, placeData, changeTypeConversion, getAssigningCode, getSubZoning, getSuperiorZoningCode, openNotificationWithIcon } from "../../../../asset/pfpsmas/zcms/js/common";
+import { clearData, placeData, changeTypeConversion, openNotificationWithIcon } from "../../../../asset/pfpsmas/zcms/js/common";
 import { getInitPreviewZoningData, getCheckPreviewZoning, getRejectionChangeDetails, getConfirmationChangeDetails, getFindChangeDetails, getDCVerification } from "../../../../Service/pfpsmas/zcms/server";
 
 import { Navbar, Hr } from "../../../../Components/index";
@@ -33,6 +33,7 @@ class PreviewChangeDetails extends React.Component {
             },
 
             displayDetails: [], //  变更明细展示
+            changeDetails: [], //   提交后未确认的变更明细
 
             requestSeq: "", //  申请单序号
             groupmc: "",
@@ -113,7 +114,7 @@ class PreviewChangeDetails extends React.Component {
     /**
      * 上传批复文件
      */
-    handleUpload(){
+    handleUpload() {
         const { fileList } = this.state;
         const formData = new FormData();
         fileList.forEach((file) => {
@@ -175,6 +176,7 @@ class PreviewChangeDetails extends React.Component {
             }
 
             this.setState({
+                changeDetails: tempArr,
                 displayDetails: tempArr
             })
         }
@@ -185,22 +187,30 @@ class PreviewChangeDetails extends React.Component {
      * @param {string} zoningCode 区划代码
      */
     async axiosFindChangeDetails(params) {
+        let { changeDetails } = this.state;
         let res = await getFindChangeDetails(params);
         let tempArr = [];
 
         console.log(res);
         if (res.rtnCode == "000000") {
 
-            res.responseData.forEach(item => {
-                item.disChangeType = changeTypeConversion(item.changeType)
-                tempArr.push(item);
-            });
+            let data = res.responseData;
 
-            tempArr.length != 0 && this.setState({
-                displayDetails: tempArr
-            })
+            if (data.length == 0) {
+                this.setState({
+                    displayDetails: changeDetails,
+                })
+            } else {
+                data.forEach(item => {
+                    item.disChangeType = changeTypeConversion(item.changeType)
+                    tempArr.push(item);
+                });
 
 
+                this.setState({
+                    displayDetails: tempArr
+                })
+            }
         } else {
             openNotificationWithIcon("error", res.rtnMessage);
         }
@@ -265,17 +275,16 @@ class PreviewChangeDetails extends React.Component {
             name: "建立变更对照表",
             routerPath: "/about/pfpsmas/zcms/previewChangeDetails",
             imgPath: gray
-        },
-        {
+        }, {
             name: "录入变更明细",
             routerPath: "/about/pfpsmas/zcms/previewChangeDetails",
             imgPath: gray
-        },
-        {
+        }, {
             name: "变更明细预览",
             routerPath: "/about/pfpsmas/zcms/previewChangeDetails",
             imgPath: blue
-        }];
+        }
+        ];
 
         const columns = [{
             title: '原区划代码',
@@ -302,12 +311,14 @@ class PreviewChangeDetails extends React.Component {
             dataIndex: 'targetZoningName',
             key: 'targetZoningName',
             width: 150,
-        }, {
-            title: '备注',
-            dataIndex: 'notes',
-            key: 'notes',
-            width: 150,
-        }];
+        },
+            // {
+            //     title: '备注',
+            //     dataIndex: 'notes',
+            //     key: 'notes',
+            //     width: 150,
+            // }
+        ];
 
         const displayDom = (data, color) => Object.keys(data).map(key => {
             return (
@@ -322,15 +333,18 @@ class PreviewChangeDetails extends React.Component {
         const loop = (data, color) => data.map((item) => {
 
             return (
-                <tr className={`zoningcode-tr ${(item.sfbh && item.sfbh == "1") ? "background-color-red" : null} ${color == item.zoningCode ? "zoningCode-actived" : null}`}
+                <tr className={`zoningcode-tr ${color == item.zoningCode ? "zoningCode-actived" : null}`}
                     data-zoningCode={item.zoningCode}
                     data-zoningName={item.divisionName}
                     data-assigningCode={item.assigningCode}
+                    data-sfbh={item.sfbh}
                     onClick={this.handleAxiosCheckPreviewZoning.bind(this)}
                 >
-                    <td data-zoningCode={item.zoningCode}
+                    <td className={`${(item.sfbh && item.sfbh == "1") ? "font-color-c33" : null}`}
+                        data-zoningCode={item.zoningCode}
                         data-zoningName={item.divisionName}
-                        data-assigningCode={item.assigningCode}>
+                        data-assigningCode={item.assigningCode}
+                        data-sfbh={item.sfbh}>
                         {item.divisionName} {item.ownCode}
                     </td>
                 </tr>
@@ -358,7 +372,8 @@ class PreviewChangeDetails extends React.Component {
 
         return (
             <div className="outer-box">
-                <div className="previewchangedetails">
+                <div className="previewchangedetails inner-box">
+
                     <FreeScrollBar autohide="true">
                         <Navbar data={navbar}></Navbar>
 
@@ -371,45 +386,58 @@ class PreviewChangeDetails extends React.Component {
 
                             <Hr />
 
-                            <div className="preview-container-bottom">
-                                <Table dataSource={this.state.displayDetails} columns={columns} pagination={{ pageSize: 5 }} />
+                            <div className="preview-container-center">
+                                <Table
+                                    dataSource={this.state.displayDetails}
+                                    columns={columns}
+                                    pagination={{ pageSize: 5 }}
+                                    title={() => '变更明细展示'} 
+                                    rowClassName={(record, index) => record.clztdm == "30" ? "font-color-c33" : ""}/>
                             </div>
 
-                            <div className="preview-container-footer margin-top-10">
-                                <Button type="primary" size="large" onClick={this.handleAxiosRejectionChangeDetails.bind(this)}>驳回</Button>
-                                <Button type="primary" size="large" style={{ marginLeft: 20 }} disabled={this.state.isDisabled} onClick={this.handleAxiosConfirmationChangeDetails.bind(this)}>确认</Button>
-                            </div>
-
-                            <div className="margin-top-10">
+                            <div className="preview-container-bottom margin-top-10">
                                 <Row>
                                     <Col span={2} offset={3}>
-                                        <span className="font-color-fff text-algin-center">批复说明</span>
+                                        <span className="font-color-fff text-algin-center" style={{ fontSize: 16 }}>批复说明</span>
                                     </Col>
 
                                     <Col span={8}>
-                                        <Input type="textarea" onChange={this.changeNote.bind(this)} value={this.state.groupmc}></Input>
+                                        <Input type="textarea" onChange={this.changeNote.bind(this)} value={this.state.groupmc} style={{ fontSize: 14 }}></Input>
                                     </Col>
 
-                                    <Col span={2} offset={1}>
-                                        <Upload {...upLoadProp}>
-                                            <Button>
-                                                <Icon type="upload" /> 批复文件上传
+                                    <Col span={6} offset={1}>
+                                        <Row>
+                                            <Col span={12}>
+                                                <Upload {...upLoadProp}>
+                                                    <Button>
+                                                        <Icon type="upload" /> 批复文件上传
+                                                    </Button>
+                                                </Upload>
+                                            </Col>
+                                            <Col span={12}>
+                                                <Button 
+                                                    type="primary"
+                                                    onClick={this.handleUpload.bind(this)}
+                                                    disabled={this.state.fileList.length === 0}
+                                                    loading={this.state.uploading}
+                                                    style={{width: "80%"}}
+                                                >
+                                                    {this.state.uploading ? '上传中' : '开始上传'}
                                                 </Button>
-                                        </Upload>
-                                        <Button
-                                            type="primary"
-                                            onClick={this.handleUpload.bind(this)}
-                                            disabled={this.state.fileList.length === 0}
-                                            loading={this.state.uploading}
-                                            style={{ marginTop: 16 }}
-                                        >
-                                            {this.state.uploading ? '上传中' : '开始上传'}
-                                        </Button>
+                                            </Col>
+                                        </Row>
                                     </Col>
                                 </Row>
-
                             </div>
+
+                            <div className="preview-container-footer margin-top-10">
+                                <Button type="primary" size="large" onClick={this.handleAxiosRejectionChangeDetails.bind(this)}>{this.state.displayDetails.length == 0 ? `返回` : `驳回`}</Button>
+                                <Button type="primary" size="large" style={{ marginLeft: 20 }} disabled={this.state.isDisabled} onClick={this.handleAxiosConfirmationChangeDetails.bind(this)}>确认</Button>
+                            </div>
+
+
                         </div>
+
                     </FreeScrollBar>
                 </div>
             </div>

@@ -39,6 +39,20 @@ export let getAddZoningChangeRequest = async (params) => {
 }
 
 /**
+ * 建立申请单接口
+ * @param {string} requestSeq 申请单序号
+ * @param {string} note 备注
+ */
+export let getUpdateZoningChangeRequest = async (params) => {
+    let response = await axios({
+        url: 'zcmsapi1/zoningChangeManager/updateZoningChangeRequest',
+        method: 'get',
+        params: params
+    })
+    return response.data
+}
+
+/**
  * 查询存在可录入的变更申请单接口
  */
 export let getFindWritableZCCRequests = async () => {
@@ -119,6 +133,21 @@ export let getDraftsOfDetails = async (params) => {
         method: 'get',
         params: {
             requestSeq: params
+        }
+    })
+    return response.data
+}
+
+/**
+ * 变更明细草稿箱通过明细id获取明细数据
+ * @param {string} id 明细id
+ */
+export let getInquiryDraftBox = async (params) => {
+    let response = await axios({
+        url: 'zcmsapi1/zoningChangeManager/inquiryDraftBox',
+        method: 'get',
+        params: {
+            id: params
         }
     })
     return response.data

@@ -1,6 +1,8 @@
-.previewchangedetails{
-    overflow: auto;
-    height: 800px;
+@media only screen and (min-width: 1367px) {
+    .inner-box{
+        overflow: auto;
+        height: 600px;
+    }
 }
 
 .previewchangedetails .preview-container{
@@ -24,7 +26,7 @@
     color: #fff;
     line-height: 30px;
     cursor: pointer;
-    padding-left: 10px;
+    padding: 0 10px;
 }
 
 .previewchangedetails .preview-container .preview-container-top .zoningcode-tr:hover{

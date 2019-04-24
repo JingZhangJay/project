@@ -17,6 +17,7 @@ class GeoDemo extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            formatterText:{},
         }
     }
 
@@ -29,8 +30,24 @@ class GeoDemo extends React.Component {
         console.log(res);
     }
 
+       /**
+     * 变更明细当月实时数据
+     * @param {string} zoningCode 区划代码
+     */
+    async axiosGetBgmxRealTimeExcel(param){
+        let data = await getBgmxRealTimeExcel(param); 
+        console.log('data ======>',data.responseData); 
+        if(data.rtnCode == '000000'){
+            this.setState({
+                formatterText: data.responseData
+            })
+        }
+    }
+
+
     componentWillMount(){
         this.axiosBgmxRealTimeExcel({zoningCode: "000000000000000"})
+        this.axiosGetBgmxRealTimeExcel({zoningCode: "000000000000000"})
     }
 
     componentDidMount() {
@@ -77,55 +94,68 @@ class GeoDemo extends React.Component {
         var chinaDatas = [
             [{
                 name: '北京',
-                value: 0
+                value: 0,
+                qhdm: '110000000000000'
             }],
             [{
                 name: '黑龙江',
-                value: 0
+                value: 0,
+                qhdm: '230000000000000'
             }],
             [{
                 name: '内蒙古',
-                value: 0
+                value: 0,
+                qhdm: '150000000000000'
             }],
             [{
                 name: '吉林',
-                value: 0
+                value: 0,
+                qhdm: '220000000000000'
             }],
             [{
                 name: '辽宁',
-                value: 0
+                value: 0, 
+                qhdm: '210000000000000'
             }],
             [{
                 name: '河北',
-                value: 0
+                value: 0, 
+                qhdm: '130000000000000'
             }],
             [{
                 name: '天津',
-                value: 0
+                value: 0, 
+                qhdm: '120000000000000'
             }],
             [{
                 name: '山西',
-                value: 0
+                value: 0, 
+                qhdm: '140000000000000'
             }],
             [{
                 name: '陕西',
-                value: 0
+                value: 0, 
+                qhdm: '610000000000000'
             }],
             [{
                 name: '甘肃',
-                value: 0
+                value: 0, 
+                qhdm: '600000000000000'
             }],
             [{
                 name: '宁夏',
-                value: 0
+                value: 0, 
+                qhdm: '640000000000000'
             }],
             [{
                 name: '青海',
-                value: 0
+                value: 0, 
+                qhdm: '630000000000000'
             }],
             [{
                 name: '新疆',
-                value: 0
+                value: 0, 
+                qhdm: '650000000000000'
             }],
             [{
                 name: '新疆兵团',
@@ -133,67 +163,83 @@ class GeoDemo extends React.Component {
             }],
             [{
                 name: '西藏',
-                value: 0
+                value: 0, 
+                qhdm: '540000000000000' 
             }],
             [{
                 name: '四川',
-                value: 0
+                value: 0, 
+                qhdm: '510000000000000' 
             }],
             [{
                 name: '重庆',
-                value: 0
+                value: 0, 
+                qhdm: '500000000000000' 
             }],
             [{
                 name: '山东',
-                value: 0
+                value: 0, 
+                qhdm: '370000000000000' 
             }],
             [{
                 name: '河南',
-                value: 0
+                value: 0, 
+                qhdm: '410000000000000' 
             }],
             [{
                 name: '江苏',
-                value: 0
+                value: 0, 
+                qhdm: '320000000000000' 
             }],
             [{
                 name: '安徽',
-                value: 0
+                value: 0, 
+                qhdm: '340000000000000' 
             }],
             [{
                 name: '湖北',
-                value: 0
+                value: 0, 
+                qhdm: '420000000000000' 
             }],
             [{
                 name: '浙江',
-                value: 0
+                value: 0, 
+                qhdm: '330000000000000' 
             }],
             [{
                 name: '福建',
-                value: 0
+                value: 0, 
+                qhdm: '350000000000000' 
             }],
             [{
                 name: '江西',
-                value: 0
+                value: 0, 
+                qhdm: '360000000000000' 
             }],
             [{
                 name: '湖南',
-                value: 0
+                value: 0, 
+                qhdm: '430000000000000' 
             }],
             [{
                 name: '贵州',
-                value: 0
+                value: 0, 
+                qhdm: '520000000000000' 
             }],
             [{
                 name: '广西',
-                value: 0
+                value: 0, 
+                qhdm: '450000000000000' 
             }],
             [{
                 name: '海南',
-                value: 0
+                value: 0, 
+                qhdm: '460000000000000' 
             }],
             [{
                 name: '上海',
-                value: 0
+                value: 0, 
+                qhdm: '310000000000000' 
             }]
         ];
 
@@ -206,12 +252,13 @@ class GeoDemo extends React.Component {
                 if (fromCoord && toCoord) {
                     res.push([{
                         coord: fromCoord,
-                        value: dataItem[0].value
+                        value: dataItem[0].value,
+                        qhdm: dataItem[0].qhdm,
                     }, {
                         coord: toCoord,
                     }]);
                 }
-            }
+            } 
             return res;
         };
 
@@ -219,107 +266,57 @@ class GeoDemo extends React.Component {
 
         [
             ['北京市', chinaDatas]
-        ].forEach(function (item, i) {
-            console.log(item)
+        ].forEach(function (item, i) { 
             series.push({
-                type: 'lines',
+                type: 'effectScatter',
+                coordinateSystem: 'geo',
                 zlevel: 2,
-                effect: {
-                    show: false,
-                    period: 4, //箭头指向速度，值越小速度越快
-                    trailLength: 0.02, //特效尾迹长度[0,1]值越大，尾迹越长重
-                    symbol: 'arrow', //箭头图标
-                    symbolSize: 5, //图标大小
+                rippleEffect: { //涟漪特效
+                    period: 4, //动画时间，值越小速度越快
+                    brushType: 'stroke', //波纹绘制方式 stroke, fill
+                    scale: 4 //波纹圆环最大限制，值越大波纹越大
                 },
-                lineStyle: {
+                label: {
                     normal: {
-                        width: 0, //尾迹线条宽度
-                        opacity: 1, //尾迹线条透明度
-                        curveness: .3 //尾迹线条曲直度
+                        show: true,
+                        position: 'right', //显示位置
+                        offset: [5, 0], //偏移设置
+                        formatter: function (params) { //圆环显示文字
+                            return params.data.name;
+                        },
+                        fontSize: 13
+                    },
+                    emphasis: {
+                        show: true
                     }
                 },
-                data: convertData(item[1])
-            }, {
-                    type: 'effectScatter',
-                    coordinateSystem: 'geo',
-                    zlevel: 2,
-                    rippleEffect: { //涟漪特效
-                        period: 4, //动画时间，值越小速度越快
-                        brushType: 'stroke', //波纹绘制方式 stroke, fill
-                        scale: 4 //波纹圆环最大限制，值越大波纹越大
-                    },
-                    label: {
-                        normal: {
-                            show: true,
-                            position: 'right', //显示位置
-                            offset: [5, 0], //偏移设置
-                            formatter: function (params) { //圆环显示文字
-                                return params.data.name;
-                            },
-                            fontSize: 13
-                        },
-                        emphasis: {
-                            show: true
-                        }
-                    },
-                    symbol: 'circle',
-                    symbolSize: function (val) {
-                        return 5 + val[2] * 5; //圆环大小
-                    },
-                    itemStyle: {
-                        normal: {
-                            show: false,
-                            color: '#f00'
-                        }
-                    },
-                    data: item[1].map(function (dataItem) {
-                        return {
-                            name: dataItem[0].name,
-                            value: chinaGeoCoordMap[dataItem[0].name].concat([dataItem[0].value])
-                        };
-                    }),
+                symbol: 'circle',
+                symbolSize: function (val) {
+                    return 5 + val[2] * 5; //圆环大小
                 },
-                //被攻击点
-                {
-                    type: 'scatter',
-                    coordinateSystem: 'geo',
-                    zlevel: 2,
-                    rippleEffect: {
-                        period: 4,
-                        brushType: 'stroke',
-                        scale: 4
-                    },
-                    label: {
-                        normal: {
-                            show: false,
-                            position: 'right',
-                            //offset:[5, 0],
-                            color: '#0f0',
-                            formatter: '{b}',
-                            textStyle: {
-                                color: "#0f0"
-                            }
-                        },
-                        emphasis: {
-                            show: false,
-                            color: "#f60"
-                        }
-                    },
-                    symbol: 'pin',
-                    symbolSize: 50,
-                    data: [{
-
-                    }],
-                }
-            );
+                itemStyle: {
+                    normal: {
+                        show: false,
+                        color: '#f00'
+                    }
+                },
+                data: item[1].map(function (dataItem) {
+                    return {
+                        name: dataItem[0].name,
+                        value: chinaGeoCoordMap[dataItem[0].name].concat([dataItem[0].value]),
+                        qhdm:  dataItem[0].qhdm
+                    };
+                }),
+            });
         });
+ 
         //  注册地图
         echarts.registerMap('zhongguo', geoJson);
 
         const myChart = echarts.init(document.getElementById('mainMap'));
 
         myChart.setOption({
-            tooltip: {
+            tooltip: { 
                 trigger: 'item',
                 backgroundColor: 'rgba(166, 200, 76, 0.82)',
                 borderColor: '#FFFFCC',
@@ -328,14 +325,27 @@ class GeoDemo extends React.Component {
                 enterable: true,
                 transitionDuration: 0,
                 extraCssText: 'z-index:100',
-                formatter: function (params, ticket, callback) {
-                    //根据业务自己拓展要显示的内容
-                    var res = "";
-                    var name = params.name;
-                    var value = params.value[params.seriesIndex + 1];
-                    res = "<span style='color:#fff;'>" + name + "</span><br/>数据：" + value;
-                    return res;
-                }
+                formatter: (params) =>{ 
+                    let res = '';
+                    let paramsData = {
+                        zoningCode:params.data.qhdm
+                    } 
+                    this.axiosGetBgmxRealTimeExcel(paramsData)
+
+                    let obj =  this.state.formatterText;
+
+                    let str = "";
+                    for (const key in obj) {
+                        if (obj.hasOwnProperty(key)) {
+                            if(key == "合计"){
+                                str = `<span style='color: #fff; font-size: 16px; padding: 5px 10px'>${key}&nbsp;:</span><span style='color: #fff; font-size: 16px; padding: 5px 10px'>${obj[key]}</span><br/>` + str
+                            }else{
+                                str += `<span style='color: #fff; font-size: 16px; padding: 5px 10px'>${key}&nbsp;:</span><span style='color: #fff; font-size: 16px; padding: 5px 10px'>${obj[key]}</span><br/>`
+                            }
+                        }
+                    }
+				    return str;  
+                } 
             },
             backgroundColor: "#013954",
             visualMap: { //图例值控制
@@ -370,54 +380,7 @@ class GeoDemo extends React.Component {
             },
             series: series
         })
-
-        myChart.on('click', function(params) {
-            console.log(params)
-            var _self = this;
-            if (opt.goDown && params.name !== name[idx]) {
-                if (cityMap[params.name]) {
-                    var url = cityMap[params.name];
-                    $.get(url, function(response) {
-                        //console.log(response);
-                        curGeoJson = response;
-                        echarts.registerMap(params.name, response);
-                        handleEvents.resetOption(_self, option, params.name);
-                    });
-                }
-            }
-        });
-
-        myChart.setMap = function(mapName) {
-            var _self = this;
-            if (mapName.indexOf('市') < 0) mapName = mapName + '市';
-            var citySource = cityMap[mapName];
-            if (citySource) {
-                var url = './map/' + citySource + '.json';
-                $.get(url, function(response) {
-                    // console.log(response);
-                    curGeoJson = response;
-                    echarts.registerMap(mapName, response);
-                    handleEvents.resetOption(_self, option, mapName);
-                });
-            }
-    
-        };
-
-        $.getJSON(zhongguo, function(geoJson) {
-            echarts.registerMap('中国', geoJson);
-            var myChart = echarts.extendsMap('chart-panel', {
-                bgColor: '#154e90', // 画布背景色
-                mapName: '中国', // 地图名
-                text: '火电业务',
-                goDown: true, // 是否下钻
-                // 下钻回调
-                callback: function(name, option, instance) {
-                    //console.log(name, option, instance);
-                },
-                // 数据展示            	
-                data: []
-            });
-        })
+ 
     }
     render() {
         return (

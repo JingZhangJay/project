@@ -10,7 +10,7 @@
     height: 180px;
 }
 
-.previewFormalZoningCode .container .container-top :global(.ant-row-flex .ant-col-3){
+.previewFormalZoningCode .container .container-top :global(.ant-row-flex .ant-col-4){
     background: url("../../../../asset/sp/ua/img/portal/1/2.png") repeat;
     height: inherit;
     overflow: auto;
@@ -30,6 +30,12 @@
     background: #3ea7d4;
 }
 .previewFormalZoningCode .container .container-top .zoningcode-tr td{
+    text-align: left;
+}
+
+.previewFormalZoningCode .container .container-footer{
+    margin-top: 20px;
+    font-size: 14px;
     text-align: left;
 }
 

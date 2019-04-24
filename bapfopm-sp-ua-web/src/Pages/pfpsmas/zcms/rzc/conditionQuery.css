@@ -56,7 +56,7 @@ table thead tr th {
     padding-left: 10px;
     color: #558487;
     font-size: 14px;
-    font-style: italic;
+    /* font-style: italic; */
     margin-left: 2%;
 }
 

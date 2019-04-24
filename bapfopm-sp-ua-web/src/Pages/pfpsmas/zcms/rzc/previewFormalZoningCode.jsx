@@ -2,6 +2,9 @@ import React from 'react';
 import { hashHistory, Link } from "react-router";
 import "./previewFormalZoningCode.css";
 
+//  自定义滚动条
+import FreeScrollBar from 'react-free-scrollbar';
+
 import blue from "../../../../asset/pfpsmas/zcms/img/blue.png";
 import black from "../../../../asset/pfpsmas/zcms/img/black.png";
 import gray from "../../../../asset/pfpsmas/zcms/img/gray.png";
@@ -9,7 +12,7 @@ import gray from "../../../../asset/pfpsmas/zcms/img/gray.png";
 import { openNotificationWithIcon, clearData, placeData, changeTypeConversion, getAssigningCode, getSubZoning, getSuperiorZoningCode } from "../../../../asset/pfpsmas/zcms/js/common";
 import { getInitFormalZoningData, getCheckFormalZoning } from "../../../../Service/pfpsmas/zcms/server";
 import { Navbar, Hr } from "../../../../Components/index";
-import { Row, Col, Button } from 'antd';
+import { Row, Col, Button, Icon } from 'antd';
 
 class PreviewFormalZoningCode extends React.Component{
     constructor(props){
@@ -45,13 +48,22 @@ class PreviewFormalZoningCode extends React.Component{
 
     /**
      * 初始化正式表数据
+     * @param {string} sign   countryZoningCode 全国 || zoningCode 本地
      */
-    handleAxiosInitFormalZoningData(zoningCode){
-        let { codeRankPreview, assigningCode} = this.state;
+    handleAxiosInitFormalZoningData(sign){
+        let { codeRankPreview, assigningCode, zoningCode, countryZoningCode} = this.state;
         let postData = {};
-        postData.zoningCode = zoningCode;
+        let assigning;
+        if(sign == "zoningCode"){
+            postData.zoningCode = zoningCode;
+            assigning = assigningCode;
+        }else if(sign == "countryZoningCode"){
+            postData.zoningCode = countryZoningCode;
+            assigning = "1";
+        }
+        
 
-        clearData(assigningCode, codeRankPreview);
+        clearData(assigning, codeRankPreview);
         this.axiosInitFormalZoningData(postData);
     }
 
@@ -132,8 +144,6 @@ class PreviewFormalZoningCode extends React.Component{
     }
 
     render(){
-        let {zoningCode, countryZoningCode} = this.state;
-
         const navbar = [{
             name: "区划预览",
             routerPath: "/about/pfpsmas/zcms/previewFormalZoningCode",
@@ -142,8 +152,10 @@ class PreviewFormalZoningCode extends React.Component{
 
         const displayDom = (data, color) => Object.keys(data).map(key => {
             return (
-                <Col span={3}>
-                    {loop(data[key], color[key])}
+                <Col span={4}>
+                    <FreeScrollBar>
+                        {loop(data[key], color[key])}
+                    </FreeScrollBar>
                 </Col>
             )
         });
@@ -161,6 +173,9 @@ class PreviewFormalZoningCode extends React.Component{
                         data-zoningName={item.divisionName}
                         data-assigningCode={item.assigningCode}>
                         {item.divisionName} {item.ownCode}
+                        <Icon type="exclamation-circle-o" className={item.compareResult == "2" ? "display-inline-block" : "display-none"} style={{color: "#FFFF99", paddingLeft: 20}}/>                      
+                        <Icon type="exclamation-circle-o" className={item.compareResult == "3" ? "display-inline-block" : "display-none"} style={{color: "#CCCCFF", paddingLeft: 20}}/>                      
+                        <Icon type="exclamation-circle-o" className={item.compareResult == "4" ? "display-inline-block" : "display-none"} style={{color: "#FF9966", paddingLeft: 20}}/>                      
                     </td>
                 </tr>
             )
@@ -168,12 +183,12 @@ class PreviewFormalZoningCode extends React.Component{
 
         return (
             <div className="previewFormalZoningCode">
-                <Navbar data={navbar} />
+                {/* <Navbar data={navbar} /> */}
 
                 <div className="container">
                     <div className="container-header">
-                        <Button type="primary" size="large" onClick={this.handleAxiosInitFormalZoningData.bind(this,zoningCode)}>查看本省区划</Button>
-                        <Button type="primary" size="large" className="margin-left-20" onClick={this.handleAxiosInitFormalZoningData.bind(this,countryZoningCode)}>查看全国区划</Button>
+                        <Button type="primary" size="large" onClick={this.handleAxiosInitFormalZoningData.bind(this, "zoningCode")}>查看本省区划</Button>
+                        <Button type="primary" size="large" className="margin-left-20" onClick={this.handleAxiosInitFormalZoningData.bind(this, "countryZoningCode")}>查看全国区划</Button>
                     </div>
 
                     <div className="container-top">
@@ -198,6 +213,7 @@ class PreviewFormalZoningCode extends React.Component{
                                     </Col>
                                 </Row>
                             </Col>
+
                             <Col span={9}>
                                 <Row>
                                     <Col span={8}>
@@ -210,9 +226,41 @@ class PreviewFormalZoningCode extends React.Component{
                                     </Col>
                                 </Row>
                             </Col>
+
                         </Row>
                     </div>
-                </div>
+
+                    <div className="container-footer">
+                        <Row>
+                            <Col span={8}>
+                                <Icon type="exclamation-circle-o" style={{color: "#FFFF99", padding: 20}}/> 
+                                民政对比结果: 区划代码相同,区划名称不同
+                            </Col>
+                            {/* <Col span={8}>
+                                <Icon type="exclamation-circle-o" style={{color: "#CCCCFF", padding: 20}}/> 
+                                民政对比结果: 区划代码不同,区划名称相同
+                            </Col>
+                            <Col span={8}>
+                                <Icon type="exclamation-circle-o" style={{color: "#FF9966", padding: 20}}/>
+                                民政对比结果: 区划代码不同,区划名称不同
+                            </Col> */}
+                        </Row>
+
+                        <Row>
+                            <Col>
+                                <Icon type="exclamation-circle-o" style={{color: "#CCCCFF", padding: 20}}/> 
+                                民政对比结果: 区划代码不同,区划名称相同
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <Icon type="exclamation-circle-o" style={{color: "#FF9966", padding: 20}}/>
+                                民政对比结果: 区划代码不同,区划名称不同
+                            </Col>
+                        </Row>
+
+                    </div>
+                </div>  
             </div>
         )
     }

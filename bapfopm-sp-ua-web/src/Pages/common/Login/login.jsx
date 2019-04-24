@@ -54,7 +54,6 @@ class Login extends React.Component {
             console.log('=========', values);
             this.axiosLoginData(values);
         })
-        
     }
 
     /**
@@ -94,6 +93,7 @@ class Login extends React.Component {
 
         const loginTypeProps = getFieldProps("loginType", {
             rules: [{ required: true, message: "请选择登录方式!" }],
+            initialValue: 'userName'
         });
 
         const loginNameProps = getFieldProps("loginName", {
@@ -105,7 +105,7 @@ class Login extends React.Component {
         });
 
         const loginCodeProps = getFieldProps("loginCode", {
-            rules: [{ required: true, message: "请填写手机验证码!" }]
+            rules: [{ required: true, message: "请填写验证码!" }]
         });
 
         return (
@@ -119,7 +119,7 @@ class Login extends React.Component {
                                 label="登录方式"
                                 {...formItemLayout}
                             >
-                                <Select size="large" {...loginTypeProps} placeholder="请选择登录方式" defaultValue="userName">
+                                <Select size="large" {...loginTypeProps} placeholder="请选择登录方式">
                                     <Option value="userName">用户名</Option>
                                     <Option value="idNumber">身份证</Option>
                                     <Option value="telephone">手机号</Option>
@@ -147,7 +147,7 @@ class Login extends React.Component {
                                 />
                             </FormItem>
 
-                            <FormItem {...formItemLayout} label="手机验证码" hasFeedback>
+                            <FormItem {...formItemLayout} label="验证码" hasFeedback>
                                 <Input
                                     {...loginCodeProps}
                                     type="text"

@@ -19,7 +19,7 @@ class ConditionQuery extends React.Component {
 
             zoningName: "", //行政区划名称 
             zoningCode: "", //区划代码
-            assigningCode: "",  //级次
+            assigningCode: "1",  //级次
             pageSize: 5,
             pageIndex: 1,
             total: ""

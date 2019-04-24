@@ -78,7 +78,7 @@ class ImportCivilzoningCode extends React.Component {
         console.log(text, record);
         let postData = {};
         postData.zipXh = text.zipXh;
-        if(text.zipXh == "10" || text.zipXh == "21"){
+        if(text.status == "10" || text.status == "21"){
             this.axiosDeleteCAZCodeByzipXh(postData);
         }else{
             openNotificationWithIcon("warning","该文件不能被删除!")
@@ -108,9 +108,11 @@ class ImportCivilzoningCode extends React.Component {
         let res = await getZipFlie(params);
         if (res.rtnCode == '000000') {
             openNotificationWithIcon("success", res.rtnMessage);
-            this.setState({
-                fileList: res.responseData.dataIndex
-            })
+            let postData = {};
+            let { pageSize, pageIndex } = this.state;
+            postData.pageSize = pageSize;
+            postData.pageIndex = pageIndex;
+            this.axiosSelectCivilAffairZip(postData);
         } else {
             openNotificationWithIcon("error", res.rtnMessage);
         }

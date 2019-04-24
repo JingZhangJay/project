@@ -250,3 +250,15 @@
             return str.replace(/^\s+|\S+$/, '');
         })();
     }
+
+    /**
+     * 补零函数
+     * @param {string} str 区划代码
+     */
+    export let patchZero = (str) => {
+        if(str.length >= 15){
+    		return str;
+  		}else{	
+    		return patchZero(str+"0");
+  		}
+    }

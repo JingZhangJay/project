@@ -5,16 +5,16 @@ import { Form, Input, Row, Col, Button, DatePicker, Cascader, Select, Table, Mod
 
 import FreeScrollBar from 'react-free-scrollbar';
 
-import "./previewChangeReport.css";
+import "./civilComparisonReport.css";
 
-export default class PreviewChangeReport extends React.Component {
+export default class CivilComparisonReport extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             iframeSrc: "",
             zoningCode: sessionStorage.getItem("zoningCode"),
 
-            visible: 'map'
+            visible: 'report'
         };
     }
 
@@ -26,7 +26,7 @@ export default class PreviewChangeReport extends React.Component {
 
     componentWillMount(){
         let {zoningCode} = this.state;
-        let src = `http://10.1.92.19:9099/ureport/preview?_u=file:countZoning.ureport.xml&zoningCode=${zoningCode}`
+        let src = `http://10.1.92.19:9099/ureport/preview?_u=file:mzxz.ureport.xml&zoningCode=${zoningCode}`
         this.setState({
             iframeSrc: src
         })
@@ -40,8 +40,8 @@ export default class PreviewChangeReport extends React.Component {
 
     render() {
         return (
-            <div className="previewChangeReport">
-                <div className="previewChangeReport-container">
+            <div className="civilComparisonReport">
+                <div className="civilComparisonReport-container">
                     <FreeScrollBar
                         className="example"
                         autohide={true}
@@ -49,7 +49,7 @@ export default class PreviewChangeReport extends React.Component {
                         start={'right'}
                         onScrollbarScrollTimeout={100}>
 
-                        <div className="previewChangeReport-container-top">
+                        <div className="civilComparisonReport-container-top">
                             <Row>
                                 <Col span={12}>
                                     <span onClick={this.changeVisible.bind(this, "map")}>地图</span>
@@ -60,7 +60,7 @@ export default class PreviewChangeReport extends React.Component {
                             </Row>
                         </div>
 
-                        <div className="previewChangeReport-container-bottom">
+                        <div className="civilComparisonReport-container-bottom">
 
                             {
                                 this.state.visible == "map" ? <GeoDemo></GeoDemo> : <iframe id="iframe" name='iframe' 

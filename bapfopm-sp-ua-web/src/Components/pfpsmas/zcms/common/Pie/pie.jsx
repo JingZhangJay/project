@@ -3,6 +3,9 @@ import React from 'react';
 //  自定义滚动条
 
 // 引入 ECharts 主模块
+
+// import echarts from 'echarts';
+
 import echarts from 'echarts/lib/echarts';
 // 引入关系图
 import 'echarts/lib/chart/pie';
@@ -31,7 +34,25 @@ class Pie extends React.Component {
             //   text:"你好",
               left:"center"
             },
+            legend: {
+                orient: "vertical",
+                textStyle: {
+                    color: 'fff'
+                },
+                align: 'left',
+                left: 10,
+                top: 10
+            },
             backgroundColor: "rgba(0,0,0,0.1)",
+            tooltip: {
+                trigger: 'item', //是否节点触发  
+                padding: 5,
+                formatter: function (params, ticket, callback) {
+                    console.log(params);
+                    return '<div><p>变更类型: ' + params.data.name + '</p>' +
+                                '<p>变更数量: ' + params.data.value + '</p></div>'
+                }
+            },
             series : [
                 {
                     name: '',
@@ -42,19 +63,12 @@ class Pie extends React.Component {
                             formatter: "{b} : {c} \n {d}%",
                         }
                     },
-                    minAngle: 30,
+                    // minAngle: 30,
                     itemStyle: {
                         emphasis: {
                             shadowBlur: 10,
                             shadowOffsetX: 0,
                             shadowColor: 'rgba(0, 0, 0, 0.5)'
-                        }
-                    },
-                    tooltip: {
-                        trigger: 'item', //是否节点触发  
-                        padding: 5,
-                        formatter: function (params, ticket, callback) {
-                            console.log(params);
                         }
                     },
                     color:['#2EC7C9','#EBFF30','#5AB1EF','#FE8463']

@@ -1,15 +1,4 @@
-.outer-box{
-    overflow: hidden;
-    height: 800px;
-    width: 1693px;
-}
-
-.inputchangedetails{
-    overflow: auto;
-    height: 800px;
-}
-
-.inputchangedetails .container{
+/* .inputchangedetails .container{
     margin-top: 20px;
 }
 
@@ -35,7 +24,7 @@
 
 .inputchangedetails .container .container-top .zoningcode-tr:hover{
     background: #3ea7d4;
-}
+} */
 
 .container-top-2 .civil-content{
     padding-left: 10%;

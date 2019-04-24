@@ -12,7 +12,7 @@ import { Table, Button, Modal, Input } from 'antd';
 import { Navbar, Hr } from "../../../../Components/index";
 
 import {openNotificationWithIcon, ownTimeFormat} from "../../../../asset/pfpsmas/zcms/js/common";
-import { getZoningChangeRequestList, getAddZoningChangeRequest, getFindWritableZCCRequests, getDetailedConfirmationVerification } from "../../../../Service/pfpsmas/zcms/server";
+import { getZoningChangeRequestList, getAddZoningChangeRequest, getFindWritableZCCRequests, getDetailedConfirmationVerification, getUpdateZoningChangeRequest } from "../../../../Service/pfpsmas/zcms/server";
 
 class CreateChangeComparisonTable extends React.Component {
     constructor(props) {    
@@ -20,6 +20,8 @@ class CreateChangeComparisonTable extends React.Component {
         this.state = {
             requestList: [],    //  申请单存放数组
             addRequestToggle: false, //  添加申请单确认框显隐开关
+            updateRequestToggle: false, //  修改申请单确认框显隐开关
+
             isDisabled: false,   //  添加按钮是否禁用
 
             systemId: sessionStorage.getItem("systemId"),   //  系统id
@@ -55,7 +57,8 @@ class CreateChangeComparisonTable extends React.Component {
      */
     handleCancel() {
         this.setState({
-            addRequestToggle: false
+            addRequestToggle: false,
+            updateRequestToggle: false
         })
     }
 
@@ -81,6 +84,24 @@ class CreateChangeComparisonTable extends React.Component {
         this.axiosAddZoningChangeRequest(postDataObj);
     }
 
+    /**
+     * 申请单备注修改
+     */
+    handleUpdate(){
+        let postDataObj = {};
+        let { notes, requestSeq } = this.state;
+        postDataObj.note  = notes;
+        postDataObj.requestSeq = requestSeq;
+
+        console.log(postDataObj);
+
+        this.axiosUpdateZoningChangeRequest(postDataObj);
+    }
+
+    /**
+     * 录入明细跳转路由
+     * @param {string} seqStr 申请单序号
+     */
     handleNextRouter(record){        
         let postData = {};
         postData.seqStr = record.seq;
@@ -89,6 +110,18 @@ class CreateChangeComparisonTable extends React.Component {
         })
         sessionStorage.setItem("requestSeq", record.seq)
         this.axiosDetailedConfirmationVerification(postData);
+    }
+
+    /**
+     * 申请单备注修改框显示
+     */
+    showUpdate(record){
+        this.setState({
+            updateRequestToggle: true,
+            requestSeq: record.seq,
+            name: record.name,
+            notes: record.notes
+        })
     }
 
     changeName(e) {
@@ -110,18 +143,28 @@ class CreateChangeComparisonTable extends React.Component {
         let res = await getZoningChangeRequestList();
         console.log("数据", res);
         let data = res.responseData.dataList;
+        let tempData = [];
         data.forEach(item => {
             for(var key in item){
                 if(key == "createDate"){
                     item[key] = ownTimeFormat(item[key]);
                 }
             }
+
+            if(item.levelCode == this.state.levelCode){
+                sessionStorage.setItem("requestSeq", item.seq);
+                tempData.unshift(item);
+            }else{
+                tempData.push(item);
+            }
         })
+
+
         console.log(data)
 
         if (res.rtnCode == "000000") {
             this.setState({
-                requestList: data
+                requestList: tempData
             })
         }
     }
@@ -163,6 +206,23 @@ class CreateChangeComparisonTable extends React.Component {
         }
         this.setState({
             addRequestToggle: false
+        })
+    }
+
+    /**
+     * 修改申请单备注
+     * @param {string} requestSeq 申请单序号
+     * @param {string} note 备注
+     */
+    async axiosUpdateZoningChangeRequest(params){
+        let res = await getUpdateZoningChangeRequest(params);
+        if (res.rtnCode == "000000") {
+            this.axiosZoningChangeRequestList();
+        } else {
+            openNotificationWithIcon("error", res.rtnMessage);
+        }
+        this.setState({
+            updateRequestToggle: false
         })
     }
 
@@ -235,7 +295,11 @@ class CreateChangeComparisonTable extends React.Component {
         }, {
             title: '操作',
             render: (text, record) => (
-                <Button type="primary" size="large" onClick={this.handleNextRouter.bind(this, record)}>录入明细</Button>
+                <span>
+                    <Button type="primary" size="small" disabled={this.state.levelCode != record.levelCode} onClick={this.showUpdate.bind(this, record)}>备注修改</Button>
+                        <span className="ant-divider"></span>
+                    <Button type="primary" size="small" disabled={this.state.levelCode != record.levelCode} onClick={this.handleNextRouter.bind(this, record)}>录入明细</Button>
+                </span>
             ),
         }];
 
@@ -246,7 +310,7 @@ class CreateChangeComparisonTable extends React.Component {
         },
         {
             name: "录入变更明细",
-            routerPath: "/about/pfpsmas/zcms/createChangeComparisonTable",
+            routerPath: "/about/pfpsmas/zcms/inputChangeDetails",
             imgPath: black
         },
         {
@@ -257,16 +321,21 @@ class CreateChangeComparisonTable extends React.Component {
 
         return (
             <div className="createChangeComparisonTable">
+                
+                {/* 菜单导航 */}
                 <Navbar data={navbar}></Navbar>
 
                 <div className="container"> 
 
+                    {/* 申请单列表展示 */}
                     <div className="container-top margin-top-10">
                         <Table columns={columns} dataSource={this.state.requestList} />
                     </div>
 
+                    {/* 添加申请单按钮 */}
                     <div className="container-bottom margin-top-10">
                         <Button type="primary" size="large" disabled={this.state.isDisabled} onClick={this.showPrompt.bind(this)}>添加</Button>
+                        <span className={`${this.state.isDisabled} ? display-inline-block : display-none`} style={{color: "#f66", fontSize: 16, paddingLeft: 20}}>* 本月已有变更申请单</span>
                     </div>
                 </div>
                 
@@ -288,6 +357,27 @@ class CreateChangeComparisonTable extends React.Component {
                         </div>
                     </div>
                 </Modal>
+
+                <Modal title="修改申请单备注" 
+                    visible={this.state.updateRequestToggle}
+                    okText="提交" 
+                    maskClosable={false}
+                    onOk={this.handleUpdate.bind(this)}
+                    onCancel={this.handleCancel.bind(this)}
+                >
+                    <div>
+                        <div>
+                            <span>变更对照表名称</span>
+                            <Input value={this.state.name} disabled></Input>
+                        </div>
+                        <div>
+                            <span>备注</span>
+                            <Input type="textarea" onChange={this.changeNote.bind(this)} value={this.state.notes}></Input>
+                        </div>
+                    </div>
+                </Modal>
+
+
             </div>
         )
     }

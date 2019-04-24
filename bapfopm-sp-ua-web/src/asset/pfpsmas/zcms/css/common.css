@@ -1,7 +1,27 @@
+/* 区划系统全局样式处理 */
+@media only screen and (min-width: 1200px) and (max-width: 1366px){
+    .inner-box{
+        overflow: auto;
+        height: 500px;
+    }
+}
+
+@media only screen and (min-width: 1367px) {
+    .inner-box{
+        overflow: auto;
+        height: 800px;
+    }
+}
+
+.outer-box{
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+}
+
 .ant-notification-notice-with-icon .ant-notification-notice-message{
     font-size: 18px;
 }
-
 
 .ant-notification-notice-with-icon .ant-notification-notice-description{
     font-size: 14px;
@@ -43,6 +63,26 @@
     color: #fff !important;
 }
 
+.font-color-c33{
+    color: #c33;
+}
+
 .bg-color-green{
     background-color: #8FBC8F;
+}
+
+.background-color-1{
+    background-color: #FFCCCC;
+}
+
+.background-color-2{
+    background-color: #FFFF99;
+}
+
+.background-color-3{
+    background-color: #CCCCFF;
+}
+
+.background-color-4{
+    background-color: #FF9966;
 }
