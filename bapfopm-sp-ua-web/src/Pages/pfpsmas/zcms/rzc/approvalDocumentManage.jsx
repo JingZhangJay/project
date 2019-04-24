@@ -21,7 +21,7 @@ class ApprovalDocumentManage extends React.Component {
             endValue: null,//时间选择器结束时间
             endOpen: false,//
 
-            pageSize: 1,//每页条数
+            pageSize: 5,//每页条数
             pageIndex: 1,//当前页码
             totalRecord: "",
         }

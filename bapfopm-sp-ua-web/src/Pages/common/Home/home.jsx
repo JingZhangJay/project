@@ -140,6 +140,20 @@ class Home extends React.Component {
         }
     }
 
+    /**
+     * 图片跳转
+     * @param {string} pathname 跳转路径
+     * @param {string} systemId 跳转参数 系统id
+     */
+    handleNextRouter(pathname, systemId){
+        hashHistory.push({
+            pathname: pathname,
+            state: {
+                systemId: systemId
+            }
+        })
+    }
+
     componentWillMount() {
         this.axiosSystemList();
         this.axiosCustInfo();
@@ -179,7 +193,7 @@ class Home extends React.Component {
                     return (
                         <Col span="4">
                             <Card bordered={true} style={{ backgroundColor: 'transparent', borderColor: "#4cb8e9" }}>
-                                <p>
+                                <p className='system-icon' onClick={this.handleNextRouter.bind(this, "/about/pfpsmas/zcms/zcmsIndex", el.systemId)}>
                                     <img className="system-logo" src={el.systemId < 11 ? require(`../../../asset/sp/ua/img/portal/${el.systemId}.png`) : require(`../../../asset/sp/ua/img/portal/1.png`)} alt="" /></p>
                                 <p className='system-name'>
                                     <Link className="system-a" to={{ pathname: "/about/pfpsmas/zcms/zcmsIndex", state: { systemId: el.systemId } }}>{el.systemName}
@@ -192,7 +206,7 @@ class Home extends React.Component {
                     return (
                         <Col span="4">
                             <Card bordered={true} style={{ backgroundColor: 'transparent', borderColor: "#4cb8e9" }}>
-                                <p>
+                                <p className='system-icon' onClick={this.handleNextRouter.bind(this, "/about", el.systemId)}>
                                     <img className="system-logo" src={el.systemId < 11 ? require(`../../../asset/sp/ua/img/portal/${el.systemId}.png`) : require(`../../../asset/sp/ua/img/portal/1.png`)} alt="" /></p>
                                 <p className='system-name'>
                                     <Link className="system-a" to={{ pathname: "/about", state: { systemId: el.systemId } }}>{el.systemName}

@@ -11,8 +11,25 @@ class Sider extends React.Component {
     this.state = {
       mode: 'inline',
       theme: 'dark',
-      menuData: []
+      menuData: [],
+
+      current: '',
+      openKeys: [],
     }
+  }
+
+  handleClick(e) {
+    console.log('click ', e);
+    this.setState({
+      current: e.key,
+      openKeys: e.keyPath.slice(1),
+    });
+  }
+
+  onToggle(info) {
+    this.setState({
+      openKeys: info.open ? info.keyPath : info.keyPath.slice(1),
+    });
   }
 
   changeMode(value) {
@@ -101,6 +118,11 @@ class Sider extends React.Component {
           style={{ width: `100%` }}
           mode={this.state.mode}
           theme={this.state.theme}
+          onClick={this.handleClick.bind(this)}
+          openKeys={this.state.openKeys}
+          onOpen={this.onToggle.bind(this)}
+          onClose={this.onToggle.bind(this)}
+          selectedKeys={[this.state.current]}
         >
           {loopMenu(this.state.menuData)}
         </Menu>

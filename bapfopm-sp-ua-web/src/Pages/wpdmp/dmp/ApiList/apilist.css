@@ -37,7 +37,7 @@ input{
     position: relative;
     color: #ffffff;
 }
-.container:after{
+.apilist .container:after{
     content: "";
     display: block;
     padding:25%;

@@ -30,7 +30,7 @@
 }
 
 .container-top-2 .civil-content{
-    padding-left: 10%;
+    /* padding-left: 10%; */
 }
 
 .container-top-2 .civil-span{
@@ -150,7 +150,7 @@ table .ant-table-tbody > tr > td{
 .inputchangedetails :global(.container:after) {
     content: "";
     display: block;
-    padding: 10%;
+    padding: 1%;
 }
 
 .inputchangedetails :global(table .ant-table-thead > tr > th, table .ant-table-tbody > tr > td){
@@ -159,5 +159,9 @@ table .ant-table-tbody > tr > td{
 
 .move-table :global(.ant-modal){
     width: 50% !important;
+}
+
+.inputchangedetails :global(.FreeScrollbar-vertical-track){
+    position: fixed !important;
 }
 

@@ -168,6 +168,10 @@
     border-color: #2c6172;
 }
 
+.home-container .home-content .home-content-footer .system-icon{
+  cursor: pointer;
+}
+
 .home-container .home-content .home-content-footer .system-logo{
   width: 44px;
   height: 34px;
