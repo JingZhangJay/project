@@ -237,7 +237,7 @@ class PreviewCivilzoningCode extends React.Component {
 
                             <Hr />
 
-                            <div className="preview-container-center">
+                            <div className="preview-container-center container-box">
                                 <Row type="flex" justify="center">
                                     <Col className="info-span" span={4}>民政区划代码:</Col>
                                     <Col className="info-span info-span-small" span={4}>{this.state.selectedZoningCode}</Col>
@@ -246,9 +246,9 @@ class PreviewCivilzoningCode extends React.Component {
                                 </Row>
                             </div>
 
-                            <Hr />
+                            {/* <Hr /> */}
 
-                            <div className="preview-container-bottom">
+                            <div className="preview-container-bottom margin-top-15">
                                 <Row type="flex" justify="center">
                                     <Col span={4}>
                                         <Button type="primary" size="large" loading={this.state.loading} onClick={this.handleAxiosZoningCompareAffair.bind(this)}>生成民政对比</Button>
