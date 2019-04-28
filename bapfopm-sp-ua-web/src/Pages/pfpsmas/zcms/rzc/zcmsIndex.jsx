@@ -79,6 +79,7 @@ class ZcmsIndex extends React.Component {
         let res = await getBgmxRealTimeExcel(param);
         let obj;
         let temp = [];  //  处理后饼图数据
+        
         let barTemp = [];   //  处理的柱状图元数据
         let barData = [];    //  处理后的柱状图数据
         if (res.rtnCode == "000000") {
@@ -89,6 +90,10 @@ class ZcmsIndex extends React.Component {
                 obj = {};
                 obj.name = key;
                 obj.value = data[key];
+                if(obj.value == 0){
+                    obj.label = {show: false};
+                    obj.labelLine = {show: false};
+                }
                 barTemp.push(obj);
                 key != "合计" && temp.push(obj);
             }
@@ -155,8 +160,8 @@ class ZcmsIndex extends React.Component {
             <div className="outer-box">
                 <div className="zcmsIndex">
                     <FreeScrollBar autohide="true">
-                        <div style={{color: "#fff", fontSize: "16px"}}>本月实时变更情况</div>
-                        <div className="zcmsIndex-container-top">
+                        <div style={{color: "#fff", fontSize: "16px", textAlign: "center"}}>本月实时变更情况</div>
+                        <div className="zcmsIndex-container-top margin-top-10">
                             <Row>
                                 <Col span={12}>
                                     <Pie data={this.state.parentPieData} />
