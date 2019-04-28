@@ -303,7 +303,7 @@ class HistoricalTrace extends React.Component {
             <div className="outer-box">
                 <div className="historicalTrace inner-box">
                     <FreeScrollBar autohide="true">
-                        <div className="historicalTrace-container">
+                        <div className="historicalTrace-container container">
                             <div className="historicalTrace-container-top container-box margin-top-10">
                                 <div className="container-centent">
                                     <Row>
@@ -338,8 +338,14 @@ class HistoricalTrace extends React.Component {
                                 <div id="main" style={{ width: "100%", height: 400 }}></div>
                             </div>
 
-                            <div className="historicalTrace-container-bottom">
-                                <Table dataSource={this.state.historyData} columns={columns}></Table>
+                            <div className="historicalTrace-container-bottom container-box">
+                                <div className="container-title">
+                                    <span>历史变更明细追溯</span>
+                                </div>
+
+                                <div className="container-content">
+                                    <Table dataSource={this.state.historyData} columns={columns}></Table>                                
+                                </div>
                             </div>
                         </div>
 
