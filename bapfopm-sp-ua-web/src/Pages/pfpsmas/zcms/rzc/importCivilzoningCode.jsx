@@ -2,7 +2,10 @@ import React from 'react';
 import { hashHistory, Link } from "react-router";
 import qs from 'qs'
 
-import './importCivilzoningCode.css'
+import './importCivilzoningCode.css';
+
+//  自定义滚动条
+import FreeScrollBar from "react-free-scrollbar";
 
 import { Table, Button, Select, Upload, Icon, Popconfirm } from 'antd';
 import { openNotificationWithIcon } from "../../../../asset/pfpsmas/zcms/js/common";
@@ -74,15 +77,15 @@ class ImportCivilzoningCode extends React.Component {
     /**
      * 删除民政区划文件
      */
-    handleAxiosDeleteCAZCodeByzipXh(text, record){
+    handleAxiosDeleteCAZCodeByzipXh(text, record) {
         console.log(text, record);
         let postData = {};
         postData.zipXh = text.zipXh;
-        if(text.status == "10" || text.status == "21"){
+        if (text.status == "10" || text.status == "21") {
             this.axiosDeleteCAZCodeByzipXh(postData);
-        }else{
-            openNotificationWithIcon("warning","该文件不能被删除!")
-        }    
+        } else {
+            openNotificationWithIcon("warning", "该文件不能被删除!")
+        }
     }
 
     /**
@@ -90,8 +93,8 @@ class ImportCivilzoningCode extends React.Component {
      * @param {number} zipXh  文件序号
      * @param {string} filePath  文件路径
      */
-    handleAxiosImportDate(text, record){
-        let postData = {}; 
+    handleAxiosImportDate(text, record) {
+        let postData = {};
         postData.zipXh = text.zipXh;
         postData.filePath = text.filePath;
         this.setState({
@@ -158,11 +161,11 @@ class ImportCivilzoningCode extends React.Component {
      * @param {number} zipXh  文件序号
      * @param {string} filePath  文件路径
      */
-    async axiosImportDate(param){
+    async axiosImportDate(param) {
         let res = await getImportDate(param);
-        if(res.rtnCode == "000000"){
+        if (res.rtnCode == "000000") {
             openNotificationWithIcon("success", resrtnMessage);
-        }else {
+        } else {
             openNotificationWithIcon("error", res.rtnMessage);
         }
         this.setState({
@@ -233,27 +236,33 @@ class ImportCivilzoningCode extends React.Component {
         };
 
         return (
-            <div className="ImportCivilzoningCode">
+            <div className="outer-box">
+                <div className="ImportCivilzoningCode inner-box">
+                    <FreeScrollBar autohide="true">
+                        <div className="upload-quhua">
+                            <span>上传文件</span>
+                            <input type="text" className='filename' onChange={this.onChange.bind(this)} value={this.state.fileName} />
+                            <input type="file" className="upload-file" id="upload_file" name="file" onChange={this.update.bind(this)} />
+                            <input type="button" className="button-up" value="浏览" />
+                        </div>
 
-                <div className="upload-quhua">
-                    <span>上传文件</span>
-                    <input type="text" className='filename' onChange={this.onChange.bind(this)} value={this.state.fileName} />
-                    <input type="file" className="upload-file" id="upload_file" name="file" onChange={this.update.bind(this)} />
-                    <input type="button" className="button-up" value="浏览" />
-                </div>
+                        {/* 功能按钮组 */}
+                        <div className="button-group  button-group-quhua">
+                            <Button type="primary" size="large" onClick={this.handleAxioszipFlie.bind(this)}>上传</Button>
 
-                {/* 功能按钮组 */}
-                <div className="button-group  button-group-quhua">
-                    <Button type="primary" size="large" onClick={this.handleAxioszipFlie.bind(this)}>上传</Button>
+                            <Button type="primary" size="large" className="margin-left-20" onClick={this.handleReset.bind(this)}>重置</Button>
+                        </div>
 
-                    <Button type="primary" size="large" className="margin-left-20" onClick={this.handleReset.bind(this)}>重置</Button>
-                </div>
+                        <div className="container-box" style={{ marginTop: 50 }}>
+                            <div className="container-title">
+                                <span>导入结果展示</span>
+                            </div>
 
-                <div style={{ marginTop: 60 }}>
-                    <div className="table-title">
-                        <span>导入结果展示</span>
-                    </div>
-                    <Table columns={columns} dataSource={this.state.fileList} pagination={pagination} />
+                            <div className="container-centent">
+                                <Table columns={columns} dataSource={this.state.fileList} pagination={pagination} />
+                            </div>
+                        </div>
+                    </FreeScrollBar>
                 </div>
             </div>
         )
