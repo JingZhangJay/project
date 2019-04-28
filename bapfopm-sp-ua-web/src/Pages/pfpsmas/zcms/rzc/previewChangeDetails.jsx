@@ -10,7 +10,7 @@ import gray from "../../../../asset/pfpsmas/zcms/img/gray.png";
 import FreeScrollBar from 'react-free-scrollbar';
 
 import { clearData, placeData, changeTypeConversion, openNotificationWithIcon } from "../../../../asset/pfpsmas/zcms/js/common";
-import { getInitPreviewZoningData, getCheckPreviewZoning, getRejectionChangeDetails, getConfirmationChangeDetails, getFindChangeDetails, getDCVerification } from "../../../../Service/pfpsmas/zcms/server";
+import { getInitPreviewZoningData, getCheckPreviewZoning, getRejectionChangeDetails, getConfirmationChangeDetails, getFindChangeDetails, getDCVerification, getUpload } from "../../../../Service/pfpsmas/zcms/server";
 
 import { Navbar, Hr } from "../../../../Components/index";
 import { Table, Button, Input, Row, Col, Tooltip, Upload, message, Icon, } from 'antd';
@@ -70,9 +70,11 @@ class PreviewChangeDetails extends React.Component {
         placeData(colorRank, activedColor);
 
         postData.zoningCode = e.target.dataset.zoningcode;
-        this.axiosCheckPreviewZoning(postData);
-        this.axiosFindChangeDetails(postData);
 
+        if(postData.zoningCode){
+            this.axiosCheckPreviewZoning(postData);
+            this.axiosFindChangeDetails(postData);
+        }
         clearData(selectedAssigningCode, codeRankPreview);
     }
 
@@ -117,13 +119,14 @@ class PreviewChangeDetails extends React.Component {
     handleUpload() {
         const { fileList } = this.state;
         const formData = new FormData();
+        this.setState({
+            uploading: true,
+        });
         fileList.forEach((file) => {
             formData.append('file', file);
         });
 
-        this.setState({
-            uploading: true,
-        });
+        this.axiosUpload(formData);
     }
 
     /**
@@ -256,6 +259,24 @@ class PreviewChangeDetails extends React.Component {
         }
     }
 
+    /**
+     * 批复文件上传接口
+     * @param {string} formId 上传文件id
+     */
+    async axiosUpload(params) {
+        let res = await getUpload(params);
+        // console.log('批复上传res--->', res)
+        if (res.rtnCode == '000000') {
+            openNotificationWithIcon("success", res.rtnMessage);
+            this.setState({
+                uploading: false,
+                fileList: []
+            })
+        } else {
+            openNotificationWithIcon("error", res.rtnMessage);
+        }
+    }
+
     componentWillMount() {
         let { zoningCode } = this.state;
         let postData = {};
@@ -272,7 +293,7 @@ class PreviewChangeDetails extends React.Component {
 
     render() {
         const navbar = [{
-            name: "建立变更对照表",
+            name: "创建变更申请单",
             routerPath: "/about/pfpsmas/zcms/previewChangeDetails",
             imgPath: gray
         }, {
@@ -283,8 +304,7 @@ class PreviewChangeDetails extends React.Component {
             name: "变更明细预览",
             routerPath: "/about/pfpsmas/zcms/previewChangeDetails",
             imgPath: blue
-        }
-        ];
+        }];
 
         const columns = [{
             title: '原区划代码',
@@ -323,7 +343,7 @@ class PreviewChangeDetails extends React.Component {
         const displayDom = (data, color) => Object.keys(data).map(key => {
             return (
                 <Col span={4}>
-                    <FreeScrollBar>
+                    <FreeScrollBar autohide="true">
                         {loop(data[key], color[key])}
                     </FreeScrollBar>
                 </Col>
@@ -386,13 +406,20 @@ class PreviewChangeDetails extends React.Component {
 
                             <Hr />
 
-                            <div className="preview-container-center">
-                                <Table
-                                    dataSource={this.state.displayDetails}
-                                    columns={columns}
-                                    pagination={{ pageSize: 5 }}
-                                    title={() => '变更明细展示'} 
-                                    rowClassName={(record, index) => record.clztdm == "30" ? "font-color-c33" : ""}/>
+                            {/* 变更明细展示 */}
+                            <div className="preview-container-center container-box">
+                                <div className="container-title">
+                                    <span>变更明细展示</span>
+                                </div>
+
+                                <div className="container-content"> 
+                                    <Table
+                                        dataSource={this.state.displayDetails}
+                                        columns={columns}
+                                        pagination={{ pageSize: 5 }}
+                                        rowClassName={(record, index) => record.clztdm == "30" ? "font-color-c33" : ""}/>
+                                </div>
+                               
                             </div>
 
                             <div className="preview-container-bottom margin-top-10">
