@@ -33,6 +33,9 @@ class CreateChangeComparisonTable extends React.Component {
 
             requestSeq: "", //  变更申请单序号
             nextRouter: "", //  下一步路由
+
+            pageSize: 5,    //  分页每页展示数量
+            totalRecord: 0, //  数据总量
         }
     }
 
@@ -138,6 +141,10 @@ class CreateChangeComparisonTable extends React.Component {
 
     /**
      *  查询申请单
+     * @param zoningCode — 区划代码
+     * @param pageSize — 每个页面数据条数
+     * @param pageIndex — 当前页面
+     * @param total — 总条数
      */
     async axiosZoningChangeRequestList() {
         let res = await getZoningChangeRequestList();
@@ -304,7 +311,7 @@ class CreateChangeComparisonTable extends React.Component {
         }];
 
         const navbar = [{
-            name: "建立变更对照表",
+            name: "创建变更申请单",
             routerPath: "/about/pfpsmas/zcms/createChangeComparisonTable",
             imgPath: blue
         },
@@ -319,6 +326,21 @@ class CreateChangeComparisonTable extends React.Component {
             imgPath: black
         }];
 
+        const pagination = {
+            _this: this,
+            total: this.state.totalRecord,
+            pageSize: this.state.pageSize,
+            onChange(current) {
+                let postData = {};
+                postData.zoningCode = this._this.zoningCode;
+                postData.pageSize = this._this.state.pageSize;
+                postData.pageIndex = current;
+                postData.total = this._this.state.totalRecord;
+                this._this.axiosZoningChangeRequestList(postData)
+                console.log('Current: ', current, this._this);
+            },
+        };
+
         return (
             <div className="createChangeComparisonTable">
                 
@@ -328,8 +350,15 @@ class CreateChangeComparisonTable extends React.Component {
                 <div className="container"> 
 
                     {/* 申请单列表展示 */}
-                    <div className="container-top margin-top-10">
-                        <Table columns={columns} dataSource={this.state.requestList} />
+                    <div className="container-top container-box margin-top-10">
+                    
+                        <div className="container-title">
+                            <span>变更申请单展示</span>
+                        </div>
+
+                        <div className="container-content">
+                            <Table columns={columns} dataSource={this.state.requestList} pagination={pagination} />
+                        </div>
                     </div>
 
                     {/* 添加申请单按钮 */}
