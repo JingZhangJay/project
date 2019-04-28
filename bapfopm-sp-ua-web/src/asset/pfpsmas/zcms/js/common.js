@@ -106,6 +106,33 @@
     }
 
     /**
+     * 区划级次转化
+     */
+    export let assignConversion = (status) => {
+        status = Number(status) || "";
+        switch (status) {
+            case 1:
+                status = "省级"
+                break;
+            case 2:
+                status = "市级"
+                break;
+            case 3:
+                status = "县级"
+                break;
+            case 4:
+                status = "乡级"
+                break;
+            case 5:
+                status = "村级"
+                break;
+            default:
+                break;
+        }
+        return status;
+    }
+
+    /**
      *  根据行政区划代码获取相应级次代码
      * @method  getAssigningCode
      * @param   zoningCode

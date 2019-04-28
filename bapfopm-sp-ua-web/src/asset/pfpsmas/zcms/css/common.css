@@ -1,88 +1,162 @@
 /* 区划系统全局样式处理 */
-@media only screen and (min-width: 1200px) and (max-width: 1366px){
-    .inner-box{
+@media only screen and (min-width: 1200px) and (max-width: 1366px) {
+    .inner-box {
         overflow: auto;
         height: 500px;
+    }
+
+    .inner-box :global(.container:after) {
+        content: "";
+        display: block;
+        padding: 1%;
     }
 }
 
 @media only screen and (min-width: 1367px) {
-    .inner-box{
+    .inner-box {
         overflow: auto;
         height: 800px;
     }
+
+    .inner-box :global(.container:after) {
+        content: "";
+        display: block;
+        padding: 10%;
+    }
 }
 
-.outer-box{
+.outer-box {
     overflow: hidden;
     height: 100%;
     width: 100%;
 }
 
-.ant-notification-notice-with-icon .ant-notification-notice-message{
+.ant-notification-notice-with-icon .ant-notification-notice-message {
     font-size: 18px;
 }
 
-.ant-notification-notice-with-icon .ant-notification-notice-description{
+.ant-notification-notice-with-icon .ant-notification-notice-description {
     font-size: 14px;
 }
 
-.margin-top-15{
+.margin-top-15 {
     margin-top: 15px;
 }
 
-.margin-left-20{
+.margin-left-20 {
     margin-left: 20px;
 }
 
-.zoningCode-actived{
+.zoningCode-actived {
     background: #3ea7d4;
 }
 
-.text-algin-center{
+.text-algin-center {
     text-align: center;
 }
 
-.margin-top-10{
+.text-algin-left {
+    text-align: left;
+}
+
+.margin-top-10 {
     margin-top: 10px;
 }
 
-.background-color-red{
+.background-color-red {
     background-color: #f00;
 }
 
-.display-none{
+.display-none {
     display: none;
 }
 
-.display-inline-block{
+.display-inline-block {
     display: inline-block;
 }
 
-.font-color-fff{
+.font-color-fff {
     color: #fff !important;
 }
 
-.font-color-c33{
+.font-color-c33 {
     color: #c33;
 }
 
-.bg-color-green{
+.bg-color-green {
     background-color: #8FBC8F;
 }
 
-.background-color-1{
+.background-color-1 {
     background-color: #FFCCCC;
 }
 
-.background-color-2{
+.background-color-2 {
     background-color: #FFFF99;
 }
 
-.background-color-3{
+.background-color-3 {
     background-color: #CCCCFF;
 }
 
-.background-color-4{
+.background-color-4 {
     background-color: #FF9966;
+}
+
+.container-box{
+    background: url("../../../../asset/sp/ua/img/portal/1/2.png") repeat;
+    padding: 10px 20px;
+    border: 1px solid #fff;
+    border-radius: 6px;
+}
+
+.container-title {
+    padding: 10px 20px;
+    font-size: 16px;
+    text-align: left;
+    border-bottom: 1px solid #fff;
+    color: #fff;
+    margin-bottom: 15px;
+}
+
+.container-title span{
+    font-size: 16px;
+    color: #fff;
+}
+
+.container-content {
+    padding: 15px 0 5px;
+}
+
+/* 向下 上 切换 fromConten 显示 隐藏*/
+.container-title>.downAndUp {
+    width: 16px;
+    height: 20px;
+    background: url("../../../../asset/pfpsmas/zcms/img/down.png") no-repeat 0px 0px;
+    background-size: 100% 100%;
+    float: right;
+    /* margin-top: 6px; */
+    cursor: pointer;
+}
+
+.container-title>.downAndUp.rotate {
+    transform: rotateX(180deg);
+}
+
+.container-content.content-hide {
+    display: none;
+    /* padding: 0px; */
+    transition: height 2s;
+    -moz-transition: height 2s;
+    /* Firefox 4 */
+    -webkit-transition: height 2s;
+    /* Safari and Chrome */
+    -o-transition: height 2s;
+    /* Opera */
+}
+
+.float-rigth{
+    float: right;
+    margin-top: -10px;
+    cursor: pointer;
 }
