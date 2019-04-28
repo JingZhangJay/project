@@ -2,12 +2,15 @@ import React from 'react';
 import { hashHistory, Link } from "react-router";
 import qs from 'qs'
 
+//  自定义滚动条
+import FreeScrollBar from 'react-free-scrollbar';
 
-import { Table, Button, Modal, DatePicker } from 'antd';
+import { Table, Button, Modal, DatePicker, Row, Col } from 'antd';
 import { getList } from "../../../../Service/pfpsmas/zcms/server";
 import { openNotificationWithIcon } from "../../../../asset/pfpsmas/zcms/js/common";
 
 import './approvalDocumentManage.css'
+import { cpus } from 'os';
 
 class ApprovalDocumentManage extends React.Component {
     constructor(props) {
@@ -25,23 +28,6 @@ class ApprovalDocumentManage extends React.Component {
             pageIndex: 1,//当前页码
             totalRecord: "",
         }
-    }
-
-    componentWillMount() {
-        let postData = {};
-        let { pageSize, pageIndex, start, end } = this.state;
-        postData.pageSize = 5;
-        postData.pageIndex = 1;
-        postData.start = start;
-        postData.end = end;
-
-        this.axiosListInit(postData);
-    }
-    async axiosListInit(params) {
-        let res = await getList(params);
-        this.setState({
-            requestList: res.responseData.dataList
-        })
     }
 
     //以下都是时间选择器方法
@@ -78,7 +64,7 @@ class ApprovalDocumentManage extends React.Component {
         this.setState({ endOpen: open });
     }
 
-    handleReSet(){
+    handleReSet() {
         this.setState({
             startValue: "",
             endValue: "",
@@ -99,6 +85,17 @@ class ApprovalDocumentManage extends React.Component {
         this.axiosList(postData);
     }
 
+    componentWillMount() {
+        let postData = {};
+        let { pageSize, pageIndex, start, end } = this.state;
+        postData.pageSize = pageSize;
+        postData.pageIndex = 1;
+        postData.start = start;
+        postData.end = end;
+
+        this.axiosList(postData);
+    }
+
     /**
      * 批复文件列表展示已经上传的文档接口
      * @param {number} pageSize 每页条数
@@ -109,6 +106,8 @@ class ApprovalDocumentManage extends React.Component {
     async axiosList(params) {
         let res = await getList(params);
         if (res.rtnCode == '000000') {
+
+            console.log(res.responseData.totalRecord)
             // openNotificationWithIcon("success", res.rtnMessage);
             this.setState({
                 totalRecord: res.responseData.totalRecord,
@@ -154,6 +153,7 @@ class ApprovalDocumentManage extends React.Component {
             total: this.state.totalRecord,
             pageSize: this.state.pageSize,
             onChange(current) {
+                console.log(this._this.state.totalRecord)
                 let postData = {};
                 postData.pageSize = this._this.state.pageSize;
                 postData.pageIndex = current;
@@ -163,44 +163,66 @@ class ApprovalDocumentManage extends React.Component {
         };
 
         return (
-            <div className="ApprovalDocumentManage">
-                {/* 时间选择器 */}
-                <div className="button-group" style={{ marginTop: '15px' }}>
-                    <span className='time-title'>导出时间起(YYYYMMDD): </span>
-                    <DatePicker
-                        disabledDate={this.disabledStartDate.bind(this)}
-                        value={this.state.startValue}
-                        placeholder="开始日期"
-                        onChange={this.onStartChange.bind(this)}
-                        toggleOpen={this.handleStartToggle.bind(this)}
-                        size='large'
-                    />
-                    <span className='time-title'>导出时间止(YYYYMMDD): </span>
-                    <DatePicker
-                        disabledDate={this.disabledEndDate.bind(this)}
-                        value={this.state.endValue}
-                        placeholder="结束日期"
-                        onChange={this.onEndChange.bind(this)}
-                        open={this.state.endOpen}
-                        toggleOpen={this.handleEndToggle.bind(this)}
-                        size='large'
-                    />
-                </div>
+            <div className="outer-box">
+                <div className="ApprovalDocumentManage inner-box">
+                    <FreeScrollBar autohide="true">
+                        {/* 时间选择器 */}
+                        <div className="button-group container-box" style={{ marginTop: '15px' }}>
+                            <Row>
+                                <Col span={7} offset={1}>
+                                    <span className='time-title'>导出时间起: </span>
+                                    <DatePicker
+                                        disabledDate={this.disabledStartDate.bind(this)}
+                                        value={this.state.startValue}
+                                        placeholder="开始日期"
+                                        onChange={this.onStartChange.bind(this)}
+                                        toggleOpen={this.handleStartToggle.bind(this)}
+                                        size='large'
+                                    />
+                                </Col>
 
-                {/* 功能按钮组 */}
-                <div className="button-group">
+                                <Col span={7}>
+                                    <span className='time-title'>导出时间止: </span>
+                                    <DatePicker
+                                        disabledDate={this.disabledEndDate.bind(this)}
+                                        value={this.state.endValue}
+                                        placeholder="结束日期"
+                                        onChange={this.onEndChange.bind(this)}
+                                        open={this.state.endOpen}
+                                        toggleOpen={this.handleEndToggle.bind(this)}
+                                        size='large'
+                                    />
+                                </Col>
+
+                                <Col span={2}>
+                                    <Button type="primary" size="large" onClick={this.handleAxiosList.bind(this)}>查询</Button>
+                                </Col>
+
+                                <Col span={2}>
+                                    <Button type="primary" size="large" className="margin-left-20" onClick={this.handleReSet.bind(this)}>重置</Button>
+                                </Col>
+                            </Row>
+
+
+                        </div>
+
+                        {/* 功能按钮组 */}
+                        {/* <div className="button-group">
                     <Button type="primary" size="large" onClick={this.handleAxiosList.bind(this)}>查询</Button>
                     <Button type="primary" size="large" className="margin-left-20" onClick={this.handleReSet.bind(this)}>重置</Button>
-                </div>
+                </div> */}
 
-                {/* 申请单展示列表 */}
-                <div style={{ marginTop: 15 }}>
-                    <div className="table-title">
-                        <span>查询信息结果展示</span>
-                    </div>
-                    <Table columns={columns} dataSource={this.state.requestList} pagination={pagination}/>
+                        {/* 申请单展示列表 */}
+                        <div className="container-box" style={{ marginTop: 15 }}>
+                            <div className="container-title">
+                                <span>查询信息结果展示</span>
+                            </div>
+                            <div className="container-centent">
+                                <Table columns={columns} dataSource={this.state.requestList} pagination={pagination} />
+                            </div>
+                        </div>
+                    </FreeScrollBar>
                 </div>
-
             </div>
         )
     }
