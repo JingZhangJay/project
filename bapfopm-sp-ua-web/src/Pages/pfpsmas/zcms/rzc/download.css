@@ -13,16 +13,3 @@
     /* margin-top: 15px; */
     text-align: center;
 }
-.table-title{
-    height: 50px;
-    width:100%;
-    background: url("../../../../asset/pfpsmas/zcms/img/form-title_03.png");
-    background-size: cover;
-    line-height: 50px;
-    text-align: left;
-    padding-left: 10px;
-}
-.table-title span{
-    font-size: 16px;
-    color: #fff;
-}

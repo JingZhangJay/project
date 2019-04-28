@@ -1,252 +1,300 @@
-import React from 'react';
-import {hashHistory, Link} from "react-router";
+import React from "react";
+import { hashHistory, Link } from "react-router";
 
 import blue from "../../../../asset/pfpsmas/zcms/img/blue.png";
-import black from "../../../../asset/pfpsmas/zcms/img/black.png"
-import gray from "../../../../asset/pfpsmas/zcms/img/gray.png"
+import black from "../../../../asset/pfpsmas/zcms/img/black.png";
+import gray from "../../../../asset/pfpsmas/zcms/img/gray.png";
 
-import './download.css'
+import "./download.css";
 
-import {Table, Button, Modal, DatePicker, Row, Col, Popconfirm} from 'antd';
-import {Navbar, Hr } from "../../../../Components/index";
+//  自定义滚动条
+import FreeScrollBar from "react-free-scrollbar";
 
-import {formatDateToStr} from "../../../../asset/pfpsmas/zcms/js/common";
-import {getQueryReleaseFormalCode, getDownloadFormalRelease} from "../../../../Service/pfpsmas/zcms/server";
+import { Table, Button, Modal, DatePicker, Row, Col, Popconfirm } from "antd";
+import { Navbar, Hr } from "../../../../Components/index";
 
+import { formatDateToStr } from "../../../../asset/pfpsmas/zcms/js/common";
+import {
+  getQueryReleaseFormalCode,
+  getDownloadFormalRelease
+} from "../../../../Service/pfpsmas/zcms/server";
 
 class Download extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            zoningName: sessionStorage.getItem("zoningName"),   //  行政区划名称
-            levelCode: sessionStorage.getItem("levelCode"), //  级次代码
+  constructor(props) {
+    super(props);
+    this.state = {
+      zoningName: sessionStorage.getItem("zoningName"), //  行政区划名称
+      levelCode: sessionStorage.getItem("levelCode"), //  级次代码
 
-            dispalyRelease: [], //  发布区划展示存放位置
+      dispalyRelease: [], //  发布区划展示存放位置
 
-            startValue: null,   //  时间选择器起始时间
-            endValue: null, //  时间选择器结束时间
-            endOpen: false, //  结束日期时间选择器显隐
+      startValue: null, //  时间选择器起始时间
+      endValue: null, //  时间选择器结束时间
+      endOpen: false, //  结束日期时间选择器显隐
 
-            exportDate: "", //  导入时间起
-            deadline: "",   //  导入时间止
-            pageNum: 1,    //  当前页码
-            pageSize: 5,   //  每页显示条数
-        }
-    }
+      exportDate: "", //  导入时间起
+      deadline: "", //  导入时间止
+      pageNum: 1, //  当前页码
+      pageSize: 5 //  每页显示条数
+    };
+  }
 
-    handleAxiosQueryReleaseFormalCode(){
-        let {exportDate, deadline, pageNum, pageSize} = this.state;
-        let postData = {};
-        postData.exportDate = exportDate;
-        postData.deadline = deadline;
-        postData.pageSize = pageSize; 
-        postData.pageNum = pageNum;
+  handleAxiosQueryReleaseFormalCode() {
+    let { exportDate, deadline, pageNum, pageSize } = this.state;
+    let postData = {};
+    postData.exportDate = exportDate;
+    postData.deadline = deadline;
+    postData.pageSize = pageSize;
+    postData.pageNum = pageNum;
 
-        this.axiosQueryReleaseFormalCode(postData);
-    }
+    this.axiosQueryReleaseFormalCode(postData);
+  }
 
-    confirm(record){
-        let filePath = record.filePath;
-        console.log(filePath);
-        getDownloadFormalRelease(filePath);
-    }
+  confirm(record) {
+    let filePath = record.filePath;
+    console.log(filePath);
+    getDownloadFormalRelease(filePath);
+  }
 
-    handleReset(){
-        this.setState({
-            startValue: null,   //  时间选择器起始时间
-            endValue: null, //  时间选择器结束时间
-            endOpen: false, //  结束日期时间选择器显隐
+  handleReset() {
+    this.setState(
+      {
+        startValue: null, //  时间选择器起始时间
+        endValue: null, //  时间选择器结束时间
+        endOpen: false, //  结束日期时间选择器显隐
 
-            exportDate: "", //  导入时间起
-            deadline: "",   //  导入时间止
-            pageNum: 1,    //  当前页码
-            pageSize: 5,   //  每页显示条数
-        }, () =>{
-            this.initPage();
-        })
-    }
-
-    /**
-     * 查看区划发布信息 || 按照时间查询
-     * @param {string} exportDate 导入时间起
-     * @param {string} deadline 导入时间止
-     * @param {number} pageNum 当前页码
-     * @param {number} pageSize 每页显示条数
-     */
-    async axiosQueryReleaseFormalCode(params){
-        let res = await getQueryReleaseFormalCode(params);
-        if(res.rtnCode == "000000"){
-            this.setState({
-                dispalyRelease: res.responseData.dataList
-            })
-        }
-    }
-
-    initPage(){
-        let {exportDate, deadline, pageNum, pageSize} = this.state;
-        let postData = {};
-        postData.exportDate = exportDate;
-        postData.deadline = deadline;
-        postData.pageSize = pageSize; 
-        postData.pageNum = pageNum;
-        this.axiosQueryReleaseFormalCode(postData);
-    }
-
-    componentWillMount() {
+        exportDate: "", //  导入时间起
+        deadline: "", //  导入时间止
+        pageNum: 1, //  当前页码
+        pageSize: 5 //  每页显示条数
+      },
+      () => {
         this.initPage();
+      }
+    );
+  }
+
+  /**
+   * 查看区划发布信息 || 按照时间查询
+   * @param {string} exportDate 导入时间起
+   * @param {string} deadline 导入时间止
+   * @param {number} pageNum 当前页码
+   * @param {number} pageSize 每页显示条数
+   */
+  async axiosQueryReleaseFormalCode(params) {
+    let res = await getQueryReleaseFormalCode(params);
+    if (res.rtnCode == "000000") {
+      this.setState({
+        dispalyRelease: res.responseData.dataList
+      });
+    }
+  }
+
+  initPage() {
+    let { exportDate, deadline, pageNum, pageSize } = this.state;
+    let postData = {};
+    postData.exportDate = exportDate;
+    postData.deadline = deadline;
+    postData.pageSize = pageSize;
+    postData.pageNum = pageNum;
+    this.axiosQueryReleaseFormalCode(postData);
+  }
+
+  componentWillMount() {
+    this.initPage();
+  }
+
+  //以下都是时间选择器方法
+  disabledStartDate(startValue) {
+    if (!startValue || !this.state.endValue) {
+      return false;
+    }
+    return startValue.getTime() >= this.state.endValue.getTime();
+  }
+  disabledEndDate(endValue) {
+    if (!endValue || !this.state.startValue) {
+      return false;
+    }
+    return endValue.getTime() <= this.state.startValue.getTime();
+  }
+
+  onChange(field, value) {
+    this.setState({
+      [field]: value
+    });
+  }
+
+  onStartChange(value) {
+    this.onChange("startValue", value);
+    let exportDate;
+
+    if (value) {
+      exportDate = formatDateToStr(value);
     }
 
-    //以下都是时间选择器方法
-    disabledStartDate(startValue) {
-        if (!startValue || !this.state.endValue) {
-            return false;
-        }
-        return startValue.getTime() >= this.state.endValue.getTime();
-    }
-    disabledEndDate(endValue) {
-        if (!endValue || !this.state.startValue) {
-            return false;
-        }
-        return endValue.getTime() <= this.state.startValue.getTime();
-    }
+    this.setState({
+      exportDate: exportDate
+    });
+  }
 
-    onChange(field, value) {
-        this.setState({
-            [field]: value,
-        });
+  onEndChange(value) {
+    this.onChange("endValue", value);
+    let deadline;
+
+    if (value) {
+      deadline = formatDateToStr(value);
     }
 
-    onStartChange(value) {
-        this.onChange('startValue', value);     
-        let exportDate;
+    this.setState({
+      deadline: deadline
+    });
+  }
 
-        if(value){
-            exportDate = formatDateToStr(value);
-        }
-        
-
-        this.setState({
-            exportDate: exportDate
-        })
-
+  handleStartToggle({ open }) {
+    if (!open) {
+      this.setState({ endOpen: true });
     }
+  }
 
-    onEndChange(value) {
-        this.onChange('endValue', value);
-        let deadline;
+  handleEndToggle({ open }) {
+    this.setState({ endOpen: open });
+  }
 
-        if(value) {
-            deadline= formatDateToStr(value);
-        }
+  render() {
+    const columns = [
+      {
+        title: "文件名称",
+        dataIndex: "fileName",
+        key: "fileName",
+        width: 150
+      },
+      {
+        title: "文件大小(KB)",
+        dataIndex: "fileSize",
+        key: "fileSize",
+        width: 100
+      },
+      {
+        title: "导出时间",
+        dataIndex: "exportDate",
+        key: "exportDate",
+        width: 100
+      },
+      {
+        title: "操作",
+        key: "operation",
+        width: 50,
+        render: (text, record) => (
+          <Popconfirm
+            title="确定下载该文件?"
+            onConfirm={this.confirm.bind(this, record)}
+          >
+            <Button type="primary" size="small">
+              下载
+            </Button>
+          </Popconfirm>
+        )
+      }
+    ];
 
-        this.setState({
-            deadline: deadline
-        })
-    }
+    const navbar = [
+      {
+        name: "区划下载",
+        routerPath: "/about/pfpsmas/zcms/download",
+        imgPath: blue
+      },
+      {
+        name: "省级版本记录",
+        routerPath: "/about/pfpsmas/zcms/provincialVersionControl",
+        imgPath: black
+      }
+    ];
 
-    handleStartToggle({ open }) {
-        if (!open) {
-            this.setState({ endOpen: true });
-        }
-    }
+    const data = [];
 
-    handleEndToggle({ open }) {
-        this.setState({ endOpen: open });
-    }
+    return (
+      <div className="outer-box">
+        <div className="download inner-box">
+          <FreeScrollBar autohide="true">
+            <Navbar data={navbar} />
 
+            {/* 时间选择器 */}
+            <div className="button-group container-box" style={{ marginTop: "15px" }}>
+              <Row>
+                <Col span={7} offset={1}>
+                  <span className="time-title">导出时间起: </span>
+                  <DatePicker
+                    disabledDate={this.disabledStartDate.bind(this)}
+                    value={this.state.startValue}
+                    defaultValue={this.state.startValue}
+                    placeholder="开始日期"
+                    onChange={this.onStartChange.bind(this)}
+                    toggleOpen={this.handleStartToggle.bind(this)}
+                    size="large"
+                  />
+                </Col>
+                <Col span={7}>
+                  <span className="time-title">导出时间止: </span>
+                  <DatePicker
+                    disabledDate={this.disabledEndDate.bind(this)}
+                    value={this.state.endValue}
+                    defaultValue={this.state.endValue}
+                    placeholder="结束日期"
+                    onChange={this.onEndChange.bind(this)}
+                    open={this.state.endOpen}
+                    toggleOpen={this.handleEndToggle.bind(this)}
+                    size="large"
+                  />
+                </Col>
 
-    render() {
-        const columns = [{
-            title: '文件名称',
-            dataIndex: 'fileName',
-            key: 'fileName',
-            width: 150, 
-        }, {
-            title: '文件大小(KB)',
-            dataIndex: 'fileSize',
-            key: 'fileSize',
-            width: 100,
-        }, {
-            title: '导出时间',
-            dataIndex: 'exportDate',
-            key: 'exportDate',
-            width: 100,
-        }, {
-            title: '操作',
-            key: 'operation',
-            width: 50,
-            render: (text, record) => (
-                <Popconfirm title="确定下载该文件?" onConfirm={this.confirm.bind(this, record)}>
-                    <Button type="primary" size="small">下载</Button>
-                </Popconfirm>
-            ),
-        }];
+                <Col span={2}>
+                  <Button
+                    type="primary"
+                    size="large"
+                    onClick={this.handleAxiosQueryReleaseFormalCode.bind(this)}
+                  >
+                    查询
+                  </Button>
+                </Col>
 
-        const navbar = [{
-            name: "区划下载",
-            routerPath: "/about/pfpsmas/zcms/download",
-            imgPath: blue
-        },{
-            name: "省级版本记录",
-            routerPath: "/about/pfpsmas/zcms/provincialVersionControl",
-            imgPath: black
-        }];
+                <Col span={2}>
+                  <Button
+                    type="primary"
+                    size="large"
+                    onClick={this.handleReset.bind(this)}
+                  >
+                    重置
+                  </Button>
+                </Col>
+              </Row>
+            </div>
 
-        const data = [];
-
-        return (
-            <div className="download">
-
-                <Navbar data={navbar}></Navbar>
-
-                {/* 时间选择器 */}
-                <div className="button-group" style={{marginTop:'15px'}}>
-                    <Row>
-                        <Col span={9} offset={3}>
-                            <span className='time-title'>导出时间起(YYYY-MM-DD): </span>
-                            <DatePicker
-                                disabledDate={this.disabledStartDate.bind(this)}
-                                value={this.state.startValue}
-                                defaultValue={this.state.startValue}
-                                placeholder="开始日期"
-                                onChange={this.onStartChange.bind(this)}
-                                toggleOpen={this.handleStartToggle.bind(this)}
-                                size='large'
-                            />
-                        </Col>
-                        <Col span={9}>
-                            <span className='time-title'>导出时间止(YYYY-MM-DD): </span>
-                            <DatePicker
-                                disabledDate={this.disabledEndDate.bind(this)}
-                                value={this.state.endValue}
-                                defaultValue={this.state.endValue}
-                                placeholder="结束日期"
-                                onChange={this.onEndChange.bind(this)}
-                                open={this.state.endOpen}
-                                toggleOpen={this.handleEndToggle.bind(this)}
-                                size='large'
-                            />
-                        </Col>
-                    </Row>     
-                </div>
-
-                {/* 功能按钮组 */}
-                <div className="button-group">
+            {/* 功能按钮组 */}
+            {/* <div className="button-group">
                     <Button type="primary" size="large" onClick={this.handleAxiosQueryReleaseFormalCode.bind(this)}>查询</Button>
 
                     <Button type="primary" size="large" onClick={this.handleReset.bind(this)} style={{marginLeft: 30}}>重置</Button>
-                </div>
+                </div> */}
 
-                {/* 申请单展示列表 */}
-                <div style={{ marginTop: 15}}>
-                    <div className="table-title">
-                        <span>查询信息</span>
-                    </div>
-                    <Table columns={columns} dataSource={this.state.dispalyRelease} pagination={{ pageSize: this.state.pageSize }}/>
-                </div>
+            {/* 区划文件展示列表 */}
+            <div className="container-box margin-top-15">
+              <div className="container-title">
+                <span>查询信息</span>
+              </div>
+
+              <div className="container-centent">
+                <Table
+                  columns={columns}
+                  dataSource={this.state.dispalyRelease}
+                  pagination={{ pageSize: this.state.pageSize }}
+                />
+              </div>
             </div>
-        )
-    }
+          </FreeScrollBar>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default Download;
