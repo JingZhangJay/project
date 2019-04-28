@@ -152,7 +152,7 @@ class TimedTask extends React.Component {
                 <Navbar data={navbar}></Navbar>
 
                 {/* 功能按钮组 */}
-                <div className="button-group" style={{ marginTop: '15px' }}>
+                <div className="container-box margin-top-15">
 
                     <span className='time-title'>选择自动发布时间: </span>
 
@@ -165,11 +165,16 @@ class TimedTask extends React.Component {
                     <Button className='fabu-btn' type="primary" size="large" disabled={this.state.isDisabled} onClick={this.handleAxiosSettingTheCronExpression.bind(this)}>定时发布</Button>
                 </div>
 
-                {/* 申请单展示列表 */}
-                <div style={{ marginTop: 20 }}>
-                    <Table columns={columns} dataSource={changeControl} />
-                </div>
+                {/* 定时任务展示列表 */}
+                <div className="container-box margin-top-15">
+                    <div className="container-title">
+                        <span>定时任务展示列表</span>
+                    </div>
 
+                    <div className="container-centent">
+                        <Table columns={columns} dataSource={changeControl} />
+                    </div>
+                </div>
             </div>
         )
     }
