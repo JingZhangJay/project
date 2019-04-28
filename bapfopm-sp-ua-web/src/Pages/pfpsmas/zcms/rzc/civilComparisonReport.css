@@ -12,8 +12,17 @@
     }
 }
 
-.civilComparisonReport-container-top :global(.ant-col-12){
-    
+.civilComparisonReport-container-top{
+    width: 80%;
+    margin: 10px auto;
+}
+
+.civilComparisonReport-container-bottom{
+    width: 80%;
+    margin: 15px auto;
+    padding: 10px;
+    border: 1px solid #fff;
+    border-radius: 6px; 
 }
 
 .civilComparisonReport-container-top span{
@@ -28,4 +37,5 @@
     border: 1px solid #fff;
     border-radius: 5px;
     background: url(../../../../asset/sp/ua/img/bg.png) repeat;
+    cursor: pointer;
 }
