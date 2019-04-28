@@ -63,6 +63,8 @@ class Pie extends React.Component {
                             formatter: "{b} : {c} \n {d}%",
                         }
                     },
+                    labelLine: {
+                    },
                     // minAngle: 30,
                     itemStyle: {
                         emphasis: {
