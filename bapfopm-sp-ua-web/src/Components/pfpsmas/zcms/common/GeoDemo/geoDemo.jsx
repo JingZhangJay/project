@@ -38,8 +38,20 @@ class GeoDemo extends React.Component {
         let data = await getBgmxRealTimeExcel(param); 
         console.log('data ======>',data.responseData); 
         if(data.rtnCode == '000000'){
+            let formatterText = "";
+            let obj = data.responseData
+            for (const key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    if(key == "合计"){
+                        formatterText = `<span style='color: #fff; font-size: 16px; padding: 5px 10px'>${key}&nbsp;:</span><span style='color: #fff; font-size: 16px; padding: 5px 10px'>${obj[key]}</span><br/>` + formatterText
+                    }else{
+                        formatterText += `<span style='color: #fff; font-size: 16px; padding: 5px 10px'>${key}&nbsp;:</span><span style='color: #fff; font-size: 16px; padding: 5px 10px'>${obj[key]}</span><br/>`
+                    }
+                }
+            }
+
             this.setState({
-                formatterText: data.responseData
+                formatterText: formatterText
             })
         }
     }
@@ -47,7 +59,6 @@ class GeoDemo extends React.Component {
 
     componentWillMount(){
         this.axiosBgmxRealTimeExcel({zoningCode: "000000000000000"})
-        this.axiosGetBgmxRealTimeExcel({zoningCode: "000000000000000"})
     }
 
     componentDidMount() {
@@ -159,7 +170,8 @@ class GeoDemo extends React.Component {
             }],
             [{
                 name: '新疆兵团',
-                value: 0
+                value: 0,
+                qhdm: '660000000000000'
             }],
             [{
                 name: '西藏',
@@ -281,7 +293,7 @@ class GeoDemo extends React.Component {
                         show: true,
                         position: 'right', //显示位置
                         offset: [5, 0], //偏移设置
-                        formatter: function (params) { //圆环显示文字
+                        formatter: function (params) { //圆环显示文字 
                             return params.data.name;
                         },
                         fontSize: 13
@@ -292,7 +304,7 @@ class GeoDemo extends React.Component {
                 },
                 symbol: 'circle',
                 symbolSize: function (val) {
-                    return 5 + val[2] * 5; //圆环大小
+                    return 10 + val[2] * 10; //圆环大小
                 },
                 itemStyle: {
                     normal: {
@@ -326,7 +338,8 @@ class GeoDemo extends React.Component {
                 transitionDuration: 0,
                 extraCssText: 'z-index:100',
                 formatter: (params) =>{ 
-                    let res = '';
+                    console.log('params',params)
+
                     let paramsData = {
                         zoningCode:params.data.qhdm
                     } 
@@ -334,17 +347,17 @@ class GeoDemo extends React.Component {
 
                     let obj =  this.state.formatterText;
 
-                    let str = "";
-                    for (const key in obj) {
-                        if (obj.hasOwnProperty(key)) {
-                            if(key == "合计"){
-                                str = `<span style='color: #fff; font-size: 16px; padding: 5px 10px'>${key}&nbsp;:</span><span style='color: #fff; font-size: 16px; padding: 5px 10px'>${obj[key]}</span><br/>` + str
-                            }else{
-                                str += `<span style='color: #fff; font-size: 16px; padding: 5px 10px'>${key}&nbsp;:</span><span style='color: #fff; font-size: 16px; padding: 5px 10px'>${obj[key]}</span><br/>`
-                            }
-                        }
-                    }
-				    return str;  
+                    // let str = "";
+                    // for (const key in obj) {
+                    //     if (obj.hasOwnProperty(key)) {
+                    //         if(key == "合计"){
+                    //             str = `<span style='color: #fff; font-size: 16px; padding: 5px 10px'>${key}&nbsp;:</span><span style='color: #fff; font-size: 16px; padding: 5px 10px'>${obj[key]}</span><br/>` + str
+                    //         }else{
+                    //             str += `<span style='color: #fff; font-size: 16px; padding: 5px 10px'>${key}&nbsp;:</span><span style='color: #fff; font-size: 16px; padding: 5px 10px'>${obj[key]}</span><br/>`
+                    //         }
+                    //     }
+                    // }
+				    return obj;  
                 } 
             },
             backgroundColor: "#013954",
@@ -385,7 +398,7 @@ class GeoDemo extends React.Component {
     render() {
         return (
             <div className="Geo">
-                <div id="mainMap" style={{ width: '100%', height: '700px' }}></div>
+                <div id="mainMap" style={{ width: '100%', height: '500px' }}></div>
             </div>
         );
     }
