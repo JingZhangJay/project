@@ -301,35 +301,37 @@ class HistoricalTrace extends React.Component {
 
         return (
             <div className="outer-box">
-                <div className="historicalTrace">
-                    {/* <FreeScrollBar autohide="true"> */}
+                <div className="historicalTrace inner-box">
+                    <FreeScrollBar autohide="true">
                         <div className="historicalTrace-container">
-                            <div className="historicalTrace-container-top">
-                                <Row>
-                                    <Col span={4}>
-                                        <Row>
-                                            <Col span={8}><span className="info-span">区划代码</span></Col>
-                                            <Col span={16}>
-                                                <Input size="large" value={this.state.queryZoningCode}
-                                                    onChange={this.handleChangeValue.bind(this)}></Input>
-                                            </Col>
-                                        </Row>
-                                    </Col>
+                            <div className="historicalTrace-container-top container-box margin-top-10">
+                                <div className="container-centent">
+                                    <Row>
+                                        <Col span={5}>
+                                            <Row>
+                                                <Col span={8}><span className="info-span">区划代码</span></Col>
+                                                <Col span={16}>
+                                                    <Input size="large" value={this.state.queryZoningCode}
+                                                        onChange={this.handleChangeValue.bind(this)}></Input>
+                                                </Col>
+                                            </Row>
+                                        </Col>
 
-                                    <Col span={4} offset={1}>
-                                        <Row>
-                                            <Col span={8}><span className="info-span">时间选择</span></Col>
-                                            <Col span={16}>
-                                                <MonthPicker size="large" defaultValue="2000-01"
-                                                    onChange={this.handleChangeValueTime.bind(this)} />
-                                            </Col>
-                                        </Row>
-                                    </Col>
+                                        <Col span={5} offset={1}>
+                                            <Row>
+                                                <Col span={8}><span className="info-span">时间选择</span></Col>
+                                                <Col span={16}>
+                                                    <MonthPicker size="large" defaultValue="2000-01"
+                                                        onChange={this.handleChangeValueTime.bind(this)} />
+                                                </Col>
+                                            </Row>
+                                        </Col>
 
-                                    <Col span={4} offset={1}>
-                                        <Button type="primary" size="large" onClick={this.handleAxiosHistoryDate.bind(this)}>查询</Button>
-                                    </Col>
-                                </Row>
+                                        <Col span={4} offset={1}>
+                                            <Button type="primary" size="large" onClick={this.handleAxiosHistoryDate.bind(this)}>查询</Button>
+                                        </Col>
+                                    </Row>
+                                </div>
                             </div>
 
                             <div className="historicalTrace-container-center">
@@ -341,7 +343,7 @@ class HistoricalTrace extends React.Component {
                             </div>
                         </div>
 
-                    {/* </FreeScrollBar> */}
+                    </FreeScrollBar>
                 </div>
             </div>
         )
