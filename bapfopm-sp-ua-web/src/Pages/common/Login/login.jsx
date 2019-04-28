@@ -162,7 +162,7 @@ class Login extends React.Component {
                                 <span className="login-form-tel-span">{this.state.codeNum}</span>
                             </FormItem>
 
-                            <FormItem wrapperCol={{ span: 15, offset: 5 }}>
+                            <FormItem wrapperCol={{ span: 16, offset: 5 }}>
                                 <Button type="primary" style={{ marginTop: 0 }} onClick={this.handleSubmit.bind(this)}>登录</Button>
                                 <Button type="ghost" onClick={this.handleReset.bind(this)} style={{ color: "#fff", marginLeft: 10 }}>重置</Button>
                                 <Link to="/register" style={{ marginLeft: 10, color: '#fff' }}>没有账号？ 立即注册</Link>
