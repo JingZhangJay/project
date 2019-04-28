@@ -6,8 +6,8 @@
     position: relative;
     font-size: 16px;
     color: #ffffff;
-    top: 30px;
-    left: 1%
+    top: 15px;
+    /* left: 1% */
 }
 
 .upload-quhua span {
@@ -54,6 +54,7 @@
     z-index: 1;
     font-size: 1px;
     width: 8%;
+    height: 37px;
     opacity: 0;
     filter: alpha(opacity:0);
 }

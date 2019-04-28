@@ -2,7 +2,10 @@ import React from 'react';
 import { hashHistory, Link } from "react-router";
 import qs from 'qs'
 
-import './uploadApprovalFile.css'
+import './uploadApprovalFile.css';
+
+//  自定义滚动条
+import FreeScrollBar from 'react-free-scrollbar';
 
 import { Table, Button, Select, Upload, Icon, Popconfirm } from 'antd';
 import { openNotificationWithIcon } from "../../../../asset/pfpsmas/zcms/js/common";
@@ -108,7 +111,7 @@ class UploadApprovalFile extends React.Component {
      */
     async axiosList(params) {
         let res = await getList(params);
-        if(res.rtnCode == "000000"){
+        if (res.rtnCode == "000000") {
             this.setState({
                 totalRecord: res.responseData.totalRecord,
                 fileList: res.responseData.dataList
@@ -122,7 +125,7 @@ class UploadApprovalFile extends React.Component {
      * 批复文件删除接口
      * @param {string} id 文档id
      */
-    async axiosDelete(params){
+    async axiosDelete(params) {
         let res = await getDelete(params);
         if (res.rtnCode == '000000') {
             openNotificationWithIcon("success", res.rtnMessage);
@@ -136,7 +139,7 @@ class UploadApprovalFile extends React.Component {
     componentWillMount() {
         this.handAxioslist();
     }
-    
+
     render() {
         const columns = [
             {
@@ -154,7 +157,7 @@ class UploadApprovalFile extends React.Component {
                 dataIndex: 'fileName',
                 key: 'fileName',
                 width: "1"
-            },{
+            }, {
                 title: '文件类型',
                 dataIndex: 'suffix',
                 key: 'suffix',
@@ -164,12 +167,12 @@ class UploadApprovalFile extends React.Component {
                 dataIndex: 'year',
                 key: 'year',
                 width: "1"
-            },{
+            }, {
                 title: '上传时间',
                 dataIndex: 'createDate',
                 key: 'createDate',
                 width: "1"
-            },{
+            }, {
                 title: '操作',
                 key: 'operation',
                 width: 1,
@@ -181,7 +184,7 @@ class UploadApprovalFile extends React.Component {
                     </span>
                 ),
             }];
-        
+
         const pagination = {
             _this: this,
             total: this.state.totalRecord,
@@ -196,24 +199,37 @@ class UploadApprovalFile extends React.Component {
         };
 
         return (
-            <div className="UploadApprovalFile">
-                <div className="upload-quhua">
-                    <span>上传文件</span>
-                    <input type="text" className='filename' value={this.state.fileName} />
-                    <input type="file" className="upload-file" id="upload_file" name="file" onChange={this.update.bind(this)} />
-                    <input type="button" className="button-up" value="浏览" />
-                </div>
-                {/* 功能按钮组 */}
-                <div className="button-group  button-group-quhua">
-                    <Button type="primary" size="large" onClick={this.handleAxiosUpload.bind(this)}>上传</Button>
+            <div className="outer-box">
+                <div className="UploadApprovalFile inner-box">
+                    <FreeScrollBar autohide="true">
+                        <div className="upload-quhua">
+                            <span>上传文件</span>
+                            <input type="text" className='filename' value={this.state.fileName} />
+                            <input type="file" className="upload-file" id="upload_file" name="file" onChange={this.update.bind(this)} />
+                            <input type="button" className="button-up" value="浏览" />
+                        </div>
+                        {/* 功能按钮组 */}
+                        <div className="button-group  button-group-quhua">
+                            <Button type="primary" size="large" onClick={this.handleAxiosUpload.bind(this)}>上传</Button>
 
-                    <Button type="primary" size="large" className="margin-left-20" onClick={this.handleReset.bind(this)}>重置</Button>
+                            <Button type="primary" size="large" className="margin-left-20" onClick={this.handleReset.bind(this)}>重置</Button>
+                        </div>
+
+                        <div className="container-box" style={{ marginTop: 35 }}>
+                            <div className="container-title">
+                                <span>批复文件上传展示</span>
+                            </div>
+
+                            <div className="container-centent">
+                                <Table columns={columns} dataSource={this.state.fileList} pagination={pagination} />
+                            </div>
+
+                        </div>
+                    </FreeScrollBar>
                 </div>
 
-                <div style={{ marginTop: 60 }}>
-                    <Table columns={columns} dataSource={this.state.fileList} pagination={pagination} />
-                </div>
             </div>
+
         )
     }
 }
