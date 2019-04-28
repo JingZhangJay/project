@@ -29,11 +29,11 @@
     background: #8FBC8F;
 }
 
-.container-top-2 .civil-content{
-    /* padding-left: 10%; */
+.inputchangedetails .container .container-top-2{
+    
 }
 
-.container-top-2 .civil-span{
+.inputchangedetails .container .container-top-2 .civil-span{
     display: inline-block;
     height: 37px;
     line-height: 37px;
@@ -43,7 +43,7 @@
     padding: 0 20px;
 }
 
-.container-top-2 .civil-input{
+.inputchangedetails .container .container-top-2 .civil-input{
     display: inline-block;
     height: 37px;
     line-height: 37px;
@@ -54,11 +54,25 @@
     color: #ccc;
 }
 
-.container-top-2 .civil-color {
+.inputchangedetails .container .container-top-2 .civil-color {
     color: #DF9810;
 }
 
-.input-small-length{
+.inputchangedetails .container .container-center{
+    background: url("../../../../asset/sp/ua/img/portal/1/2.png") repeat;
+    padding: 10px 20px;
+    border: 1px solid #fff;
+    border-radius: 6px;
+}
+
+.inputchangedetails .container .container-bottom{
+    background: url("../../../../asset/sp/ua/img/portal/1/2.png") repeat;
+    padding: 10px 20px;
+    border: 1px solid #fff;
+    border-radius: 6px;
+}
+
+.inputchangedetails .container .container-center .input-small-length{
     width: 10%;
     height: 37px;
     float: left;
@@ -71,11 +85,11 @@
     background-color: transparent;
 }
 
-.ant-col-18 .input-small-length:nth-child(1){
+.inputchangedetails .container .container-center .ant-col-18 .input-small-length:nth-child(1){
     margin-left: 0;
 }
 
-.input-large-length{
+.inputchangedetails .container .container-center .input-large-length{
     width: 75%;
     height: 37px;
     float: left;
@@ -85,53 +99,53 @@
     color: #999;
 }
 
-.input-font-color{
+.inputchangedetails .container .container-center .input-font-color{
     color: #fff;
     border-color: #1589cd;
 }
 
-.margin-top-10{
+.inputchangedetails .container .container-center .margin-top-10{
     margin-top: 15px;
 }
 
-.text-align-left{
+.inputchangedetails .container .container-center .text-align-left{
     text-align: left;
 }
 
-.label-font-16{
+.inputchangedetails .container .container-center .label-font-16{
     display: inline-block;
     height: 37px;
     line-height: 37px;
     font-size: 16px;
 }
 
-.color-red-margin{
+.inputchangedetails .container .container-center .color-red-margin{
     margin-left: 5px;
     font-size: 16px;
     color: #f00;
 }
 
-.speech-bubble{
+.inputchangedetails .container .container-center .speech-bubble{
     cursor: pointer;
     padding-left: 15px;
     height: 37px; 
 }
 
-.speech-bubble :global(.ant-tooltip-inner){
+.inputchangedetails .container .container-center .speech-bubble :global(.ant-tooltip-inner){
     color: #d7f7ff;
     background-color: #0e1c21;
     font-size: 14px;
 }
 
-.icon-show{
+.inputchangedetails .container .container-center .icon-show{
     display: block;
 }
 
-.icon-hide{
+.inputchangedetails .container .container-center .icon-hide{
     display: none;
 }
 
-.zoningCode-actived{
+.inputchangedetails .container .container-center .zoningCode-actived{
     background: #3ea7d4;
 }
 
@@ -145,12 +159,6 @@ table .ant-table-thead > tr > th{
 table .ant-table-tbody > tr > td{
     background: url("../../../../asset/sp/ua/img/portal/1/2.png") repeat;
     text-align: center;
-}
-
-.inputchangedetails :global(.container:after) {
-    content: "";
-    display: block;
-    padding: 1%;
 }
 
 .inputchangedetails :global(table .ant-table-thead > tr > th, table .ant-table-tbody > tr > td){

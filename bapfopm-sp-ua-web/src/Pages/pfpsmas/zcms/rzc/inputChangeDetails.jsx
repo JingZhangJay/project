@@ -120,9 +120,19 @@ class InputChangeDetails extends React.Component {
 
             addCode: "",    //   新增区划自动补位,
 
-            checkedKeys: { checked: [], halfChecked: [] }
+            checkedKeys: { checked: [], halfChecked: [] },
+
+            detailsToggle: true,   //  变更明细信息框显隐开关
 
         }
+    }
+
+    // 收起 搜素框
+    handleDetailsShowOrHide() {
+        let { detailsToggle } = this.state;
+        this.setState({
+            detailsToggle: !detailsToggle
+        })
     }
 
     //  选择需要录入的区划
@@ -203,7 +213,10 @@ class InputChangeDetails extends React.Component {
             originalZoningName = e.target.dataset.zoningname;
             targetZoningName = e.target.dataset.zoningname;
 
+            console.log(e);
+
             this.setState({
+                detailsToggle: false,
                 selectedAssigningCode: selectedAssigningCode,
                 selectedZoningCode: e.target.dataset.zoningcode,
                 selectedZoningName: e.target.dataset.zoningname,
@@ -212,7 +225,8 @@ class InputChangeDetails extends React.Component {
                 originalZoningName: originalZoningName,
                 targetZoningName: targetZoningName,
                 targetZoningCode: e.target.dataset.zoningcode,
-                selectedOwnCode: e.target.dataset.owncode
+                selectedOwnCode: e.target.dataset.owncode,
+                sourceId: e.target.dataset.id
             })
 
             this.render();
@@ -442,6 +456,7 @@ class InputChangeDetails extends React.Component {
         group.name = requestName;
 
         this.setState({
+            detailsToggle: true,
             group: group,
             displayDetails: tempArr
         })
@@ -458,7 +473,7 @@ class InputChangeDetails extends React.Component {
      * @param 区划信息 changeInfo
      */
     checkAdd() {
-        let { originalZoningCode, originalZoningName, targetZoningCode, targetZoningName, targetZoningCodeArray, selectedAssigningCode, changeType, notes, requestSeq, ringFlag, sourceId, targetId } = this.state;
+        let { originalZoningCode, originalZoningName, targetZoningCode, targetZoningName, targetZoningCodeArray, selectedAssigningCode, changeType, notes, requestSeq, ringFlag, sourceId, targetId, selectedId } = this.state;
         let changeInfo = {
             originalZoningCode: originalZoningCode,
             originalZoningName: originalZoningName,
@@ -468,7 +483,7 @@ class InputChangeDetails extends React.Component {
             notes: notes,
             ringFlag: ringFlag,
             sourceId: sourceId,
-            targetId: targetId,
+            targetId: selectedId,
             requestSeq: requestSeq
         };
         // let  changeType = changeInfo.changeType.toString();
@@ -525,16 +540,16 @@ class InputChangeDetails extends React.Component {
                                     obj = {};
                                 })
 
+                                this.setState({
+                                    moveForMerge: tempArr,
+                                    moveForMergeVisible: true
+                                })
+
                                 openNotificationWithIcon("warning", `${originalZoningName}该区划存在下级`);
                             }
                         }
 
                         // console.log(this.state.selectedAssigningCode)
-
-                        this.setState({
-                            moveForMerge: tempArr,
-                            moveForMergeVisible: true
-                        })
                     })
 
                     this.axiosLogicCheckBeforeSave(changeInfo);
@@ -861,14 +876,14 @@ class InputChangeDetails extends React.Component {
             checkedKeys: info
         })
 
-        if(ringFlag == 1){
+        if (ringFlag == 1) {
             this.setState({
                 targetZoningCode: tempObj.zoningCode,
                 targetZoningName: originalZoningName,
                 targetZoningCodeArray: sliceSpecifiedCode(tempObj.zoningCode),
                 selectedId: tempObj.id
             })
-        }else{
+        } else {
             if (changeType == "41") {
                 let targetZoningCodeArray = sliceSpecifiedCode(tempObj.zoningCode);
                 targetZoningCodeArray[selectedAssigningCode - 1] = selectedOwnCode
@@ -1254,7 +1269,7 @@ class InputChangeDetails extends React.Component {
 
     render() {
         const navbar = [{
-            name: "建立变更对照表",
+            name: "创建变更申请单",
             routerPath: "/about/pfpsmas/zcms/createChangeComparisonTable",
             imgPath: gray
         }, {
@@ -1293,12 +1308,6 @@ class InputChangeDetails extends React.Component {
             key: 'targetZoningName',
             width: 150,
         },
-        // {
-        //     title: '备注',
-        //     dataIndex: 'notes',
-        //     key: 'notes',
-        //     width: 150,
-        // }, 
         {
             title: '操作',
             key: 'operation',
@@ -1471,17 +1480,17 @@ class InputChangeDetails extends React.Component {
             onChange: this.onChangeSelect.bind(this)
         };
 
+        const pagination = {
+            _this: this,
+            pageSize: 5,
+        }
+
         /**
          * 并入区划下级迁移的列表分页展示
          */
         const moveForMergePagination = {
             _this: this,
             pageSize: 5,
-            onChange(current) {
-                // this._this.setState({
-                //     selectedRowKeys: []
-                // })            
-            },
         };
 
         return (
@@ -1498,9 +1507,10 @@ class InputChangeDetails extends React.Component {
                                 </Row>
                             </div>
 
-                            <Hr />
+                            {/* <Hr /> */}
 
-                            <div className="container-top-2">
+                            {/* 民政比对结果 */}
+                            <div className="container-top-2 container-box margin-top-10">
                                 <div className="civil-content">
                                     <span className="civil-span">民政区划代码:</span> <span className="civil-input">{this.state.civilCode}</span>
                                     <span className="civil-span">民政区划名称:</span> <span className="civil-input">{this.state.civilName}</span>
@@ -1512,108 +1522,114 @@ class InputChangeDetails extends React.Component {
                                 </div>
                             </div>
 
-                            <Hr />
+                            {/* <Hr /> */}
 
-                            <div className="container-center">
-                                <Row className="margin-top-10">
-                                    {/* 调整说明 */}
-                                    <Col span={12}>
-                                        <Row>
-                                            <Col span={6}>
-                                                <label className="label-font-16">调整说明
+                            <div className="container-center margin-top-10">
+                                <div className="container-title">
+                                    <span>变更明细信息</span>
+                                    <p className={`downAndUp ${this.state.detailsToggle ? 'rotate' : ''}`} onClick={this.handleDetailsShowOrHide.bind(this)}></p>
+                                </div>
+
+                                <div className={`container-content ${this.state.detailsToggle ? 'content-hide' : ''}`}>
+                                    <Row>
+                                        {/* 调整说明 */}
+                                        <Col span={12}>
+                                            <Row>
+                                                <Col span={6}>
+                                                    <label className="label-font-16">调整说明
                                                 {/* <span className="color-red-margin">*</span> */}
-                                                </label>
-                                            </Col>
-                                            <Col span={18}>
-                                                <input type="text" className="input-large-length" value={this.state.requestName}
-                                                    onChange={this.handleChangeInputValue.bind(this, "requestName")} />
-                                            </Col>
-                                        </Row>
-                                    </Col>
+                                                    </label>
+                                                </Col>
+                                                <Col span={18}>
+                                                    <input type="text" className="input-large-length" value={this.state.requestName}
+                                                        onChange={this.handleChangeInputValue.bind(this, "requestName")} />
+                                                </Col>
+                                            </Row>
+                                        </Col>
 
-                                    {/* 调整类型 */}
-                                    <Col span={12}>
-                                        <Row>
-                                            <Col span={6} style={{ marginTop: 7 }}>
-                                                <Checkbox onChange={this.handleChecked.bind(this)} style={{ fontSize: 16 }}>环链变更</Checkbox>
-                                            </Col>
-                                            <Col span={18}>
-                                                <Row>
-                                                    <Col span={6}>
-                                                        <label className="label-font-16">调整类型<span className="color-red-margin">*</span></label>
-                                                    </Col>
-                                                    <Col span={18} className="text-align-left">
-                                                        <Select size="large" placeholder="--请选择--" value={this.state.changeType}
-                                                            onChange={this.handleChangeType.bind(this)}
-                                                            style={{ width: "66%" }}>
-                                                            {loopOption(this.state.changeTypeOption)}
-                                                        </Select>
-                                                    </Col>
-                                                </Row>
-                                            </Col>
-                                        </Row>
-                                    </Col>
-                                </Row>
+                                        {/* 调整类型 */}
+                                        <Col span={12}>
+                                            <Row>
+                                                <Col span={6} style={{ marginTop: 7 }}>
+                                                    <Checkbox onChange={this.handleChecked.bind(this)} style={{ fontSize: 16 }}>环链变更</Checkbox>
+                                                </Col>
+                                                <Col span={18}>
+                                                    <Row>
+                                                        <Col span={6} style={{textAlign: "left"}}>
+                                                            <label className="label-font-16">调整类型<span className="color-red-margin">*</span></label>
+                                                        </Col>
+                                                        <Col span={18} className="text-align-left">
+                                                            <Select size="large" placeholder="--请选择--" value={this.state.changeType}
+                                                                onChange={this.handleChangeType.bind(this)}
+                                                                style={{ width: "66%" }}>
+                                                                {loopOption(this.state.changeTypeOption)}
+                                                            </Select>
+                                                        </Col>
+                                                    </Row>
+                                                </Col>
+                                            </Row>
+                                        </Col>
+                                    </Row>
 
-                                <Row className="margin-top-10">
-                                    {/* 原区划代码 */}
-                                    <Col span={12}>
-                                        <Row>
-                                            <Col span={6}>
-                                                <label className="label-font-16">原区划代码</label>
-                                            </Col>
-                                            <Col span={18}>
-                                                {loopInput(this.state.originalZoningCodeArray)}
-                                            </Col>
-                                        </Row>
-                                    </Col>
+                                    <Row className="margin-top-10">
+                                        {/* 原区划代码 */}
+                                        <Col span={12}>
+                                            <Row>
+                                                <Col span={6}>
+                                                    <label className="label-font-16">原区划代码</label>
+                                                </Col>
+                                                <Col span={18}>
+                                                    {loopInput(this.state.originalZoningCodeArray)}
+                                                </Col>
+                                            </Row>
+                                        </Col>
 
-                                    {/* 现区划代码 */}
-                                    <Col span={12}>
-                                        <Row>
-                                            <Col span={6}>
-                                                <label className="label-font-16">现区划代码<span className="color-red-margin">*</span></label>
-                                            </Col>
-                                            <Col span={18}>
-                                                {loopInput(this.state.targetZoningCodeArray, this.state.selectedAssigningCode, this.state.changeType)}
-                                                <Tooltip placement="bottom" arrowPointAtCenter="true" overlayClassName="speech-bubble" mouseLeaveDelay="5" title="点击星星图标获取区划代码">
-                                                    <img src={star} alt="迁移,并入提示图标" className={this.state.iconToggle ? "speech-bubble icon-show" : "speech-bubble icon-hide"} onClick={this.showTree.bind(this)} />
-                                                </Tooltip>
-                                            </Col>
-                                        </Row>
-                                    </Col>
-                                </Row>
+                                        {/* 现区划代码 */}
+                                        <Col span={12}>
+                                            <Row>
+                                                <Col span={6}>
+                                                    <label className="label-font-16">现区划代码<span className="color-red-margin">*</span></label>
+                                                </Col>
+                                                <Col span={18}>
+                                                    {loopInput(this.state.targetZoningCodeArray, this.state.selectedAssigningCode, this.state.changeType)}
+                                                    <Tooltip placement="bottom" arrowPointAtCenter="true" overlayClassName="speech-bubble" mouseLeaveDelay="5" title="点击星星图标获取区划代码">
+                                                        <img src={star} alt="迁移,并入提示图标" className={this.state.iconToggle ? "speech-bubble icon-show" : "speech-bubble icon-hide"} onClick={this.showTree.bind(this)} />
+                                                    </Tooltip>
+                                                </Col>
+                                            </Row>
+                                        </Col>
+                                    </Row>
 
-                                <Row className="margin-top-10">
-                                    {/* 原区划名称 */}
-                                    <Col span={12}>
-                                        <Row>
-                                            <Col span={6}>
-                                                <label className="label-font-16">原区划名称</label>
-                                            </Col>
-                                            <Col span={18}>
-                                                <input type="text" className="input-large-length" value={this.state.originalZoningName} readOnly />
-                                            </Col>
-                                        </Row>
-                                    </Col>
+                                    <Row className="margin-top-10">
+                                        {/* 原区划名称 */}
+                                        <Col span={12}>
+                                            <Row>
+                                                <Col span={6}>
+                                                    <label className="label-font-16">原区划名称</label>
+                                                </Col>
+                                                <Col span={18}>
+                                                    <input type="text" className="input-large-length" value={this.state.originalZoningName} readOnly />
+                                                </Col>
+                                            </Row>
+                                        </Col>
 
-                                    {/* 现区划名称 */}
-                                    <Col span={12}>
-                                        <Row>
-                                            <Col span={6}>
-                                                <label className="label-font-16">现区划名称<span className="color-red-margin">*</span></label>
-                                            </Col>
-                                            <Col span={18}>
-                                                <input type="text" className="input-large-length font-color-fff" value={this.state.targetZoningName}
-                                                    onChange={this.handleChangeInputValue.bind(this, "targetZoningName")} readOnly={this.state.changeType == "31" || this.state.ringFlag == "1"} />
-                                            </Col>
-                                        </Row>
-                                    </Col>
+                                        {/* 现区划名称 */}
+                                        <Col span={12}>
+                                            <Row>
+                                                <Col span={6}>
+                                                    <label className="label-font-16">现区划名称<span className="color-red-margin">*</span></label>
+                                                </Col>
+                                                <Col span={18}>
+                                                    <input type="text" className="input-large-length font-color-fff" value={this.state.targetZoningName}
+                                                        onChange={this.handleChangeInputValue.bind(this, "targetZoningName")} readOnly={this.state.changeType == "31" || this.state.ringFlag == "1"} />
+                                                </Col>
+                                            </Row>
+                                        </Col>
 
-                                </Row>
+                                    </Row>
 
-                                {/* 备注 */}
-                                {/* <Row className="margin-top-10">
+                                    {/* 备注 */}
+                                    {/* <Row className="margin-top-10">
                                     <Col span={12}>
                                         <Row>
                                             <Col span={6}>
@@ -1628,24 +1644,33 @@ class InputChangeDetails extends React.Component {
                                     </Col>
                                 </Row> */}
 
-                                <Row className="margin-top-10">
-                                    {/* 功能按钮组 */}
-                                    <Col span={12} offset={6}>
-                                        <Button type="primary" size="large" onClick={this.handleSaveDisplayDetails.bind(this)}>保存明细</Button>
-                                        <Button type="primary" size="large" onClick={this.clean.bind(this)} style={{ marginLeft: 20 }}>重置</Button>
-                                    </Col>
-                                </Row>
+                                    <Row className="margin-top-10">
+                                        {/* 功能按钮组 */}
+                                        <Col span={12} offset={6}>
+                                            <Button type="primary" size="large" onClick={this.handleSaveDisplayDetails.bind(this)}>保存明细</Button>
+                                            <Button type="primary" size="large" onClick={this.clean.bind(this)} style={{ marginLeft: 20 }}>重置</Button>
+                                        </Col>
+                                    </Row>
+
+                                </div>
                             </div>
 
-                            <Hr />
+                            {/* <Hr /> */}
 
-                            <div className="container-bottom">
-                                <Table dataSource={this.state.displayDetails} columns={columns} pagination={{ pageSize: 5 }} />
+                            <div className="container-bottom margin-top-10">
+                                <div className="container-title">
+                                    <span>变更明细展示</span>
+                                    <Button type="primary" className="float-rigth" onClick={this.handleSubmitDetails.bind(this)}>预览</Button>
+                                </div>
+
+                                <div className="container-content">
+                                    <Table dataSource={this.state.displayDetails} columns={columns} pagination={pagination} />
+                                </div>
                             </div>
 
-                            <div className="container-footer">
+                            {/* <div className="container-footer">
                                 <Button type="primary" size="large" className="margin-top-10" onClick={this.handleSubmitDetails.bind(this)}>预览</Button>
-                            </div>
+                            </div> */}
 
                         </div>
                     </FreeScrollBar>
