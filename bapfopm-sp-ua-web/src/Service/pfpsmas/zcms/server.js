@@ -446,6 +446,7 @@ export let getFindVersionRecord = async () => {
  * 提交版本记录
  * @param {string} dmxzqh 行政区划代码
  * @param {string} bbfbrq 版本发布日期
+ * @param {string} scbbrq 上次发布日期
  */
 export let getRecordVersion = async (params) => {
     let response = await axios({

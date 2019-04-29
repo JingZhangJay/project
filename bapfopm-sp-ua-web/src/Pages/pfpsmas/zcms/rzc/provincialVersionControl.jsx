@@ -24,7 +24,8 @@ class ProvincialVersionControl extends React.Component {
 
             displayVersion: [], //  各省使用区划版本
             usedVersionList: [],    //  已发布版本列表
-            usedVersion: "--请选择--" //  所使用的版本
+            usedVersion: "--请选择--", //  所使用的版本
+            oldVersion: ""  //  上次版本日期
 
         }
     }
@@ -40,11 +41,12 @@ class ProvincialVersionControl extends React.Component {
      * 提交版本记录
      */
     handleAxiosRecordVersion() {
-        let { zoningCode, usedVersion } = this.state;
+        let { zoningCode, usedVersion, oldVersion } = this.state;
         let postData = {};
 
         postData.dmxzqh = zoningCode;
         postData.bbfbrq = usedVersion;
+        postData.scbbrq = oldVersion;
 
         this.axiosRecordVersion(postData);
     }
@@ -71,12 +73,14 @@ class ProvincialVersionControl extends React.Component {
     async axiosFindVersionRecord() {
         let { zoningCode } = this.state;
         let res = await getFindVersionRecord();
+        let tempVersion = "";
         console.log(res);
         if (res.rtnCode == "000000") {
             let data = res.responseData;
             let temp = [];
             data.forEach(item => {
                 if (item.xzqhdm == zoningCode) {
+                    tempVersion = item.bbfbrq;
                     temp.unshift(item);
                 } else {
                     temp.push(item);
@@ -84,7 +88,8 @@ class ProvincialVersionControl extends React.Component {
             })
             console.log(temp);
             this.setState({
-                displayVersion: temp
+                displayVersion: temp,
+                oldVersion: tempVersion
             })
         } else {
             openNotificationWithIcon("error", res.rtnMessage);
@@ -95,6 +100,8 @@ class ProvincialVersionControl extends React.Component {
      * 提交版本记录
      * @param {string} dmxzqh 行政区划代码
      * @param {string} bbfbrq 版本发布日期
+     * @param {string} scbbrq 上次发布日期
+     * 
      */
     async axiosRecordVersion(params) {
         let res = await getRecordVersion(params);
