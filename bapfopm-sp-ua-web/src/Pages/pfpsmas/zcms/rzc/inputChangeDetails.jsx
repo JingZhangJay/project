@@ -473,7 +473,7 @@ class InputChangeDetails extends React.Component {
      * @param 区划信息 changeInfo
      */
     checkAdd() {
-        let { originalZoningCode, originalZoningName, targetZoningCode, targetZoningName, targetZoningCodeArray, selectedAssigningCode, changeType, notes, requestSeq, ringFlag, sourceId, targetId, selectedId } = this.state;
+        let { displayDetails, originalZoningCode, originalZoningName, targetZoningCode, targetZoningName, targetZoningCodeArray, selectedAssigningCode, changeType, notes, requestSeq, ringFlag, sourceId, targetId, selectedId } = this.state;
         let changeInfo = {
             originalZoningCode: originalZoningCode,
             originalZoningName: originalZoningName,
@@ -486,6 +486,7 @@ class InputChangeDetails extends React.Component {
             targetId: selectedId,
             requestSeq: requestSeq
         };
+        let flag = true;
         // let  changeType = changeInfo.changeType.toString();
         // basket = data.basket;
 
@@ -500,7 +501,15 @@ class InputChangeDetails extends React.Component {
                 if (changeInfo.targetZoningCode == changeInfo.originalZoningCode && changeInfo.targetZoningName == changeInfo.originalZoningName) {
                     openNotificationWithIcon("warning", "无效的变更，原区划代码、原区划名称与现区划代码、现区划名称完全一致!");
                 } else {
-                    this.axiosLogicCheckBeforeSave(changeInfo);
+                    displayDetails.forEach(item => {
+                        if(item.originalZoningCode == changeInfo.originalZoningCode && item.originalZoningName == changeInfo.originalZoningName && item.targetZoningCode == changeInfo.targetZoningCode && item.targetZoningName == changeInfo.targetZoningName){
+                            openNotificationWithIcon("warning", "该变更明细已存在!");
+                            flag = false;
+                        }
+                    })
+                    if(flag){
+                        this.axiosLogicCheckBeforeSave(changeInfo);
+                    }     
                 }
             } else if (changeType == "31") {
                 //并入，可以在点击“选择并入对象”时，校验对象是否有子级区划
