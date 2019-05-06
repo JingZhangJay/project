@@ -328,6 +328,17 @@ class GeoDemo extends React.Component {
         const myChart = echarts.init(document.getElementById('mainMap'));
 
         myChart.setOption({
+            title: {
+                text: '本\n月\n区\n划\n变\n更\n情\n况',
+                textStyle: {
+                    width: "20px",
+                    height: '100%',
+                    fontSize: 18,
+                    color: '#fff',
+                },
+                textAlign: "auto",
+                textVerticalAlign: "middle"
+            },
             tooltip: { 
                 trigger: 'item',
                 backgroundColor: 'rgba(166, 200, 76, 0.82)',

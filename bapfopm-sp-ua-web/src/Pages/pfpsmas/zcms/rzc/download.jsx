@@ -175,7 +175,7 @@ class Download extends React.Component {
         width: 100
       },
       {
-        title: "导出时间",
+        title: "发布日期",
         dataIndex: "exportDate",
         key: "exportDate",
         width: 100
@@ -222,7 +222,7 @@ class Download extends React.Component {
             <div className="button-group container-box" style={{ marginTop: "15px" }}>
               <Row>
                 <Col span={7} offset={1}>
-                  <span className="time-title">导出时间起: </span>
+                  <span className="time-title">起始时间: </span>
                   <DatePicker
                     disabledDate={this.disabledStartDate.bind(this)}
                     value={this.state.startValue}
@@ -234,7 +234,7 @@ class Download extends React.Component {
                   />
                 </Col>
                 <Col span={7}>
-                  <span className="time-title">导出时间止: </span>
+                  <span className="time-title">终止时间: </span>
                   <DatePicker
                     disabledDate={this.disabledEndDate.bind(this)}
                     value={this.state.endValue}

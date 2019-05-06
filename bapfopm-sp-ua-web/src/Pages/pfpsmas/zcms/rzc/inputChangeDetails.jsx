@@ -83,6 +83,7 @@ class InputChangeDetails extends React.Component {
             level: 0, //  变更明细的级别代码
             ringFlag: 0,
             ringFlagToggle: false,    //  是否重用
+            ringFlagHide: true, //  环链变更是否显示
 
             iconToggle: false, //  迁移，并入图标
 
@@ -159,7 +160,8 @@ class InputChangeDetails extends React.Component {
         if (selectedAssigningCode != this.state.selectedAssigningCode || selectedZoningCode != this.state.selectedZoningCode) {
             this.setState({
                 changeType: "--请选择--",
-                iconToggle: false
+                iconToggle: false,
+                ringFlagHide: true
             })
         }
 
@@ -401,7 +403,8 @@ class InputChangeDetails extends React.Component {
                     targetZoningCode: targetZoningCode,
                     targetZoningCodeArray: tempArr,
                     iconToggle: false,
-                    ringFlag: 0
+                    ringFlag: 0,
+                    ringFlagHide: true
                 })
             } else if (e == "21") {
                 this.setState({
@@ -412,7 +415,8 @@ class InputChangeDetails extends React.Component {
                     targetZoningName: originalZoningName,
                     targetZoningCodeArray: originalZoningCodeArray,
                     iconToggle: false,
-                    ringFlag: 0
+                    ringFlag: 0,
+                    ringFlagHide: false
                 })
             } else {
                 this.setState({
@@ -424,7 +428,8 @@ class InputChangeDetails extends React.Component {
                     targetZoningName: "",
                     targetZoningCodeArray: ["", "", "", "", "", ""],
                     iconToggle: true,
-                    ringFlag: 0
+                    ringFlag: 0,
+                    ringFlagHide: true
                 })
                 openNotificationWithIcon("info", "点击星星获取区划代码");
             }
@@ -495,21 +500,28 @@ class InputChangeDetails extends React.Component {
         } else {
 
             if (changeType == "11") {
-                this.axiosLogicCheckBeforeSave(changeInfo);
-
+                displayDetails.forEach(item => {
+                    if(item.originalZoningCode == changeInfo.originalZoningCode && item.originalZoningName == changeInfo.originalZoningName){
+                        openNotificationWithIcon("warning", "该区划已做变更,请确认后再进行变更操作!");
+                        flag = false;
+                    }
+                })
+                if(flag){
+                    this.axiosLogicCheckBeforeSave(changeInfo);
+                }      
             } else if (changeType == "21") {
                 if (changeInfo.targetZoningCode == changeInfo.originalZoningCode && changeInfo.targetZoningName == changeInfo.originalZoningName) {
                     openNotificationWithIcon("warning", "无效的变更，原区划代码、原区划名称与现区划代码、现区划名称完全一致!");
                 } else {
                     displayDetails.forEach(item => {
-                        if(item.originalZoningCode == changeInfo.originalZoningCode && item.originalZoningName == changeInfo.originalZoningName && item.targetZoningCode == changeInfo.targetZoningCode && item.targetZoningName == changeInfo.targetZoningName){
-                            openNotificationWithIcon("warning", "该变更明细已存在!");
+                        if(item.originalZoningCode == changeInfo.originalZoningCode && item.originalZoningName == changeInfo.originalZoningName){
+                            openNotificationWithIcon("warning", "该区划已做变更,请确认后再进行变更操作!");
                             flag = false;
                         }
                     })
                     if(flag){
                         this.axiosLogicCheckBeforeSave(changeInfo);
-                    }     
+                    }   
                 }
             } else if (changeType == "31") {
                 //并入，可以在点击“选择并入对象”时，校验对象是否有子级区划
@@ -561,12 +573,28 @@ class InputChangeDetails extends React.Component {
                         // console.log(this.state.selectedAssigningCode)
                     })
 
-                    this.axiosLogicCheckBeforeSave(changeInfo);
+                    displayDetails.forEach(item => {
+                        if(item.originalZoningCode == changeInfo.originalZoningCode && item.originalZoningName == changeInfo.originalZoningName){
+                            openNotificationWithIcon("warning", "该区划已做变更,请确认后再进行变更操作!");
+                            flag = false;
+                        }
+                    })
+                    if(flag){
+                        this.axiosLogicCheckBeforeSave(changeInfo);
+                    }   
                 }
             } else if (changeType == "41") {
 
                 //迁移在前台其实不能做多少校验，需要使用ajax
-                this.axiosLogicCheckBeforeSave(changeInfo);
+                displayDetails.forEach(item => {
+                    if(item.originalZoningCode == changeInfo.originalZoningCode && item.originalZoningName == changeInfo.originalZoningName){
+                        openNotificationWithIcon("warning", "该区划已做变更,请确认后再进行变更操作!");
+                        flag = false;
+                    }
+                })
+                if(flag){
+                    this.axiosLogicCheckBeforeSave(changeInfo);
+                }    
             }
         }
     };
@@ -1542,11 +1570,10 @@ class InputChangeDetails extends React.Component {
                                 <div className={`container-content ${this.state.detailsToggle ? 'content-hide' : ''}`}>
                                     <Row>
                                         {/* 调整说明 */}
-                                        <Col span={12}>
+                                        {/* <Col span={12}>
                                             <Row>
                                                 <Col span={6}>
                                                     <label className="label-font-16">调整说明
-                                                {/* <span className="color-red-margin">*</span> */}
                                                     </label>
                                                 </Col>
                                                 <Col span={18}>
@@ -1554,17 +1581,26 @@ class InputChangeDetails extends React.Component {
                                                         onChange={this.handleChangeInputValue.bind(this, "requestName")} />
                                                 </Col>
                                             </Row>
+                                        </Col> */}
+
+                                        {/* 环链变更 */}
+                                        <Col span={12}>
+                                            <Row>
+                                                <Col span={6} offset={15} className={`${this.state.ringFlagHide ? "display-none" : "display-inline-block"}`}>
+                                                    <Checkbox onChange={this.handleChecked.bind(this)} style={{ fontSize: 16 }}>环链变更</Checkbox>
+                                                </Col>
+                                            </Row>
                                         </Col>
 
                                         {/* 调整类型 */}
                                         <Col span={12}>
                                             <Row>
-                                                <Col span={6} style={{ marginTop: 7 }}>
+                                                {/* <Col span={6} style={{ marginTop: 7 }}>
                                                     <Checkbox onChange={this.handleChecked.bind(this)} style={{ fontSize: 16 }}>环链变更</Checkbox>
-                                                </Col>
-                                                <Col span={18}>
-                                                    <Row>
-                                                        <Col span={6} style={{textAlign: "left"}}>
+                                                </Col> */}
+                                                {/* <Col span={18}>
+                                                    <Row> */}
+                                                        <Col span={6}>
                                                             <label className="label-font-16">调整类型<span className="color-red-margin">*</span></label>
                                                         </Col>
                                                         <Col span={18} className="text-align-left">
@@ -1574,8 +1610,8 @@ class InputChangeDetails extends React.Component {
                                                                 {loopOption(this.state.changeTypeOption)}
                                                             </Select>
                                                         </Col>
-                                                    </Row>
-                                                </Col>
+                                                    {/* </Row>
+                                                </Col> */}
                                             </Row>
                                         </Col>
                                     </Row>

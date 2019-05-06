@@ -34,6 +34,8 @@ class CreateChangeComparisonTable extends React.Component {
             requestSeq: "", //  变更申请单序号
             nextRouter: "", //  下一步路由
 
+            Router: "/about/pfpsmas/zcms/createChangeComparisonTable", //  本次路由    创建变更申请单 || 录入变更明细
+
             pageSize: 5,    //  分页每页展示数量
             totalRecord: 0, //  数据总量
         }
@@ -183,11 +185,13 @@ class CreateChangeComparisonTable extends React.Component {
         let res = await getFindWritableZCCRequests();
         if (res.rtnCode == "000000" && res.responseData != 0) {
             this.setState({
-                isDisabled: true
+                isDisabled: true,
+                Router: '/about/pfpsmas/zcms/inputChangeDetails'
             })
         } else {
             this.setState({
-                isDisabled: false
+                isDisabled: false,
+                Router: '/about/pfpsmas/zcms/createChangeComparisonTable'
             })
         }
         console.log(this.state.isDisabled)
@@ -317,7 +321,7 @@ class CreateChangeComparisonTable extends React.Component {
         },
         {
             name: "录入变更明细",
-            routerPath: "/about/pfpsmas/zcms/inputChangeDetails",
+            routerPath: this.state.Router,
             imgPath: black
         },
         {
@@ -364,7 +368,7 @@ class CreateChangeComparisonTable extends React.Component {
                     {/* 添加申请单按钮 */}
                     <div className="container-bottom margin-top-10">
                         <Button type="primary" size="large" disabled={this.state.isDisabled} onClick={this.showPrompt.bind(this)}>添加</Button>
-                        <span className={`${this.state.isDisabled} ? display-inline-block : display-none`} style={{color: "#f66", fontSize: 16, paddingLeft: 20}}>* 本月已有变更申请单</span>
+                        <span className={`${this.state.isDisabled ? "display-inline-block" : "display-none"}`} style={{color: "#f66", fontSize: 16, paddingLeft: 20}}>* 本月已有变更申请单</span>
                     </div>
                 </div>
                 
