@@ -21,7 +21,7 @@ class ProvincialVersionControl extends React.Component {
         super(props);
         this.state = {
             zoningCode: sessionStorage.getItem("zoningCode"),   //  用户登录区划
-
+            countryZoningCode: "000000000000000",
             displayVersion: [], //  各省使用区划版本
             usedVersionList: [],    //  已发布版本列表
             usedVersion: "--请选择--", //  所使用的版本
@@ -70,21 +70,22 @@ class ProvincialVersionControl extends React.Component {
     /**
      * 查询版本记录
      */
-    async axiosFindVersionRecord() {
+    async axiosFindVersionRecord(params) {
         let { zoningCode } = this.state;
-        let res = await getFindVersionRecord();
+        let res = await getFindVersionRecord(params);
         let tempVersion = "";
         console.log(res);
         if (res.rtnCode == "000000") {
             let data = res.responseData;
             let temp = [];
             data.forEach(item => {
-                if (item.xzqhdm == zoningCode) {
-                    tempVersion = item.bbfbrq;
-                    temp.unshift(item);
-                } else {
+                //  将登录人所在区划置顶
+                // if (item.xzqhdm == zoningCode) {
+                //     tempVersion = item.bbfbrq;
+                //     temp.unshift(item);
+                // } else {
                     temp.push(item);
-                }
+                // }
             })
             console.log(temp);
             this.setState({
@@ -107,8 +108,11 @@ class ProvincialVersionControl extends React.Component {
         let res = await getRecordVersion(params);
         console.log(res);
         if (res.rtnCode == "000000") {
+            let {countryZoningCode} = this.state;
+            let postData = {};
+            postData.zoningCode = countryZoningCode;
             openNotificationWithIcon("success", res.rtnMessage);
-            this.axiosFindVersionRecord();
+            this.axiosFindVersionRecord(postData);
             this.setState({
                 usedVersion: "--请选择--"
             })
@@ -118,8 +122,11 @@ class ProvincialVersionControl extends React.Component {
     }
 
     componentWillMount() {
+        let {countryZoningCode} = this.state;
+        let postData = {};
+        postData.zoningCode = countryZoningCode;
         this.axiosFindVersionExist();
-        this.axiosFindVersionRecord();
+        this.axiosFindVersionRecord(postData);
     }
 
     render() {
@@ -173,16 +180,17 @@ class ProvincialVersionControl extends React.Component {
                                 <div className="container-centent">
                                     <Table className="provincialVersionControl-table"
                                         dataSource={this.state.displayVersion}
-                                        rowClassName={(record, index) => record.xzqhdm === this.state.zoningCode ? "bg-color-green" : ''}
+                                        // rowClassName={(record, index) => record.xzqhdm === this.state.zoningCode ? "bg-color-green" : ''}
                                         columns={columns}
                                         pagination={{ pageSize: 5 }} />
                                 </div>
 
                             </div>
 
-                            <Hr />
+                            {/* <Hr /> */}
 
-                            <div className="container-bottom margin-top-15">
+                            {/* 提交当前使用版本 */}
+                            {/* <div className="container-bottom margin-top-15">
                                 <Row>
                                     <Col span={5} offset={6}>
                                         <span style={{ fontSize: 16 }}>
@@ -204,7 +212,7 @@ class ProvincialVersionControl extends React.Component {
                                         <Button type="primary" size="large" onClick={this.handleAxiosRecordVersion.bind(this)}>提交</Button>
                                     </Col>
                                 </Row>
-                            </div>
+                            </div> */}
 
                         </div>
                     </FreeScrollBar>
