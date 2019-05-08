@@ -79,6 +79,10 @@
     color: #fff !important;
 }
 
+.font-size-16{
+    font-size: 16px;
+}
+
 .font-color-c33 {
     color: #c33;
 }
@@ -117,6 +121,7 @@
     border-bottom: 1px solid #fff;
     color: #fff;
     margin-bottom: 15px;
+    cursor: pointer;
 }
 
 .container-title span{

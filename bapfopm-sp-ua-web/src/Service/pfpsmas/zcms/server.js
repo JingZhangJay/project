@@ -433,11 +433,13 @@ export let getFindVersionExist = async () => {
 
 /**
  * 查询版本记录
+ * @param {string} zoningCode 区划代码
  */
-export let getFindVersionRecord = async () => {
+export let getFindVersionRecord = async (params) => {
     let response = await axios({
         url: 'zcmsapi1/zoningChangeManager/findVersionRecord',
         method: 'get',
+        params: params,
     })
     return response.data
 }

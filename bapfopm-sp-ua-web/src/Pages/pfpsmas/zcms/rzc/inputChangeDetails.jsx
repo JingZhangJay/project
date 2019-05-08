@@ -128,7 +128,7 @@ class InputChangeDetails extends React.Component {
         }
     }
 
-    // 收起 搜素框
+    // 收起明细框
     handleDetailsShowOrHide() {
         let { detailsToggle } = this.state;
         this.setState({
@@ -1562,7 +1562,7 @@ class InputChangeDetails extends React.Component {
                             {/* <Hr /> */}
 
                             <div className="container-center margin-top-10">
-                                <div className="container-title">
+                                <div className="container-title" style={{cursor: "pointer"}} onClick={this.handleDetailsShowOrHide.bind(this)}>
                                     <span>变更明细信息</span>
                                     <p className={`downAndUp ${this.state.detailsToggle ? 'rotate' : ''}`} onClick={this.handleDetailsShowOrHide.bind(this)}></p>
                                 </div>

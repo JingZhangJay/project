@@ -141,17 +141,21 @@ class PreviewFormalZoningCode extends React.Component {
     }
 
     componentWillMount() {
-        let { zoningCode } = this.state;
+        let { countryZoningCode } = this.state;
         let postData = {};
-        postData.zoningCode = zoningCode;
+        postData.zoningCode = countryZoningCode;
         this.axiosInitFormalZoningData(postData);
     }
 
     render() {
         const navbar = [{
-            name: "区划预览",
+            name: "区划历史变更查询",
             routerPath: "/about/pfpsmas/zcms/previewFormalZoningCode",
             imgPath: blue
+        }, {
+            name: "变更报表预览",
+            routerPath: "/about/pfpsmas/zcms/previewChangeReport",
+            imgPath: black
         }];
 
         const displayDom = (data, color) => Object.keys(data).map(key => {
@@ -190,13 +194,11 @@ class PreviewFormalZoningCode extends React.Component {
                 <div className="previewFormalZoningCode inner-box">
                     <FreeScrollBar autohide="true">
 
-                        {/* <Navbar data={navbar} /> */}
+                        <Navbar data={navbar} />
 
                         <div className="container">
-                            <div className="container-header">
-                                {/* <Button type="primary" size="large" onClick={this.handleAxiosInitFormalZoningData.bind(this, "zoningCode")}>查看本级区划</Button>
-                                <Button type="primary" size="large" className="margin-left-20" onClick={this.handleAxiosInitFormalZoningData.bind(this, "countryZoningCode")}>查看全国区划</Button> */}
-
+                            {/* 标签页,查看全国 || 查看本级 */}
+                            {/* <div className="container-header">
                                 <Row>
                                     <Col span={12}>
                                         <span onClick={this.handleAxiosInitFormalZoningData.bind(this, "zoningCode")}>查看本级区划</span>
@@ -204,9 +206,8 @@ class PreviewFormalZoningCode extends React.Component {
                                     <Col span={12}>
                                         <span onClick={this.handleAxiosInitFormalZoningData.bind(this, "countryZoningCode")}>查看全国区划</span>
                                     </Col>
-                                </Row>
-                            
-                            </div>
+                                </Row>        
+                            </div> */}
 
                             <div className="container-top">
                                 <Row type="flex" justify="space-around">
